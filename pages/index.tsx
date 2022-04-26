@@ -328,8 +328,15 @@ export default function Home() {
                 >
                   Join our Discord
                 </a>{" "}
-                and use the #fweb3-faucet to receive 222 $FWEB3 tokens by
-                specifying your wallet address.
+                and use the{" "}
+                <a
+                  href="https://fweb3-faucet.vercel.app"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  fweb3 faucet
+                </a>{" "}
+                to receive 300 $FWEB3 tokens by connecting your wallet.
               </p>
               <p>That&apos;s enough to complete all the tasks in the game.</p>
               <p>
@@ -354,8 +361,16 @@ export default function Home() {
                 >
                   Join our Discord
                 </a>{" "}
-                and use the #matic-faucet to receive .1 $MATIC. You&apos;ll need
-                at least 100 $FWEB3 tokens in order to use it.
+                and use the{" "}
+                <a
+                  href="https://fweb3-faucet.vercel.app"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  fweb3 faucet
+                </a>{" "}
+                to receive .0420 $MATIC. You&apos;ll need the 300 $FWEB3 tokens
+                from the fweb3 faucet in order to use it.
               </p>
             </>
           )}
