@@ -15,6 +15,7 @@ import { Account } from "../components/Account";
 import { ENSLookup } from "../components/ENSLookup";
 import { getTrophyColor } from "../lib";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const dotContent: Record<DotKey, DotContent> = {
   [DotKey.isConnected]: {
@@ -328,8 +329,9 @@ export default function Home() {
                 >
                   Join our Discord
                 </a>{" "}
-                and use the #fweb3-faucet to receive 300 $FWEB3 tokens by
-                specifying your wallet address.
+                and use the{" "}
+                <Link href="https://fweb3-faucet.vercel.app">Web Faucet</Link>{" "}
+                to receive 300 $FWEB3 tokens by specifying your wallet address.
               </p>
               <p>That&apos;s enough to complete all the tasks in the game.</p>
               <p>
@@ -354,9 +356,10 @@ export default function Home() {
                 >
                   Join our Discord
                 </a>{" "}
-                and use the #matic-faucet to receive .0420 $MATIC. You&apos;ll
-                need the 300 $FWEB3 tokens from the fweb3 faucet in order to use
-                it.
+                and use the{" "}
+                <Link href="https://fweb3-faucet.vercel.app">Web Faucet</Link>{" "}
+                to receive .0420 $MATIC. You&apos;ll need the 300 $FWEB3 tokens
+                from the fweb3 faucet in order to use it.
               </p>
             </>
           )}
