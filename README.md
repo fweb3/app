@@ -1,56 +1,73 @@
-### Website
+# [fweb3.xyz](https://fweb3.xyz)
 
 ![Statements](https://img.shields.io/badge/statements-87.5%25-yellow.svg?style=flat&logo=jest)
 ![Branches](https://img.shields.io/badge/branches-60%25-red.svg?style=flat&logo=jest)
 ![Functions](https://img.shields.io/badge/functions-100%25-brightgreen.svg?style=flat&logo=jest)
 ![Lines](https://img.shields.io/badge/lines-87.5%25-yellow.svg?style=flat&logo=jest)
 
-Get a [PolygonScan API key](https://polygonscan.com/apis) and put it in `.env.local`:
+Contributions are more than welcome! Please fork this repo, do work, then submit a PR!
+You will find the contribution guidlines [here](https://github.com/fweb3/CONTRIBUTING)
 
-`POLYGON_API_KEY=`
+---
 
-Run local server:
+## Game Contracts
 
+All of our contracts are open and available!
+You will find all of them [here](https://github.com/fweb3/contracts)
+
+- Fweb3 Token [0x4a14ac36667b574b08443a15093e417db909d7a3](https://polygonscan.com/address/0x4a14ac36667b574b08443a15093e417db909d7a3)
+- Fweb3 Trophy NFT [0x2a0493dee4f4b5e4b595326f0e73645f6f493923](https://polygonscan.com/address/0x2a0493dee4f4b5e4b595326f0e73645f6f493923)
+
+## Local Development
+
+```bash
+# Install dependencies
+yarn install
+
+# Copy .env.example to .env.local and fill out vars
+cp .env.example .env.local
+
+# Run dev server
+yarn dev
+
+# Testing...
+yarn test
+
+# watch mode
+yarn test:watch
+
+# cypress (start app first)
+yarn e2e
+
+# cypress standalone
+yarn e2e:run
+
+# Linting
+yarn lint
+
+# Formatting
+yarn prettier
 ```
-npm run dev
-```
 
-Push to `main` branch to deploy.
-
-#### Testing
-
-To run the tests using [Cypress](https://cypress.io):
-
-1. Install dev dependencies: `npm install`
-2. Run local server: `npm run dev`
-3. Run Cypress tests in a separate terminal: `npm run e2e`
-
-To run unit tests with jest
-
-```
-npm run test
-```
-
-Watch mode:
-
-```
-npm run test:watch
-```
-
-#### Debugging with devtools
+## Debugging with devtools
 
 Supports using either the VS Code debugger or Chrome DevTools.
-
 See official Next.js docs: https://nextjs.org/docs/advanced-features/debugging
+You can use `http://localhost:3000?wallet=<address>` to test using a specific wallet address
 
-#### Debugging with variables
+## Depolyment
 
-You can set `DEBUG_ENABLE` to console.debug request responses and override the production blocking for the dot switch described below.
+Deployment is handled automatically to vercel on a merge to master.
+All checks must pass before a merge can occur. Preview deploys are created on opening a PR.
 
-You can use `?wallet=` to test using a specific wallet address
+## Tooling & Documentation
 
-To enable individual dots (bypasses any external polygon api calls)
-set `NEXT_PUBLIC_DEBUG_ENABLE_DOTS=`
-To enable dots one at a time or multiple dots. Use a string of 1/0 switches to enable/disable
-ex: NEXT_PUBLIC_DEBUG_ENABLE_DOTS=1111111
-This would enable the first 7 game tasks. Not avail in production
+- [Typescript](https://www.typescriptlang.org/docs)
+- [Nextjs](https://nextjs.org/docs)
+- [Vercel](https://vercel.com/docs?redirected=1)
+- [PolygonScan](https://polygonscan.com/apis)
+- [Cypress](https://cypress.io)
+- [Jest](https://jestjs.io/docs/getting-started)
+- [Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+
+## Join our [discord](https://discord.gg/SztqpYpY) for more information.
