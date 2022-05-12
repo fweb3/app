@@ -4,14 +4,13 @@ import { FWEB3_GAME_ADDRESS, FWEB3_TOKEN_ADDRESS } from "../interfaces";
 import { createContext, useContext, useEffect, useState } from "react";
 import fweb3TokenInterface from "../interfaces/Fweb3Token.json";
 import fweb3GameInterface from "../interfaces/Fweb3Game.json";
-import { Network } from "@ethersproject/providers";
 import { Contract, ethers } from "ethers";
 interface IConnectionContext {
   isConnected: boolean;
   connect: () => void;
   account: string;
-  provider: any;
-  network: Network;
+  provider: ethers.providers.AlchemyProvider | ethers.providers.JsonRpcProvider;
+  network: ethers.providers.Network;
   isConnecting: boolean;
   error: string;
   tokenContract: Contract;
@@ -39,7 +38,7 @@ const ConnectionProvider = ({ children }) => {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [tokenContract, setTokenContract] = useState<Contract>(null);
   const [gameContract, setGameContract] = useState<Contract>(null);
-  const [network, setNetwork] = useState<Network>(null);
+  const [network, setNetwork] = useState<ethers.providers.Network>(null);
   const [account, setAccount] = useState<string>("");
   const [ensName, setEnsName] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -67,8 +66,6 @@ const ConnectionProvider = ({ children }) => {
       }
     } catch (err) {
       // todo toastify
-      // import { UserRejectedRequestError } from '@web3-react/injected-connector'
-
       console.error(err);
       setError(err.message);
     }
