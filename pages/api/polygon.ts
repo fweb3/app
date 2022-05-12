@@ -48,6 +48,6 @@ export default async function handler(
     return res.json(gameTaskState);
   } catch (e) {
     console.error(e);
-    return res.status(500).send("Internal server error");
+    return res.status(400).send("Internal server error");
   }
 }
