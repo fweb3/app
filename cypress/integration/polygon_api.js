@@ -27,6 +27,7 @@ describe("Polygon endpoint tests", () => {
 
   it("should handle an invalid wallet", () => {
     // Example: {"tokenBalance":"Error! Invalid address format","hasUsedFaucet":false,"hasSentTokens":false,"hasMintedNFT":false,"hasBurnedTokens":false,"hasSwappedTokens":false,"hasVotedInPoll":false,"hasDeployedContract":false}
+    process.env.POLYGON_API_KEY = "foobar";
     cy.request({
       url: "/api/polygon/?wallet_address=invalid",
       failOnStatusCode: false,
