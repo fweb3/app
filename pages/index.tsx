@@ -122,6 +122,7 @@ export default function Home() {
     const completedTiles: number = completionStates.reduce((acc, cur) => {
       return (acc += cur);
     }, 0);
+    console.log({ completedTiles });
     setCompletedTiles(completedTiles);
     if (gameTaskState?.hasWonGame || parseInt(trophyId) >= 1) {
       const trophyColor = getTrophyColor(gameTaskState.trophyId);
