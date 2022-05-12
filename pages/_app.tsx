@@ -1,13 +1,12 @@
-import { Web3ReactProvider } from "@web3-react/core";
 import type { AppProps } from "next/app";
-import { getLibrary } from "../lib";
+import { EthersProvider } from "../providers";
 import "../styles/globals.css";
 
 function NextWeb3App({ Component, pageProps }: AppProps) {
   return (
-    <Web3ReactProvider getLibrary={getLibrary}>
+    <EthersProvider>
       <Component {...pageProps} />
-    </Web3ReactProvider>
+    </EthersProvider>
   );
 }
 

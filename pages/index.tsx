@@ -1,21 +1,16 @@
-import Head from "next/head";
 import cn from "classnames";
-
-import {
-  DotContent,
-  DotKey,
-  DotProps,
-  IGameTaskState,
-  IRouterQuery,
-} from "../types";
+import { DotContent, DotKey, DotProps, IGameTaskState } from "../types";
 import { TokenBalance } from "../components/TokenBalance";
 import { useGameState } from "../hooks/useGameState";
 import { GameFinish } from "../components/GameFinish";
-import { Account } from "../components/Account";
+import { ConnectButton } from "../components/ConnectButton";
 import { ENSLookup } from "../components/ENSLookup";
 import { getTrophyColor } from "../lib";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { MainLayout } from "../components/shared/Layout";
+import { useEthers } from "../providers";
+import { useEffect, useState } from "react";
 
 const dotContent: Record<DotKey, DotContent> = {
   [DotKey.isConnected]: {
@@ -95,11 +90,10 @@ const Dot: React.FC<DotProps> = ({
 
 const calcCompletionStates = (
   isConnected: boolean,
-  wallet: string,
   gameTaskState: IGameTaskState
 ): number[] => {
   return [
-    isConnected || wallet ? 1 : 0,
+    isConnected ? 1 : 0,
     gameTaskState?.["hasEnoughTokens"] ? 1 : 0,
     gameTaskState?.["hasUsedFaucet"] ? 1 : 0,
     gameTaskState?.["hasSentTokens"] ? 1 : 0,
@@ -112,59 +106,39 @@ const calcCompletionStates = (
 };
 
 export default function Home() {
-  const { query }: { query: IRouterQuery } = useRouter();
-  const {
-    account,
-    isConnected,
-    trophyId,
-    hasWonGame,
-    activeDot,
-    setActiveDot,
-    gameTaskState,
-    chainId,
-    triedToEagerConnect,
-  } = useGameState();
+  const { query } = useRouter();
+  const [completionStates, setCompletionStates] = useState(null);
+  const [completedTiles, setCompletedTiles] = useState<number>(0);
+  const [shareImageUrl, setShareImageUrl] = useState<string>("");
+  const [shareText, setShareText] = useState<string>("");
+  const { account, network, isConnected } = useEthers();
+  const { trophyId, hasWonGame, activeDot, setActiveDot, gameTaskState } =
+    useGameState();
 
-  const gameTileCompletionStates: number[] = calcCompletionStates(
-    isConnected,
-    query.wallet,
-    gameTaskState
-  );
+  useEffect(() => {
+    const completionStates: number[] = calcCompletionStates(
+      isConnected,
+      gameTaskState
+    );
+    const completedTiles: number = completionStates.reduce((acc, cur) => {
+      return (acc += cur);
+    }, 0);
+    setCompletedTiles(completedTiles);
+    if (gameTaskState?.hasWonGame || parseInt(trophyId) >= 1) {
+      const trophyColor = getTrophyColor(gameTaskState.trophyId);
+      const shareText = `🏆 I won a ${trophyColor} trophy in Fweb3!`;
+      const shareImageUrl = `https://fweb3.xyz/fweb_yearone_${trophyColor}.png`;
+      setShareImageUrl(shareImageUrl);
+      setShareText(shareText);
+    }
+  }, [gameTaskState, trophyId, isConnected]);
 
-  const completedTiles: number = gameTileCompletionStates.reduce((acc, cur) => {
-    return (acc += cur);
-  }, 0);
-
-  let shareText: string = "Fweb3";
-  let shareImageUrl: string = "https://fweb3.xyz/fweb3.png";
-
-  if (hasWonGame || parseInt(trophyId) >= 1) {
-    const trophyColor: string = getTrophyColor(trophyId);
-    shareText = "🏆 I won a " + trophyColor + " trophy in Fweb3!";
-    shareImageUrl = "https://fweb3.xyz/fweb_yearone_" + trophyColor + ".png";
-  }
   return (
-    <div>
-      <Head>
-        <title>{query.wallet ? query.wallet : "Fweb3"}</title>
-        <meta name="description" content="Learn and build web3" />
-        <link rel="icon" href="/icon.png" />
-        <meta content="Learn and build web3" name="description" />
-        <meta content="Fweb3" property="og:title" />
-        <meta content="Learn and build web3" property="og:description" />
-        <meta content={shareImageUrl} property="og:image" />
-        <meta content="Fweb3" property="twitter:title" />
-        <meta content={shareImageUrl} property="twitter:image" />
-        <meta property="og:type" content="website" />
-        <meta content="summary_large_image" name="twitter:card" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </Head>
-
+    <MainLayout>
       <nav>
         <h1>fweb3</h1>
-
         <p>
-          {hasWonGame ? (
+          {gameTaskState?.hasWonGame ? (
             "🏆"
           ) : (
             <>
@@ -211,7 +185,7 @@ export default function Home() {
                 <Dot
                   key={id}
                   id={id}
-                  completed={hasWonGame || !!gameTileCompletionStates[position]}
+                  completed={hasWonGame || !!completionStates?.[position]}
                   link={link}
                   position={position}
                   toolTip={toolTip}
@@ -489,7 +463,7 @@ export default function Home() {
               </p>
             </>
           )}
-          {!gameTileCompletionStates[0] && !query.wallet && (
+          {!completionStates?.[0] && !query.wallet && (
             <div>
               <p>
                 It&apos;s free to play. Login with MetaMask to get started
@@ -497,11 +471,9 @@ export default function Home() {
                 already):
               </p>
               <p>
-                {triedToEagerConnect && (
-                  <Account triedToEagerConnect={triedToEagerConnect} />
-                )}
+                <ConnectButton />
               </p>
-              {chainId !== undefined && chainId !== 137 && !query.wallet && (
+              {isConnected && network?.chainId !== 137 && (
                 <p style={{ color: "#f55" }}>
                   Switch to Polygon via MetaMask to play this game.
                 </p>
@@ -516,29 +488,6 @@ export default function Home() {
           )}
         </section>
       </main>
-      <footer>
-        <a
-          href="https://fweb3.notion.site/Walkthrough-8ac4fc0d3b814a068767c86d63fd8fb7"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Walkthrough
-        </a>
-        <a
-          href="https://discord.gg/pNSFNfyVxA"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Discord
-        </a>
-        <a
-          href="https://github.com/slavingia/fweb3.xyz/issues"
-          target="_blank"
-          rel="noreferrer"
-        >
-          GitHub
-        </a>
-      </footer>
-    </div>
+    </MainLayout>
   );
 }

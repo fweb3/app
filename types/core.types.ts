@@ -72,10 +72,7 @@ export interface IPolygonData {
 export interface IAppColors {
   [key: string]: string;
 }
-export interface IRouterQuery {
-  debug?: string;
-  wallet?: string;
-}
+
 export interface IRequestValidationResponse {
   error?: string;
   status: number;
