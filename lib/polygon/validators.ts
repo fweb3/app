@@ -39,11 +39,6 @@ export const validateRequest = (
         error: "Bad request type",
         status: 400,
       };
-    } else if (!POLYGON_API_KEY) {
-      return {
-        error: "Missing required environment vars",
-        status: 500,
-      };
     } else if (!debug && !walletAddress) {
       return {
         error: "Missing query params",
