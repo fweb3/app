@@ -1,4 +1,5 @@
 describe("Polygon endpoint tests", () => {
+  process.env.POLYGON_API_KEY = "foobar";
   it("should fail without a wallet", () => {
     cy.request({ url: "/api/polygon", failOnStatusCode: false }).then(
       (response) => {
