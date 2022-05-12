@@ -15,6 +15,7 @@ import { Account } from "../components/Account";
 import { ENSLookup } from "../components/ENSLookup";
 import { getTrophyColor } from "../lib";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const dotContent: Record<DotKey, DotContent> = {
   [DotKey.isConnected]: {
@@ -25,12 +26,12 @@ const dotContent: Record<DotKey, DotContent> = {
   [DotKey.hasTokens]: {
     id: DotKey.hasTokens,
     position: 1,
-    toolTip: "Use the faucet to get 100 $FWEB3 tokens",
+    toolTip: "Use the faucet to get 300 $FWEB3 tokens",
   },
   [DotKey.hasUsedFaucet]: {
     id: DotKey.hasUsedFaucet,
     position: 2,
-    toolTip: "Use the faucet to get .1 $MATIC",
+    toolTip: "Use the faucet to get 0.042 $MATIC",
   },
   [DotKey.hasSentTokens]: {
     id: DotKey.hasSentTokens,
@@ -328,8 +329,9 @@ export default function Home() {
                 >
                   Join our Discord
                 </a>{" "}
-                and use the #fweb3-faucet to receive 222 $FWEB3 tokens by
-                specifying your wallet address.
+                and use the{" "}
+                <Link href="https://fweb3-faucet.vercel.app">Web Faucet</Link>{" "}
+                to receive 300 $FWEB3 tokens by specifying your wallet address.
               </p>
               <p>That&apos;s enough to complete all the tasks in the game.</p>
               <p>
@@ -354,8 +356,10 @@ export default function Home() {
                 >
                   Join our Discord
                 </a>{" "}
-                and use the #matic-faucet to receive .1 $MATIC. You&apos;ll need
-                at least 100 $FWEB3 tokens in order to use it.
+                and use the{" "}
+                <Link href="https://fweb3-faucet.vercel.app">Web Faucet</Link>{" "}
+                to receive .0420 $MATIC. You&apos;ll need the 300 $FWEB3 tokens
+                from the fweb3 faucet in order to use it.
               </p>
             </>
           )}

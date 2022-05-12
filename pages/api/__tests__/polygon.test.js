@@ -33,20 +33,6 @@ describe("external polygon api", () => {
     expect(res._getStatusCode()).toBe(400);
     expect(JSON.parse(res._getData())).toEqual("Bad request type");
   });
-  it("fails for no api key", async () => {
-    constantsMock.POLYGON_API_KEY = null;
-    const { req, res } = createMocks({
-      method: "GET",
-      query: {},
-    });
-
-    await polygonApiHandler(req, res);
-
-    expect(res._getStatusCode()).toBe(500);
-    expect(JSON.parse(res._getData())).toEqual(
-      "Missing required environment vars"
-    );
-  });
   it("fails for malformatted address", async () => {
     constantsMock.POLYGON_API_KEY = "bar";
     const { req, res } = createMocks({

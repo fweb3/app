@@ -24,6 +24,7 @@ import {
   fetchTrophyTransactions,
   fetchWalletTokenBalance,
   fetchWalletsTxs,
+  fetchWalletsInternalTxs,
   fetchERC20Txs,
   fetchNftsTxs,
 } from "./api";
@@ -37,11 +38,6 @@ export const validateRequest = (
       return {
         error: "Bad request type",
         status: 400,
-      };
-    } else if (!POLYGON_API_KEY) {
-      return {
-        error: "Missing required environment vars",
-        status: 500,
       };
     } else if (!debug && !walletAddress) {
       return {
@@ -133,10 +129,15 @@ const _checkWalletTxCompletedItems = async (
 ): Promise<IWalletTXGameTasks> => {
   const rawResult: IPolygonDataResponse = await fetchWalletsTxs(walletAddress);
   _checkStatus({ ...rawResult, apiCall: "walletTxs" });
+  const rawResult2: IPolygonDataResponse = await fetchWalletsInternalTxs(
+    walletAddress
+  );
+  _checkStatus({ ...rawResult2, apiCall: "walletInternalTxs" });
   const { result: walletsTxs }: { result: IPolygonData[] } = rawResult;
+  const { result: walletsInternalTxs }: { result: IPolygonData[] } = rawResult2;
   return {
     hasEnoughTokens: _checkHasUsedFweb3Faucet(walletsTxs),
-    hasUsedFaucet: _checkHasUsedMaticFaucet(walletsTxs),
+    hasUsedFaucet: _checkHasUsedMaticFaucet(walletsInternalTxs),
     hasSwappedTokens: _checkHasSwappedTokens(walletsTxs),
     hasDeployedContract: _checkHasDeployedContract(walletsTxs),
     hasVotedInPoll: _checkHasVotedInPoll(walletsTxs),
@@ -147,21 +148,31 @@ const _checkWalletTxCompletedItems = async (
 const _checkHasUsedFweb3Faucet = (walletsTxs: IPolygonData[]): boolean => {
   const faucetAddress1 = FAUCET_ADDRESSES[0].toLowerCase();
   const faucetAddress2 = FAUCET_ADDRESSES[1].toLowerCase();
+  const newFweb3Faucet = "0x32Ba4765d6538944ef4324E55B94797a422C72F9";
+  const newMaticFaucet = "0x351050Ac0AdC9bff0622c1c0525b3322C328517f";
+
   return (
     walletsTxs?.filter(
       (tx) =>
-        tx.to.toLowerCase() === faucetAddress1 ||
-        tx.to.toLowerCase() === faucetAddress2
+        tx.to.toLowerCase() === faucetAddress1.toLowerCase() ||
+        tx.to.toLowerCase() === faucetAddress2.toLowerCase() ||
+        tx.to.toLowerCase() === newFweb3Faucet.toLowerCase() ||
+        tx.to.toLowerCase() === newMaticFaucet.toLowerCase()
     ).length >= 1
   );
 };
 
 const _checkHasUsedMaticFaucet = (walletsTxs: IPolygonData[]): boolean => {
+  const newFweb3Faucet = "0x32Ba4765d6538944ef4324E55B94797a422C72F9";
+  const newMaticFaucet = "0x351050Ac0AdC9bff0622c1c0525b3322C328517f";
+
   return (
     walletsTxs?.filter(
       (tx) =>
         tx.from.toLowerCase() === FAUCET_ADDRESSES[0].toLowerCase() ||
-        tx.from === FAUCET_ADDRESSES[1].toLowerCase()
+        tx.from === FAUCET_ADDRESSES[1].toLowerCase() ||
+        tx.from === newMaticFaucet.toLowerCase() ||
+        tx.from === newFweb3Faucet.toLowerCase()
     ).length >= 1
   );
 };
@@ -204,7 +215,7 @@ const _validateHasSentTokens = (
   const found: IPolygonData[] = txs?.filter((tx) => {
     return (
       tx.value &&
-      tx.from.toLowerCase() === walletAddress &&
+      tx.from.toLowerCase() === walletAddress.toLowerCase() &&
       parseInt(tx.value) >= 100 * 10 ** 18
     );
   });
@@ -218,7 +229,7 @@ const _validateHasBurnedTokens = (
   const found: IPolygonData[] = txs?.filter((tx) => {
     return (
       tx.value &&
-      tx.from.toLowerCase() === walletAddress &&
+      tx.from.toLowerCase() === walletAddress.toLowerCase() &&
       tx.to.toLowerCase() === BURN_ADDRESS.toLowerCase() &&
       parseInt(tx.value) > 0
     );
