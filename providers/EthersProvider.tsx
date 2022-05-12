@@ -1,20 +1,25 @@
 declare let window: any;
 
-import { Network, Provider } from "@ethersproject/providers";
-import { ethers } from "ethers";
+import { FWEB3_GAME_ADDRESS, FWEB3_TOKEN_ADDRESS } from "../interfaces";
 import { createContext, useContext, useEffect, useState } from "react";
-
-interface IEthersContext {
+import fweb3TokenInterface from "../interfaces/Fweb3Token.json";
+import fweb3GameInterface from "../interfaces/Fweb3Game.json";
+import { Network } from "@ethersproject/providers";
+import { Contract, ethers } from "ethers";
+interface IConnectionContext {
   isConnected: boolean;
   connect: () => void;
   account: string;
-  provider: Provider;
+  provider: any;
   network: Network;
   isConnecting: boolean;
   error: string;
+  tokenContract: Contract;
+  gameContract: Contract;
+  ensName: string;
 }
 
-const defaultEthersContext: IEthersContext = {
+const defaultConnectionContext: IConnectionContext = {
   isConnected: false,
   connect: () => {},
   account: "",
@@ -22,32 +27,42 @@ const defaultEthersContext: IEthersContext = {
   network: null,
   isConnecting: false,
   error: "",
+  tokenContract: null,
+  gameContract: null,
+  ensName: "",
 };
 
-const EthersContext = createContext(defaultEthersContext);
+const ConnectionContext = createContext(defaultConnectionContext);
 
-const EthersProvider = ({ children }) => {
+const ConnectionProvider = ({ children }) => {
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [isConnected, setIsConnected] = useState<boolean>(false);
-  const [provider, setProvider] = useState<Provider>(null);
+  const [tokenContract, setTokenContract] = useState<Contract>(null);
+  const [gameContract, setGameContract] = useState<Contract>(null);
   const [network, setNetwork] = useState<Network>(null);
   const [account, setAccount] = useState<string>("");
+  const [ensName, setEnsName] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const [provider, setProvider] = useState(null);
 
   const connect = async () => {
     try {
       if (window?.ethereum) {
-        console.log("connecting...");
         setIsConnecting(true);
         setError("");
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const account = await provider.send("eth_requestAccounts", []);
         const currentNetwork = await provider.getNetwork();
-        setAccount(account[0]);
+        const tokenContract = await loadTokenContract(provider);
+        const gameContract = await loadGameContract(provider);
+        setTokenContract(tokenContract);
+        setGameContract(gameContract);
         setNetwork(currentNetwork);
+        setIsConnecting(false);
+        setAccount(account[0]);
         setProvider(provider);
         setIsConnected(true);
-        setIsConnecting(false);
+        setEnsName(ensName);
         setError("");
       }
     } catch (err) {
@@ -57,6 +72,24 @@ const EthersProvider = ({ children }) => {
       console.error(err);
       setError(err.message);
     }
+  };
+
+  const loadTokenContract = async (provider) => {
+    const contract = new ethers.Contract(
+      FWEB3_TOKEN_ADDRESS,
+      fweb3TokenInterface.abi,
+      provider.getSigner()
+    );
+    return contract;
+  };
+
+  const loadGameContract = async (provider) => {
+    const contract = new ethers.Contract(
+      FWEB3_GAME_ADDRESS,
+      fweb3GameInterface.abi,
+      provider.getSigner()
+    );
+    return contract;
   };
 
   const handleAccountChange = async (accounts) => {
@@ -70,6 +103,7 @@ const EthersProvider = ({ children }) => {
       window.location.reload();
     }
   };
+
   const handleDisconnect = () => {
     setIsConnected(false);
     setNetwork(null);
@@ -90,23 +124,39 @@ const EthersProvider = ({ children }) => {
     };
   }, []); // eslint-disable-line
 
+  useEffect(() => {
+    (async () => {
+      if (isConnected) {
+        const provider = await new ethers.providers.AlchemyProvider(
+          "mainnet",
+          process.env.NEXT_PUBLIC_ALCHEMY_KEY
+        );
+        const ensName = await provider.lookupAddress(account);
+        setEnsName(ensName);
+      }
+    })();
+  }, [account, isConnected]);
+
   return (
-    <EthersContext.Provider
+    <ConnectionContext.Provider
       value={{
-        isConnected,
+        tokenContract,
+        gameContract,
         isConnecting,
+        isConnected,
+        provider,
         connect,
         account,
-        provider,
         network,
+        ensName,
         error,
       }}
     >
       {children}
-    </EthersContext.Provider>
+    </ConnectionContext.Provider>
   );
 };
 
-const useEthers = () => useContext(EthersContext);
+const useConnection = () => useContext(ConnectionContext);
 
-export { useEthers, EthersProvider };
+export { useConnection, ConnectionProvider };

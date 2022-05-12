@@ -1,8 +1,7 @@
+import type { IGameTaskState } from "../types";
+import { useConnection } from "../providers";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-
-import type { IGameTaskState } from "../types";
-import { useEthers } from "../providers";
 
 export const useGameState = () => {
   const [gameTaskState, setGameTaskState] = useState<IGameTaskState>(null);
@@ -10,7 +9,7 @@ export const useGameState = () => {
   const [hasWonGame, setHasWonGame] = useState<boolean>(false);
   const [activeDot, setActiveDot] = useState<number>(-1);
   const [trophyId, setTrophyId] = useState<string>("");
-  const { account, isConnected } = useEthers();
+  const { account, isConnected } = useConnection();
   const {
     query: { wallet },
   } = useRouter();

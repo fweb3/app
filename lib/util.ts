@@ -1,5 +1,4 @@
-import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
-import { formatUnits, commify, parseEther } from "@ethersproject/units";
+import { formatUnits, commify } from "@ethersproject/units";
 
 export const fetcher = async (uri: string, config = null): Promise<any> => {
   const res = await fetch(uri, config);

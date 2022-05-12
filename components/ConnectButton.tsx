@@ -1,9 +1,9 @@
+import { useConnection } from "../providers";
 import styled from "styled-components";
-import MetaMaskOnboarding from "@metamask/onboarding";
-
 import { COLORS } from "../lib";
-import { useEthers } from "../providers";
-import { OnboardingButton } from "./OnboardingButton";
+
+// import MetaMaskOnboarding from "@metamask/onboarding";
+// import { OnboardingButton } from "./OnboardingButton";
 
 const Button = styled.button`
   border-radius: 99px;
@@ -20,7 +20,7 @@ const Button = styled.button`
 `;
 
 export const ConnectButton = () => {
-  const { connect, isConnected, isConnecting, error } = useEthers();
+  const { connect, isConnected, isConnecting } = useConnection();
   // todo onboarding
   // if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
   //   return <OnboardingButton />

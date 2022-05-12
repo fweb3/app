@@ -1,12 +1,12 @@
 import type { AppProps } from "next/app";
-import { EthersProvider } from "../providers";
+import { ConnectionProvider } from "../providers";
 import "../styles/globals.css";
 
 function NextWeb3App({ Component, pageProps }: AppProps) {
   return (
-    <EthersProvider>
+    <ConnectionProvider>
       <Component {...pageProps} />
-    </EthersProvider>
+    </ConnectionProvider>
   );
 }
 

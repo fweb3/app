@@ -4,12 +4,11 @@ import { TokenBalance } from "../components/TokenBalance";
 import { useGameState } from "../hooks/useGameState";
 import { GameFinish } from "../components/GameFinish";
 import { ConnectButton } from "../components/ConnectButton";
-import { ENSLookup } from "../components/ENSLookup";
 import { getTrophyColor } from "../lib";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { MainLayout } from "../components/shared/Layout";
-import { useEthers } from "../providers";
+import { useConnection } from "../providers";
 import { useEffect, useState } from "react";
 
 const dotContent: Record<DotKey, DotContent> = {
@@ -111,7 +110,7 @@ export default function Home() {
   const [completedTiles, setCompletedTiles] = useState<number>(0);
   const [shareImageUrl, setShareImageUrl] = useState<string>("");
   const [shareText, setShareText] = useState<string>("");
-  const { account, network, isConnected } = useEthers();
+  const { account, network, isConnected, ensName } = useConnection();
   const { trophyId, hasWonGame, activeDot, setActiveDot, gameTaskState } =
     useGameState();
 
@@ -156,9 +155,7 @@ export default function Home() {
               target="_blank"
               rel="noreferrer"
             >
-              <p>
-                <ENSLookup address={query.wallet} />
-              </p>
+              <p>{ensName ?? account}</p>
             </a>
           )}
 
@@ -249,11 +246,7 @@ export default function Home() {
         <section>
           {completedTiles === 9 && activeDot == -1 && (
             <div>
-              {query.wallet && (
-                <h2>
-                  <ENSLookup address={query.wallet} />
-                </h2>
-              )}
+              {query.wallet && <h2>{ensName ?? account}</h2>}
               <GameFinish />
             </div>
           )}
