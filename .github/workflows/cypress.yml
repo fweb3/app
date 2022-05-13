@@ -1,9 +1,8 @@
-name: Cypress Testing
+name: Cypress End to End
 
 on:
   pull_request:
-    branches:
-      - main
+    - 'main'
 
 jobs:
   cypress:
