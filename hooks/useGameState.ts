@@ -23,7 +23,7 @@ export const useGameState = () => {
 
   useEffect(() => {
     (async () => {
-      if (isConnected) {
+      if (isConnected || wallet) {
         try {
           setFetchingData(true);
           // if the wallet is coming from URL use that. else use connected

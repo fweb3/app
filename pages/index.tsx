@@ -122,7 +122,7 @@ export default function Home() {
     const completedTiles: number = completionStates.reduce((acc, cur) => {
       return (acc += cur);
     }, 0);
-    console.log({ completedTiles });
+
     setCompletedTiles(completedTiles);
     if (gameTaskState?.hasWonGame || parseInt(trophyId) >= 1) {
       const trophyColor = getTrophyColor(gameTaskState.trophyId);
@@ -148,17 +148,15 @@ export default function Home() {
           )}
         </p>
 
-        {query.wallet !== undefined &&
-          query.wallet !== account &&
-          query.wallet.length > 0 && (
-            <a
-              href={"https://polygonscan.com/address/" + query.wallet}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <p>{ensName ?? account}</p>
-            </a>
-          )}
+        {query?.wallet !== account && (
+          <a
+            href={"https://polygonscan.com/address/" + query.wallet}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <p>{query.wallet}</p>
+          </a>
+        )}
 
         {isConnected || query.wallet ? (
           <TokenBalance
