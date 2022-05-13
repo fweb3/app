@@ -1,13 +1,12 @@
-import { Web3ReactProvider } from "@web3-react/core";
 import type { AppProps } from "next/app";
-import { getLibrary } from "../lib";
+import { ConnectionProvider } from "../providers";
 import "../styles/globals.css";
 
 function NextWeb3App({ Component, pageProps }: AppProps) {
   return (
-    <Web3ReactProvider getLibrary={getLibrary}>
+    <ConnectionProvider>
       <Component {...pageProps} />
-    </Web3ReactProvider>
+    </ConnectionProvider>
   );
 }
 

@@ -10,16 +10,14 @@ import type {
   IPolygonData,
   IAPIRequest,
 } from "../../types";
+import { DEFAULT_WON_GAME_STATE, DEBUG_ENABLE } from "../constants";
 import {
   FAUCET_ADDRESSES,
-  DEFAULT_WON_GAME_STATE,
   SWAP_ROUTER_ADDRESS,
-  POLYGON_API_KEY,
   GENESYS_ADDRESS,
   POLL_ADDRESS,
   BURN_ADDRESS,
-  DEBUG_ENABLE,
-} from "../constants";
+} from "../../interfaces";
 import {
   fetchTrophyTransactions,
   fetchWalletTokenBalance,

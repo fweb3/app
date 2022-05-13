@@ -1,5 +1,4 @@
-import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
-import { formatUnits, commify, parseEther } from "@ethersproject/units";
+import { ethers } from "ethers";
 
 export const fetcher = async (uri: string, config = null): Promise<any> => {
   const res = await fetch(uri, config);
@@ -11,8 +10,10 @@ export const parseBalance = (
   decimals = 18,
   decimalsToDisplay = 0
 ): string => {
-  return commify(
-    parseFloat(formatUnits(value, decimals)).toFixed(decimalsToDisplay)
+  return ethers.utils.commify(
+    parseFloat(ethers.utils.formatUnits(value, decimals)).toFixed(
+      decimalsToDisplay
+    )
   );
 };
 
@@ -21,7 +22,11 @@ export const parseBalanceToNum = (
   decimals = 18,
   decimalsToDisplay = 0
 ): number =>
-  parseInt(parseFloat(formatUnits(value, decimals)).toFixed(decimalsToDisplay));
+  parseInt(
+    parseFloat(ethers.utils.formatUnits(value, decimals)).toFixed(
+      decimalsToDisplay
+    )
+  );
 
 export const getTrophyColor = (trophyId: string): string => {
   const trophyInt = parseInt(trophyId);

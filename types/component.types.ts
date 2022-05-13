@@ -4,10 +4,6 @@ export interface Address {
   address: string | string[];
 }
 
-export interface TrophyProps {
-  trophyId: string;
-}
-
 export interface IAccountProps {
   triedToEagerConnect: boolean;
 }

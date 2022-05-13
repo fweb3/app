@@ -1,13 +1,13 @@
-import { ReactElement } from "react";
+import { useGameState } from "../hooks/useGameState";
+import { TROPHY_NFT_ADDRESS } from "../interfaces";
+import { getTrophyColor } from "../lib/util";
 import Image from "next/image";
 
-import { TROPHY_NFT_ADDRESS } from "../lib/constants";
-import { getTrophyColor } from "../lib/util";
-import type { TrophyProps } from "../types";
-
-export const Trophy: React.FC<TrophyProps> = ({ trophyId }): ReactElement => {
+export const Trophy = (): JSX.Element => {
+  const { gameTaskState } = useGameState();
   const contractUrl = `https://polygonscan.com/address/${TROPHY_NFT_ADDRESS}#writeContract`;
   const openSeaUrl = `https://opensea.io/assets/matic/${TROPHY_NFT_ADDRESS}/`;
+  const trophyId = gameTaskState?.["trophyId"] || "";
 
   if (parseInt(trophyId) == 0) {
     return (
