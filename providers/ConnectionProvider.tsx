@@ -5,6 +5,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import fweb3TokenInterface from "../interfaces/Fweb3Token.json";
 import fweb3GameInterface from "../interfaces/Fweb3Game.json";
 import { Contract, ethers } from "ethers";
+
 interface IConnectionContext {
   isConnected: boolean;
   connect: () => void;
@@ -71,24 +72,6 @@ const ConnectionProvider = ({ children }) => {
     }
   };
 
-  const loadTokenContract = async (provider) => {
-    const contract = new ethers.Contract(
-      FWEB3_TOKEN_ADDRESS,
-      fweb3TokenInterface.abi,
-      provider.getSigner()
-    );
-    return contract;
-  };
-
-  const loadGameContract = async (provider) => {
-    const contract = new ethers.Contract(
-      FWEB3_GAME_ADDRESS,
-      fweb3GameInterface.abi,
-      provider.getSigner()
-    );
-    return contract;
-  };
-
   const handleAccountChange = async (accounts) => {
     if (accounts?.[0] !== account) {
       await connect();
@@ -120,31 +103,15 @@ const ConnectionProvider = ({ children }) => {
     };
   }, []); // eslint-disable-line
 
-  useEffect(() => {
-    (async () => {
-      if (isConnected) {
-        const provider = await new ethers.providers.AlchemyProvider(
-          "mainnet",
-          process.env.NEXT_PUBLIC_ALCHEMY_KEY
-        );
-        const ensName = await provider.lookupAddress(account);
-        setEnsName(ensName);
-      }
-    })();
-  }, [account, isConnected]);
-
   return (
     <ConnectionContext.Provider
       value={{
-        tokenContract,
-        gameContract,
-        isConnecting,
         isConnected,
-        provider,
+        isConnecting,
         connect,
         account,
+        provider,
         network,
-        ensName,
         error,
       }}
     >
