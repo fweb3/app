@@ -1,6 +1,8 @@
 name: Tests and Linting
 
-on: push
+on:
+  push:
+    - '*'
 
 jobs:
   tests:
