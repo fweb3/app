@@ -1,4 +1,4 @@
-name: Cypress End to End
+name: Cypress
 
 on:
   pull_request:
@@ -15,5 +15,5 @@ jobs:
           POLYGON_API_KEY: ${{ secrets.POLYGON_API_KEY }}
         uses: cypress-io/github-action@v2
         with:
-          build: npm i
-          start: npm run dev
+          build: yarn
+          start: yarn dev
