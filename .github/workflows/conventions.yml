@@ -1,0 +1,24 @@
+name: Branch naming convention
+on: [ pull_request, push ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Check branch name matches convention"
+        env:
+          IS_PR: ${{ github.EVENT_NAME == 'pull_request' }}
+        run: |
+          if ${IS_PR}; then
+            BRANCH_NAME="${GITHUB_HEAD_REF}"
+          else
+            BRANCH_NAME="${GITHUB_REF##*/}"
+          fi
+          echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
+      - name: "Current name"
+        run: echo "Branch name is ${{ env.BRANCH_NAME }}"
+
+      - name: "Match"
+        run: |
+          if [[ ${{ env.BRANCH_NAME }} =~ /[feat|chore|fix]+\/.+/g; then
+            echo ::set-output name=match::false
+          fi
