@@ -2,7 +2,9 @@ name: Tests and Linting
 
 on:
   push:
-    - '*'
+    branches:
+      - '*'
+
 jobs:
   tests:
     runs-on: ubuntu-latest

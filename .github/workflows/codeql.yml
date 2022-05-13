@@ -2,7 +2,9 @@ ame: "CodeQL Scan"
 
 on:
   push:
-    - '*'
+    branches:
+      - '*'
+
   schedule:
     - cron: '30 1 * * 0'
 
