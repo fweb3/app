@@ -26,26 +26,26 @@ export default async function handler(
       debug,
       wallet_address: walletAddress,
     }: IAPIRequestQueryParams = req.query;
-    const { status, error }: IRequestValidationResponse = validateRequest(req);
+    // const { status, error }: IRequestValidationResponse = validateRequest(req);
 
-    if (status !== 200) {
-      return res.status(status).json(error);
-    }
+    // if (status !== 200) {
+    //   return res.status(status).json(error);
+    // }
 
-    if (
-      (NODE_ENV !== "production" || DEBUG_ENABLE) &&
-      NEXT_PUBLIC_DEBUG_ENABLE_DOTS &&
-      debug
-    ) {
-      const debugTaskState: IGameTaskState = await fetchDebugGameState(
-        NEXT_PUBLIC_DEBUG_ENABLE_DOTS
-      );
-      return res.json(debugTaskState);
-    }
-    const gameTaskState: IGameTaskState = await fetchCurrentGameState(
-      debugWallet ?? walletAddress
-    );
-    return res.json(gameTaskState);
+    // if (
+    //   (NODE_ENV !== "production" || DEBUG_ENABLE) &&
+    //   NEXT_PUBLIC_DEBUG_ENABLE_DOTS &&
+    //   debug
+    // ) {
+    //   const debugTaskState: IGameTaskState = await fetchDebugGameState(
+    //     NEXT_PUBLIC_DEBUG_ENABLE_DOTS
+    //   );
+    //   return res.json(debugTaskState);
+    // }
+    // const gameTaskState: IGameTaskState = await fetchCurrentGameState(
+    //   debugWallet ?? walletAddress
+    // );
+    // return res.json(gameTaskState);
   } catch (e) {
     console.error(e);
     return res.status(e?.status || 500).send(e?.message || e);

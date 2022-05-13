@@ -1,9 +1,6 @@
 name: Cypress
 
-on:
-  pull_request:
-    branches:
-      - main
+on: push
 
 jobs:
   cypress:
@@ -11,8 +8,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run Cypress
-        env:
-          POLYGON_API_KEY: ${{ secrets.POLYGON_API_KEY }}
         uses: cypress-io/github-action@v2
         with:
           build: yarn
