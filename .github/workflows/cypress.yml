@@ -1,0 +1,19 @@
+name: Cypress
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  cypress:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Cypress
+        env:
+          POLYGON_API_KEY: ${{ secrets.POLYGON_API_KEY }}
+        uses: cypress-io/github-action@v2
+        with:
+          build: yarn
+          start: yarn dev
