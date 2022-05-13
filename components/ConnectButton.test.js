@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
-import { useConnection } from "../providers/EthersProvider";
+import { useConnection } from "../providers/ConnectionProvider";
 import { ConnectButton } from "./ConnectButton";
 
 const renderComponent = (props) => render(<ConnectButton {...props} />);
@@ -12,7 +12,7 @@ const mockConnectionState = {
   connect: jest.fn(),
 };
 
-jest.mock("../providers/EthersProvider");
+jest.mock("../providers/ConnectionProvider");
 
 beforeEach(() => {
   useConnection.mockReturnValue(mockConnectionState);
