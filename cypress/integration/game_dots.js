@@ -1,11 +1,21 @@
-// check_dots.js created with Cypress
-//
-// Start writing your Cypress tests below!
-// If you're unfamiliar with how Cypress works,
-// check out the link below and learn how to write your first test:
-// https://on.cypress.io/writing-first-test
+const WIN_STATE = {
+  hasWonGame: true,
+  trophyId: "1",
+};
 
-describe("Dots Tests", () => {
+const DEFAULT_STATE = {
+  hasEnoughTokens: false,
+  hasUsedFaucet: false,
+  hasSwappedTokens: false,
+  hasVotedInPoll: false,
+  hasDeployedContract: false,
+  hasSentTokens: false,
+  hasBurnedTokens: false,
+  hasMintedNFT: false,
+  hasWonGame: false,
+};
+
+describe("Game completion dots", () => {
   it("load the default page", () => {
     cy.visit("/");
     cy.get(".game-tile").should("be.visible");
@@ -14,6 +24,7 @@ describe("Dots Tests", () => {
   });
 
   it("loads a wallet that is complete", () => {
+    cy.intercept("/api/polygon?**", WIN_STATE);
     cy.visit("/?wallet=0x2A9d8CfD86796E6A68AF9c83FD90F67CcaF1352c");
     cy.get(".game-tile.completed").should("have.length", 9);
   });
