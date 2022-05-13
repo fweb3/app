@@ -1,1 +1,1 @@
-export * from "./EthersProvider";
+export * from "./ConnectionProvider";

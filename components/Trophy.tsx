@@ -8,7 +8,6 @@ export const Trophy = (): JSX.Element => {
   const contractUrl = `https://polygonscan.com/address/${TROPHY_NFT_ADDRESS}#writeContract`;
   const openSeaUrl = `https://opensea.io/assets/matic/${TROPHY_NFT_ADDRESS}/`;
   const trophyId = gameTaskState?.["trophyId"] || "";
-
   if (parseInt(trophyId) == 0) {
     return (
       <>
