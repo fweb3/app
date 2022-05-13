@@ -154,7 +154,7 @@ export default function Home() {
             target="_blank"
             rel="noreferrer"
           >
-            <p>{query.wallet}</p>
+            <p>{ensName ?? query.wallet}</p>
           </a>
         )}
 
@@ -245,7 +245,7 @@ export default function Home() {
         <section>
           {completedTiles === 9 && activeDot == -1 && (
             <div>
-              {query.wallet && <h2>{ensName ?? account}</h2>}
+              {<h2>{ensName ?? account}</h2>}
               <GameFinish />
             </div>
           )}

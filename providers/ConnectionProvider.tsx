@@ -55,6 +55,7 @@ const ConnectionProvider = ({ children }) => {
         const currentNetwork = await provider.getNetwork();
         const tokenContract = await loadTokenContract(provider);
         const gameContract = await loadGameContract(provider);
+        const ensName = await fetchEnsName(account[0]);
         setTokenContract(tokenContract);
         setGameContract(gameContract);
         setNetwork(currentNetwork);
@@ -90,6 +91,33 @@ const ConnectionProvider = ({ children }) => {
     setProvider(null);
   };
 
+  const loadTokenContract = (provider) => {
+    const contract = new ethers.Contract(
+      FWEB3_TOKEN_ADDRESS,
+      fweb3TokenInterface.abi,
+      provider
+    );
+    return contract;
+  };
+
+  const loadGameContract = (provider) => {
+    const contract = new ethers.Contract(
+      FWEB3_GAME_ADDRESS,
+      fweb3GameInterface.abi,
+      provider
+    );
+    return contract;
+  };
+
+  const fetchEnsName = async (account) => {
+    const provider = new ethers.providers.AlchemyProvider(
+      "homestead",
+      process.env.NEXT_PUBLIC_ALCHEMY_KEY
+    );
+    const ensName = await provider.lookupAddress(account);
+    return ensName;
+  };
+
   useEffect(() => {
     if (window?.ethereum) {
       window.ethereum.on("accountsChanged", handleAccountChange);
@@ -113,6 +141,9 @@ const ConnectionProvider = ({ children }) => {
         provider,
         network,
         error,
+        tokenContract,
+        gameContract,
+        ensName,
       }}
     >
       {children}
