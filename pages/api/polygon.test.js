@@ -7,15 +7,15 @@ import {
 import { MOCK_WALLET_ADDRESS } from "../../lib/polygon/__mocks__/mockWalletAddress";
 import polygonApiHandler from "./polygon";
 
-const constantsMock = jest.requireMock("../../../lib/constants");
+const constantsMock = jest.requireMock("../../lib/constants");
 
-jest.mock("../../../lib/constants", () => ({
+jest.mock("../../lib/constants", () => ({
   POLYGON_API_KEY: "foo",
   NEXT_PUBLIC_DEBUG_ENABLE_DOTS: 0,
   NODE_ENV: "kerplunk",
 }));
 
-jest.mock("../../../lib/polygon/game");
+jest.mock("../../lib/polygon/game");
 
 afterEach(() => {
   jest.resetAllMocks();
