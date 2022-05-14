@@ -1,8 +1,12 @@
-import Head from "next/head";
+import { ToastContainer } from 'react-toastify'
+import Head from 'next/head'
+import { LoadingDots } from './LoadingDots'
 
-export const MainLayout = ({ children }) => {
+export const MainLayout = ({ children, shareImageUrl }) => {
   return (
     <>
+      <ToastContainer />
+      <LoadingDots />
       <Head>
         <title>Fweb3</title>
         <meta name="description" content="Learn and build web3" />
@@ -10,9 +14,9 @@ export const MainLayout = ({ children }) => {
         <meta content="Learn and build web3" name="description" />
         <meta content="Fweb3" property="og:title" />
         <meta content="Learn and build web3" property="og:description" />
-        {/* <meta content={shareImageUrl} property='og:image' /> */}
+        <meta content={shareImageUrl} property="og:image" />
         <meta content="Fweb3" property="twitter:title" />
-        {/* <meta content={shareImageUrl} property='twitter:image' /> */}
+        <meta content={shareImageUrl} property="twitter:image" />
         <meta property="og:type" content="website" />
         <meta content="summary_large_image" name="twitter:card" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -42,5 +46,5 @@ export const MainLayout = ({ children }) => {
         </a>
       </footer>
     </>
-  );
-};
+  )
+}

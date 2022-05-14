@@ -1,13 +1,12 @@
-import { useGameState } from "../hooks/useGameState";
-import { TROPHY_NFT_ADDRESS } from "../interfaces";
-import { getTrophyColor } from "../lib/util";
-import Image from "next/image";
+import { TROPHY_NFT_ADDRESS } from '../interfaces'
+import { getTrophyColor } from '../lib/util'
+import { useGame } from '../providers'
+import Image from 'next/image'
 
 export const Trophy = (): JSX.Element => {
-  const { gameTaskState } = useGameState();
-  const contractUrl = `https://polygonscan.com/address/${TROPHY_NFT_ADDRESS}#writeContract`;
-  const openSeaUrl = `https://opensea.io/assets/matic/${TROPHY_NFT_ADDRESS}/`;
-  const trophyId = gameTaskState?.["trophyId"] || "";
+  const { trophyId } = useGame()
+  const contractUrl = `https://polygonscan.com/address/${TROPHY_NFT_ADDRESS}#writeContract`
+  const openSeaUrl = `https://opensea.io/assets/matic/${TROPHY_NFT_ADDRESS}/`
 
   if (parseInt(trophyId) == 0) {
     return (
@@ -22,27 +21,27 @@ export const Trophy = (): JSX.Element => {
           Bronze trophy.
         </p>
       </>
-    );
+    )
   } else {
-    const trophyColor = getTrophyColor(trophyId);
+    const trophyColor = getTrophyColor(trophyId)
     return (
       <div className="trophy-container">
         <h2>You learned and built in web3!</h2>
         <p>Here&apos;s the trophy that proves it:</p>
         <a
           href={openSeaUrl + trophyId}
-          style={{ display: "block" }}
+          style={{ display: 'block' }}
           target="_blank"
           rel="noreferrer"
         >
           <Image
             alt="trophy image"
-            src={"/fweb_yearone_" + trophyColor + ".png"}
+            src={'/fweb_yearone_' + trophyColor + '.png'}
             width="500px"
             height="500px"
           />
         </a>
       </div>
-    );
+    )
   }
-};
+}
