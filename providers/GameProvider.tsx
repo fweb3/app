@@ -1,10 +1,10 @@
 import { useState, useEffect, createContext, useContext } from 'react'
-import { DEFAULT_TOAST_OPTS } from './NotificationProvider'
 import { useConnection, useLoading } from '../providers'
+import { loadGameContracts } from '../interfaces'
 import type { IGameTaskState } from '../types'
 import { DEFAULT_GAME_STATE } from '../lib'
 import { useRouter } from 'next/router'
-import { toast } from 'react-toastify'
+import { Contract } from 'ethers'
 
 interface IGameProviderState {
   gameTaskState: IGameTaskState
@@ -12,6 +12,8 @@ interface IGameProviderState {
   handleSetActiveDot: (dot: number) => void
   trophyId: string
   hasWonGame: boolean
+  gameContract: Contract
+  tokenContract: Contract
   isFetchingGameData: boolean
 }
 
@@ -22,6 +24,8 @@ const defaultGameState: IGameProviderState = {
   trophyId: '',
   hasWonGame: false,
   isFetchingGameData: false,
+  tokenContract: null,
+  gameContract: null,
 }
 
 const GameContext = createContext(defaultGameState)
@@ -30,10 +34,13 @@ const GameProvider = ({ children }) => {
   const [isFetchingGameData, setIsFetchingGameData] = useState<boolean>(false)
   const [gameTaskState, setGameTaskState] = useState<IGameTaskState>(null)
   const [hasWonGame, setHasWonGame] = useState<boolean>(false)
+  const { account, isConnected, provider } = useConnection()
+  const [tokenContract, setTokenContract] = useState(null)
+  const [gameContract, setGameContract] = useState(null)
   const [activeDot, setActiveDot] = useState<number>(-1)
   const [trophyId, setTrophyId] = useState<string>('')
-  const { account, isConnected } = useConnection()
-  const { isLoading } = useLoading()
+  const { fullscreenLoader, loadingToast, successToast, errorToast } =
+    useLoading()
   const {
     query: { wallet },
   } = useRouter()
@@ -44,16 +51,10 @@ const GameProvider = ({ children }) => {
 
   useEffect(() => {
     ;(async () => {
-      const isConnectedWithAccount =
-        (isConnected && account) || (isConnected && wallet)
-      if (!isLoading && isConnectedWithAccount) {
-        const toaster = toast.loading('Checking progress', {
-          toastId: 1,
-          ...DEFAULT_TOAST_OPTS,
-        })
-
+      if (isConnected) {
+        fullscreenLoader(true)
+        const toaster = loadingToast(1, 'Loading game state')
         try {
-          setIsFetchingGameData(true)
           // if the wallet is coming from URL use that. else use connected
           const url = `/api/polygon?wallet_address=${wallet ?? account}`
           const apiResponse = await fetch(url)
@@ -61,23 +62,16 @@ const GameProvider = ({ children }) => {
           setGameTaskState(taskState)
           setTrophyId(gameTaskState?.['trophyId'] || '')
           setHasWonGame(gameTaskState?.['hasWonGame'] || false)
-          toast.update(toaster, {
-            render: 'Success',
-            type: toast.TYPE.SUCCESS,
-            autoClose: 500,
-            isLoading: false,
-            ...DEFAULT_TOAST_OPTS,
-          })
+          const { tokenContract, gameContract } = loadGameContracts(provider)
+          setTokenContract(tokenContract)
+          setGameContract(gameContract)
+          successToast(toaster)
           setIsFetchingGameData(false)
+          fullscreenLoader(false)
         } catch (err) {
           console.error(err)
-          toast.update(toaster, {
-            render: 'An error occured',
-            type: toast.TYPE.ERROR,
-            autoClose: 2000,
-            ...DEFAULT_TOAST_OPTS,
-          })
-          setIsFetchingGameData(false)
+          errorToast(toaster)
+          fullscreenLoader(false)
         }
       }
     })()
@@ -92,6 +86,8 @@ const GameProvider = ({ children }) => {
         trophyId,
         hasWonGame,
         isFetchingGameData,
+        gameContract,
+        tokenContract,
       }}
     >
       {children}

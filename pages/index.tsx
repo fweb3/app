@@ -123,21 +123,21 @@ export default function Home() {
     }, 0)
     setCompletionStates(completionStates)
     setCompletedTiles(completedTiles)
-    if (gameTaskState?.hasWonGame || parseInt(trophyId) >= 1) {
+    if (hasWonGame || parseInt(trophyId) >= 1) {
       const trophyColor = getTrophyColor(trophyId)
       const shareText = `🏆 I won a ${trophyColor} trophy in Fweb3!`
       const shareImageUrl = `https://fweb3.xyz/fweb_yearone_${trophyColor}.png`
       setShareImageUrl(shareImageUrl)
       setShareText(shareText)
     }
-  }, [gameTaskState, isConnected, trophyId])
+  }, [gameTaskState, isConnected, trophyId, hasWonGame])
 
   return (
     <MainLayout shareImageUrl={shareImageUrl}>
       <nav>
         <h1>fweb3</h1>
         <p>
-          {gameTaskState?.hasWonGame ? (
+          {hasWonGame ? (
             '🏆'
           ) : (
             <>
@@ -147,7 +147,7 @@ export default function Home() {
           )}
         </p>
 
-        {query?.wallet !== account && (
+        {
           <a
             href={'https://polygonscan.com/address/' + query.wallet}
             target="_blank"
@@ -155,7 +155,7 @@ export default function Home() {
           >
             <p>{ensName ?? query.wallet}</p>
           </a>
-        )}
+        }
 
         {isConnected || query.wallet ? (
           <TokenBalance
@@ -180,7 +180,7 @@ export default function Home() {
                 <Dot
                   key={id}
                   id={id}
-                  completed={hasWonGame || !!completionStates?.[position]}
+                  completed={hasWonGame}
                   link={link}
                   position={position}
                   toolTip={toolTip}
@@ -200,7 +200,7 @@ export default function Home() {
               let finalShareText
 
               for (let i = 0; i < gameTiles.length; i++) {
-                completedGameTiles.push(
+                completionStates.push(
                   gameTiles[i].classList.contains('completed') || hasWonGame
                     ? 1
                     : 0
@@ -242,13 +242,13 @@ export default function Home() {
           </a>
         </section>
         <section>
-          {completedTiles === 9 && activeDot == -1 && (
+          {hasWonGame && (
             <div>
               {<h2>{ensName ?? account}</h2>}
               <GameFinish />
             </div>
           )}
-          {(activeDot === -1 || activeDot === 0) && completedTiles !== 9 && (
+          {activeDot >= 1 && completedTiles !== 9 && (
             <>
               <h2>Learn and build in web3.</h2>
               <p>
@@ -454,16 +454,14 @@ export default function Home() {
               </p>
             </>
           )}
-          {!completionStates?.[0] && !query.wallet && (
+          {!isConnected && (
             <div>
               <p>
                 It&apos;s free to play. Login with MetaMask to get started
                 (you&apos;ll be prompted to install it if you don&apos;t have it
                 already):
               </p>
-              <p>
-                <ConnectButton />
-              </p>
+              <ConnectButton />
               {isConnected && network?.chainId !== 137 && (
                 <p style={{ color: '#f55' }}>
                   Switch to Polygon via MetaMask to play this game.
@@ -471,7 +469,7 @@ export default function Home() {
               )}
             </div>
           )}
-          {completedTiles !== 9 && (
+          {!hasWonGame && (
             <p style={{ color: '#fff', fontWeight: 'bold' }}>
               Stuck? Click the dots to the left to see further instructions, or
               check out the Walkthrough below.

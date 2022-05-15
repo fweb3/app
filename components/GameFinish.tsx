@@ -1,70 +1,89 @@
-import { useConnection } from "../providers";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import { Trophy } from "./Trophy";
+import { useConnection, useGame, useLoading } from '../providers'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
+import { Trophy } from './Trophy'
+import { ContractFunction } from 'ethers'
 
 export const GameFinish = () => {
-  const [transactionFinished, setTransactionFinished] = useState(false);
-  const { isConnected, account, gameContract } = useConnection();
-  const [isVerified, setIsVerified] = useState(false);
-  const [isWinner, setIsWinner] = useState(false);
-  const [isJudge, setIsJudge] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const { query } = useRouter();
+  const [transaction, setTransaction] = useState(false)
+  const [isVerified, setIsVerified] = useState(false)
+  const {
+    isLoading,
+    loadingToast,
+    successToast,
+    fullscreenLoader,
+    errorToast,
+  } = useLoading()
+  const { isConnected, account } = useConnection()
+  const [isWinner, setIsWinner] = useState(false)
+  const [isJudge, setIsJudge] = useState(false)
+  const { gameContract } = useGame()
+  const { query } = useRouter()
 
-  const seekVerification = async () => {
-    const tx = await gameContract.seekVerification();
-    setLoading(true);
-    await tx.wait();
-    setLoading(false);
-    setTransactionFinished(true);
-  };
+  const sendTransaction = async (
+    method: ContractFunction,
+    args: string = ''
+  ) => {
+    const toaster = loadingToast(3)
+    try {
+      fullscreenLoader(true)
+      const tx = await method(args)
+      const receipt = await tx.wait()
+      setTransaction(receipt)
+      fullscreenLoader(false)
+      successToast(toaster)
+    } catch (err) {
+      console.error(err)
+      errorToast(toaster)
+    }
+  }
+  const handleSeekVerification = async () => {
+    await sendTransaction(gameContract.seekVerification)
+  }
 
-  const win = async () => {
-    setLoading(true);
-    const tx = await gameContract.win();
-    await tx.wait();
-    setLoading(false);
-    setTransactionFinished(true);
-  };
+  const handleWin = async () => {
+    await sendTransaction(gameContract.win)
+  }
 
-  const verify = async () => {
-    setLoading(true);
-    const tx = await gameContract.verifyPlayer(query.wallet);
-    await tx.wait();
-    setLoading(false);
-    setTransactionFinished(true);
-  };
+  const handleVerify = async () => {
+    await sendTransaction(
+      gameContract.verifyPlayer,
+      query.wallet.toString() ?? account
+    )
+  }
 
   useEffect(() => {
-    (async () => {
-      try {
-        if (isConnected) {
-          const user = query?.wallet ?? account;
-          const verifiedToWin = await gameContract.hasBeenVerifiedToWin(user);
-          const isJudge = await gameContract.isJudge(account);
-          const isWinner = await gameContract.isWinner(user);
-          setIsVerified(verifiedToWin);
-          setIsWinner(isWinner);
-          setIsJudge(isJudge);
+    ;(async () => {
+      if (isConnected && gameContract) {
+        fullscreenLoader(true)
+        const toaster = loadingToast(2, 'Checking win state...')
+        try {
+          const user = query?.wallet ?? account
+          const verifiedToWin = await gameContract.hasBeenVerifiedToWin(user)
+          const isJudge = await gameContract.isJudge(account)
+          const isWinner = await gameContract.isWinner(user)
+          setIsVerified(verifiedToWin)
+          setIsWinner(isWinner)
+          setIsJudge(isJudge)
+          successToast(toaster)
+          fullscreenLoader(false)
+        } catch (err) {
+          console.error(err)
+          errorToast(toaster, 'Network congested')
+          fullscreenLoader(false)
         }
-      } catch (err) {
-        console.error(err);
       }
-    })();
-  }, [isConnected, account, query, gameContract]);
+    })()
+  }, [isConnected, account, query, gameContract]) // eslint-disable-line
 
-  if (loading) {
-    return <button className="disabled">Waiting for confirmation...</button>;
-    // User is not verified and on their own page
-  } else if (!isVerified && (!query.wallet || query.wallet === account)) {
-    if (transactionFinished) {
+  if (!isVerified && (!query.wallet || query.wallet === account)) {
+    if (transaction) {
       return (
         <p>
           Please wait for a judge to verify you. If it&apos;s been awhile, ping
           #finish-line to remind them.
         </p>
-      );
+      )
     }
     return (
       <>
@@ -73,43 +92,43 @@ export const GameFinish = () => {
           Once a judge verifies you, you&apos;ll be able to claim your 1,000
           $FWEB3 tokens.
         </p>
-        <button onClick={seekVerification} className="pulse">
+        <button onClick={handleSeekVerification} className="pulse">
           Seek verification
         </button>
       </>
-    );
+    )
     // User is a judge and page account is not verified
   } else if (!isVerified && isJudge) {
-    if (transactionFinished) {
-      return <p>You can remind this player to claim their tokens.</p>;
+    if (transaction) {
+      return <p>You can remind this player to claim their tokens.</p>
     }
     return (
       <>
         <p>If the nine dots on the left are lit up:</p>
-        <button onClick={verify} className="pulse">
+        <button onClick={handleVerify} className="pulse">
           Verify
         </button>
       </>
-    );
+    )
   } else if (
     isVerified &&
     !isWinner &&
     (!query.wallet || query.wallet === account)
   ) {
-    if (transactionFinished) {
+    if (transaction) {
       return (
         <>
           <p>Your tokens are en route...</p>
         </>
-      );
+      )
     }
     return (
       <>
-        <button onClick={win} className="pulse">
+        <button onClick={handleWin} className="pulse">
           Claim 1,000 $FWEB3 tokens
         </button>
       </>
-    );
+    )
   } else if (isWinner) {
     return (
       <>
@@ -122,8 +141,8 @@ export const GameFinish = () => {
           Or help us build by chiming into the #building channel on Discord.
         </p>
       </>
-    );
+    )
   } else {
-    return <></>;
+    return <></>
   }
-};
+}

@@ -5,7 +5,7 @@ import { LoadingDots } from './LoadingDots'
 export const MainLayout = ({ children, shareImageUrl }) => {
   return (
     <>
-      <ToastContainer />
+      <ToastContainer limit={2} />
       <LoadingDots />
       <Head>
         <title>Fweb3</title>
