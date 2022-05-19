@@ -1,20 +1,20 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from 'next'
 
 import type {
   IRequestValidationResponse,
   IGameTaskState,
   IAPIRequestQueryParams,
-} from "../../types";
+} from '../../types'
 import {
   NEXT_PUBLIC_DEBUG_ENABLE_DOTS,
   NODE_ENV,
   DEBUG_ENABLE,
-} from "../../lib/constants";
+} from '../../lib/constants'
 import {
   fetchCurrentGameState,
   fetchDebugGameState,
   validateRequest,
-} from "../../lib";
+} from '../../lib'
 
 export default async function handler(
   req: NextApiRequest,
@@ -25,29 +25,19 @@ export default async function handler(
       wallet: debugWallet,
       debug,
       wallet_address: walletAddress,
-    }: IAPIRequestQueryParams = req.query;
-    const { status, error }: IRequestValidationResponse = validateRequest(req);
+    }: IAPIRequestQueryParams = req.query
+    const { status, error }: IRequestValidationResponse = validateRequest(req)
 
     if (status !== 200) {
-      return res.status(status).json(error);
+      return res.status(status).json(error)
     }
 
-    if (
-      (NODE_ENV !== "production" || DEBUG_ENABLE) &&
-      NEXT_PUBLIC_DEBUG_ENABLE_DOTS &&
-      debug
-    ) {
-      const debugTaskState: IGameTaskState = await fetchDebugGameState(
-        NEXT_PUBLIC_DEBUG_ENABLE_DOTS
-      );
-      return res.json(debugTaskState);
-    }
     const gameTaskState: IGameTaskState = await fetchCurrentGameState(
       debugWallet ?? walletAddress
-    );
-    return res.json(gameTaskState);
+    )
+    return res.json(gameTaskState)
   } catch (e) {
-    console.error(e);
-    return res.status(e?.status || 500).send(e?.message || e);
+    console.error(e)
+    return res.status(e?.status || 500).send(e?.message || e)
   }
 }

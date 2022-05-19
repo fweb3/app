@@ -1,8 +1,14 @@
-import { TROPHY_NFT_ADDRESS } from '../interfaces'
-import { getTrophyColor } from '../lib/util'
-import { useGame } from '../providers'
+import { TROPHY_NFT_ADDRESS } from '../../interfaces'
+import { getTrophyColor } from '../../lib/util'
+import { useGame } from '../../providers'
 import Image from 'next/image'
-
+// if (hasWonGame || parseInt(trophyId) >= 1) {
+//   const trophyColor = getTrophyColor(trophyId)
+//   const shareText = `🏆 I won a ${trophyColor} trophy in Fweb3!`
+//   const shareImageUrl = `https://fweb3.xyz/fweb_yearone_${trophyColor}.png`
+//   setShareImageUrl(shareImageUrl)
+//   setShareText(shareText)
+// }
 export const Trophy = (): JSX.Element => {
   const { trophyId } = useGame()
   const contractUrl = `https://polygonscan.com/address/${TROPHY_NFT_ADDRESS}#writeContract`

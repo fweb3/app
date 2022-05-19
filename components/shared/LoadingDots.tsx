@@ -1,6 +1,5 @@
 import styled, { keyframes } from 'styled-components'
-import { useLoading } from '../../providers'
-import { COLORS } from '../../styles'
+import { COLORS } from '../styles'
 
 const FadeInOut = keyframes`
   0% {
@@ -55,15 +54,14 @@ const DotContainer = styled.div`
 const DOT_SIZE = '50px'
 
 const Dot = styled((props) => <div {...props} $s={props.$s} />)`
-  background: ${COLORS.pinkish};
+  background: ${COLORS.violet};
   width: ${DOT_SIZE};
   height: ${DOT_SIZE};
   border-radius: 50%;
   animation: ${FadeInOut} ${(props) => `${props.$s}s`} infinite;
 `
 
-export const LoadingDots = () => {
-  const { isLoading } = useLoading()
+export const LoadingDots = ({ isLoading }) => {
   return isLoading ? (
     <OutterContainer>
       <InnerContainer $isLoading={isLoading}>

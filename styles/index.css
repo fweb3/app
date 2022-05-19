@@ -1,0 +1,151 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Courier New', Courier, monospace;
+  background: black;
+  color: blue;
+  font-size: 22px;
+  /* line-height: 1.5; */
+}
+* {
+  box-sizing: border-box;
+}
+
+.open {
+  background: url('../public/chest_open.png') top left;
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+.game-grid {
+  /* display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 1.9rem;
+  margin: 1rem auto; */
+}
+
+.game-tile {
+  /* padding: 20px;
+  background: #454545;
+  border-radius: 99px;
+  position: relative;
+  cursor: pointer; */
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.game-tile > .tooltip {
+  /* box-sizing: border-box;
+  position: absolute;
+  background: white;
+  border-radius: 10px;
+  color: black;
+  box-shadow: 5px 5px 0 black;
+  display: none;
+  padding: 20px;
+  font-weight: bold;
+  z-index: 10;
+  width: 220px;
+  left: 50%;
+  margin-left: -110px;
+  bottom: 100%;
+  margin-bottom: 30px;
+  font-size: 0.75rem;
+  pointer-events: none; */
+}
+
+/* .game-tile:hover > .tooltip {
+  display: block;
+} */
+
+/* .completed {
+  background: #ff95ee;
+} */
+
+.completed:after {
+  /* position: absolute;
+  content: "";
+  display: block;
+  background: url("../public/lit_dot.png") top left;
+  background-size: contain;
+  background-repeat: no-repeat;
+  left: 50%;
+  top: 50%;
+  margin-left: -38px;
+  margin-top: -33px;
+
+  width: 72px;
+  height: 72px; */
+}
+
+button {
+  /* margin-top: 2rem; */
+  /* border-radius: 99px;
+  text-decoration: none;
+  display: inline;
+  padding: 15px 30px;
+  background: #ff95ee;
+  color: black;
+  cursor: pointer; */
+}
+
+.active {
+  background: rgb(247, 22, 209);
+}
+
+.pulse {
+  box-shadow: 0 0 0 0 rgba(255, 149, 238, 1);
+  transform: scale(1);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.99);
+    box-shadow: 0 0 0 0 rgba(255, 149, 238, 0.7);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 20px rgba(255, 149, 238, 0);
+  }
+
+  100% {
+    transform: scale(0.99);
+    box-shadow: 0 0 0 0 rgba(255, 149, 238, 0);
+  }
+}
+
+.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.share-button {
+  /* margin: 5rem 1rem 1rem;
+  color: white;
+  display: block;
+  text-align: center;
+  position: relative;
+  z-index: 3; */
+}
+
+pre {
+  /* margin: 2rem 0 0;
+  background: #333;
+  color: #999;
+  padding: 1rem;
+  border-radius: 10px; */
+}
+
+.trophy-container {
+  /* display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; */
+}

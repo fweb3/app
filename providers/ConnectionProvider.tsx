@@ -1,18 +1,21 @@
 declare let window: any
 
-import { createContext, useContext, useEffect, useState } from 'react'
-import { createEthersConnection } from '../interfaces'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { createEthersConnection, fetchEnsName } from '../interfaces'
 import { useLoading } from './LoadingProvider'
+import { toast } from 'react-toastify'
 import { providers } from 'ethers'
 
 interface IConnectionContext {
   isConnected: boolean
-  connect: () => void
+  connect: (message: string) => void
   account: string
   provider: providers.Provider
   network: providers.Network
-  isConnecting: boolean
   ensName: string
+  displayName: string
+  isConnecting: boolean
+  handleDisconnect: () => void
 }
 
 const defaultConnectionContext: IConnectionContext = {
@@ -21,77 +24,105 @@ const defaultConnectionContext: IConnectionContext = {
   account: '',
   provider: null,
   network: null,
-  isConnecting: false,
   ensName: '',
+  displayName: '',
+  isConnecting: false,
+  handleDisconnect: () => {},
 }
 
 const ConnectionContext = createContext(defaultConnectionContext)
 
 const ConnectionProvider = ({ children }) => {
-  const {
-    isLoading,
-    fullscreenLoader,
-    loadingToast,
-    successToast,
-    errorToast,
-  } = useLoading()
-  const [isConnecting, setIsConnecting] = useState<boolean>(false)
+  const [initialized, setInitialized] = useState<boolean>(false)
   const [isConnected, setIsConnected] = useState<boolean>(false)
+  const [displayName, setDisplayName] = useState<string>('')
+  const [isConnecting, setIsConnecting] = useState(false)
+  const { isLoading, fullscreenLoader } = useLoading()
   const [account, setAccount] = useState<string>('')
   const [ensName, setEnsName] = useState<string>('')
   const [provider, setProvider] = useState(null)
   const [network, setNetwork] = useState(null)
+  const toastId = useRef(null)
 
-  const connect = async () => {
+  const handleAccountLookup = async (newAccount: string) => {
+    const ensName = await fetchEnsName('homestead', newAccount)
+    setAccount(newAccount)
+    setEnsName(ensName)
+    const displayName = ensName ?? `${account.substring(0, 6)}...`
+    setDisplayName(displayName)
+  }
+
+  const connect = async (connectingMessage: string = 'Connecting') => {
     if (!isLoading && window?.ethereum) {
-      fullscreenLoader(true)
-      const toaster = loadingToast(0, 'Connecting...')
+      toastId.current = toast.loading(connectingMessage, {
+        autoClose: 1000,
+      })
       try {
         setIsConnecting(true)
+        fullscreenLoader(true)
         const { provider, account, currentNetwork, ensName } =
           await createEthersConnection()
+        setProvider(provider)
         setNetwork(currentNetwork)
         setAccount(account)
-        setProvider(provider)
         setEnsName(ensName)
-        setIsConnecting(false)
+        const displayName = ensName ?? `${account.substring(0, 6)}...`
+        setDisplayName(displayName)
         const isConnected = !!provider && !!account && !!currentNetwork?.chainId
         setIsConnected(isConnected)
-        successToast(toaster)
         fullscreenLoader(false)
+        setInitialized(true)
+        setIsConnecting(false)
+        toast.update(toastId.current, {
+          render: 'Connected!',
+          type: toast.TYPE.SUCCESS,
+          isLoading: false,
+          autoClose: 1000,
+        })
       } catch (err) {
         console.error(err)
-        errorToast(toaster)
-        fullscreenLoader(false)
+        toast.update(toastId.current, {
+          render: err.message,
+          type: toast.TYPE.ERROR,
+          isLoading: false,
+          autoClose: 1000,
+        })
+        resetState()
       }
     }
   }
 
   const handleAccountChange = async (accounts) => {
     console.log('ACCOUNT CHANGE EVENT')
-    if (!account && accounts?.[0] !== account) {
-      setAccount(account[0])
-      successToast('Account changed!')
+    if (initialized && accounts?.[0] !== account) {
+      handleAccountLookup(accounts[0])
     }
     if (accounts.length === 0) {
       handleDisconnect()
     }
   }
 
-  const handleChainChange = () => {
+  const handleChainChange = (chainId) => {
     console.log('CHAIN CHANGE EVENT')
-    if (window?.location) {
+    if (initialized && chainId !== network?.chainId) {
       window.location.reload()
     }
   }
 
-  const handleDisconnect = () => {
+  const resetState = () => {
     setIsConnected(false)
     setEnsName('')
     setNetwork(null)
     setAccount(null)
+    setDisplayName('')
     setProvider(null)
-    successToast('Disconnected')
+    fullscreenLoader(false)
+    setInitialized(false)
+  }
+
+  const handleDisconnect = () => {
+    resetState()
+    toast.success('Disconnected', { autoClose: 1000 })
   }
 
   useEffect(() => {
@@ -111,12 +142,14 @@ const ConnectionProvider = ({ children }) => {
     <ConnectionContext.Provider
       value={{
         isConnected,
-        isConnecting,
         connect,
         account,
         provider,
         network,
         ensName,
+        displayName,
+        isConnecting,
+        handleDisconnect,
       }}
     >
       {children}

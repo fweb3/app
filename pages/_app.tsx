@@ -1,18 +1,19 @@
-import type { AppProps } from 'next/app'
 import { ConnectionProvider, GameProvider, LoadingProvider } from '../providers'
+import type { AppProps } from 'next/app'
 
 import 'react-toastify/dist/ReactToastify.css'
-import '../styles/globals.css'
+import '../styles/index.css'
+import { useEffect } from 'react'
 
 function NextWeb3App({ Component, pageProps }: AppProps) {
   return (
-    <ConnectionProvider>
-      <LoadingProvider>
+    <LoadingProvider>
+      <ConnectionProvider>
         <GameProvider>
           <Component {...pageProps} />
         </GameProvider>
-      </LoadingProvider>
-    </ConnectionProvider>
+      </ConnectionProvider>
+    </LoadingProvider>
   )
 }
 
