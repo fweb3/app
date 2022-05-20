@@ -1,24 +1,15 @@
-import { ethers } from 'ethers'
+import { DEFAULT_WON_GAME_STATE } from '../constants'
 import { getAddress } from 'ethers/lib/utils'
-
+import { ethers } from 'ethers'
 import type {
-  IRequestValidationResponse,
-  IPolygonBalanceResponse,
-  IPolygonDataResponse,
-  IWalletTXGameTasks,
-  IERC20GameTasks,
-  IGameTaskState,
-  IPolygonData,
   IAPIRequest,
-} from '../../types'
-import { DEFAULT_WON_GAME_STATE, DEBUG_ENABLE } from '../constants'
-import {
-  FAUCET_ADDRESSES,
-  SWAP_ROUTER_ADDRESS,
-  GENESYS_ADDRESS,
-  POLL_ADDRESS,
-  BURN_ADDRESS,
-} from '../../interfaces'
+  IPolygonBalanceResponse,
+  IPolygonData,
+  IPolygonDataResponse,
+  IRequestValidationResponse,
+} from './index.d'
+
+import { loadAddress } from '../../interfaces'
 import {
   fetchTrophyTransactions,
   fetchWalletTokenBalance,
@@ -27,6 +18,8 @@ import {
   fetchERC20Txs,
   fetchNftsTxs,
 } from './api'
+
+import { IGameTaskState } from '../../interfaces/game'
 
 export const validateRequest = (
   req: IAPIRequest
@@ -67,11 +60,11 @@ export const checkHasWonGame = async (
   const rawResult: IPolygonDataResponse = await fetchTrophyTransactions(
     walletAddress
   )
-  _checkStatus({ ...rawResult, apiCall: 'trophyTxs' })
   const { result: trophyTxs }: { result: IPolygonData[] } = rawResult
   const tokenBalance: string = await _walletBalance(walletAddress)
+  const genesysAddress = loadAddress('genesys')
   const trophy =
-    trophyTxs?.filter((tx) => tx.from === GENESYS_ADDRESS)[0] || null
+    trophyTxs?.filter((tx) => tx.from === genesysAddress[0])[0] || null
 
   if (!trophy) {
     return null
@@ -90,9 +83,9 @@ export const checkHasWonGame = async (
 export const currentWalletGameState = async (
   walletAddress: string
 ): Promise<IGameTaskState> => {
-  const walletTxCompletedItems: IWalletTXGameTasks =
+  const walletTxCompletedItems: IGameTaskState =
     await _checkWalletTxCompletedItems(walletAddress)
-  const erc20CompletedItems: IERC20GameTasks = await _checkERC20CompletedItems(
+  const erc20CompletedItems: IGameTaskState = await _checkERC20CompletedItems(
     walletAddress
   )
   const tokenBalance: string = await _walletBalance(walletAddress)
@@ -111,7 +104,6 @@ export const _walletBalance = async (
   const rawResult: IPolygonBalanceResponse = await fetchWalletTokenBalance(
     walletAddress
   )
-  _checkStatus({ ...rawResult, apiCall: 'walletTokenBalance' })
   const { result: walletBalance }: { result: string } = rawResult
   return walletBalance ? walletBalance : '0'
 }
@@ -120,20 +112,18 @@ export const _checkHasMintedNTF = async (
   walletAddress: string
 ): Promise<boolean> => {
   const rawResult: IPolygonDataResponse = await fetchNftsTxs(walletAddress)
-  _checkStatus({ ...rawResult, apiCall: 'nftsTxs' })
   const { result: nftsTx }: { result: IPolygonData[] } = rawResult
-  return nftsTx?.filter((tx) => tx.from === GENESYS_ADDRESS).length >= 1
+  const genesysAddress = loadAddress('genesys')
+  return nftsTx?.filter((tx) => tx.from === genesysAddress[0]).length >= 1
 }
 
 const _checkWalletTxCompletedItems = async (
   walletAddress: string
-): Promise<IWalletTXGameTasks> => {
+): Promise<IGameTaskState> => {
   const rawResult: IPolygonDataResponse = await fetchWalletsTxs(walletAddress)
-  _checkStatus({ ...rawResult, apiCall: 'walletTxs' })
   const rawResult2: IPolygonDataResponse = await fetchWalletsInternalTxs(
     walletAddress
   )
-  _checkStatus({ ...rawResult2, apiCall: 'walletInternalTxs' })
   const { result: walletsTxs }: { result: IPolygonData[] } = rawResult
   const { result: walletsInternalTxs }: { result: IPolygonData[] } = rawResult2
   return {
@@ -147,41 +137,34 @@ const _checkWalletTxCompletedItems = async (
 
 // FIX ME check both matic and fweb3 faucets
 const _checkHasUsedFweb3Faucet = (walletsTxs: IPolygonData[]): boolean => {
-  const faucetAddress1 = FAUCET_ADDRESSES[0].toLowerCase()
-  const faucetAddress2 = FAUCET_ADDRESSES[1].toLowerCase()
-  const newFweb3Faucet = '0x32Ba4765d6538944ef4324E55B94797a422C72F9'
-  const newMaticFaucet = '0x351050Ac0AdC9bff0622c1c0525b3322C328517f'
+  const fweb3FaucetAddresses = loadAddress('fweb3_token_faucet')
 
   return (
-    walletsTxs?.filter(
-      (tx) =>
-        tx.to.toLowerCase() === faucetAddress1.toLowerCase() ||
-        tx.to.toLowerCase() === faucetAddress2.toLowerCase() ||
-        tx.to.toLowerCase() === newFweb3Faucet.toLowerCase() ||
-        tx.to.toLowerCase() === newMaticFaucet.toLowerCase()
+    walletsTxs?.filter((tx) =>
+      fweb3FaucetAddresses
+        .map((i) => i.toLowerCase())
+        .includes(tx.to.toLowerCase())
     ).length >= 1
   )
 }
 
 const _checkHasUsedMaticFaucet = (walletsTxs: IPolygonData[]): boolean => {
-  const newFweb3Faucet = '0x32Ba4765d6538944ef4324E55B94797a422C72F9'
-  const newMaticFaucet = '0x351050Ac0AdC9bff0622c1c0525b3322C328517f'
+  const maticFaucetAddresses = loadAddress('fweb3_matic_faucet')
 
   return (
-    walletsTxs?.filter(
-      (tx) =>
-        tx.from.toLowerCase() === FAUCET_ADDRESSES[0].toLowerCase() ||
-        tx.from === FAUCET_ADDRESSES[1].toLowerCase() ||
-        tx.from === newMaticFaucet.toLowerCase() ||
-        tx.from === newFweb3Faucet.toLowerCase()
+    walletsTxs?.filter((tx) =>
+      maticFaucetAddresses
+        .map((i) => i.toLowerCase())
+        .includes(tx.from.toLowerCase())
     ).length >= 1
   )
 }
 
 const _checkHasSwappedTokens = (walletsTxs: IPolygonData[]): boolean => {
+  const swapAddress = loadAddress('swap_router')
   return (
     walletsTxs?.filter(
-      (tx) => tx.to.toLowerCase() === SWAP_ROUTER_ADDRESS.toLowerCase()
+      (tx) => tx.to.toLowerCase() === swapAddress[0].toLowerCase()
     ).length >= 1
   )
 }
@@ -190,18 +173,18 @@ const _checkHasDeployedContract = (walletsTxs: IPolygonData[]): boolean => {
 }
 
 const _checkHasVotedInPoll = (walletsTxs: IPolygonData[]): boolean => {
+  const pollAddress = loadAddress('fweb3_poll')
   return (
     walletsTxs?.filter(
-      (tx) => tx.to.toLowerCase() === POLL_ADDRESS.toLowerCase()
+      (tx) => tx.to.toLowerCase() === pollAddress[0].toLowerCase()
     ).length >= 1
   )
 }
 
 const _checkERC20CompletedItems = async (
   walletAddress: string
-): Promise<IERC20GameTasks> => {
+): Promise<IGameTaskState> => {
   const rawResult: IPolygonDataResponse = await fetchERC20Txs(walletAddress)
-  _checkStatus({ ...rawResult, apiCall: 'erc20Txs' })
   const { result: erc20Txs }: { result: IPolygonData[] } = rawResult
   return {
     hasSentTokens: _validateHasSentTokens(erc20Txs, walletAddress),
@@ -228,24 +211,13 @@ const _validateHasBurnedTokens = (
   walletAddress: string
 ): boolean => {
   const found: IPolygonData[] = txs?.filter((tx) => {
+    const burnAddress = loadAddress('burn')
     return (
       tx.value &&
       tx.from.toLowerCase() === walletAddress.toLowerCase() &&
-      tx.to.toLowerCase() === BURN_ADDRESS.toLowerCase() &&
+      tx.to.toLowerCase() === burnAddress[0].toLowerCase() &&
       parseInt(tx.value) > 0
     )
   })
   return found?.length >= 1
-}
-
-const _checkStatus = ({
-  status,
-  message,
-  result,
-  apiCall,
-}: IPolygonDataResponse | IPolygonBalanceResponse) => {
-  if (DEBUG_ENABLE && (!status || status !== '1')) {
-    const json = JSON.stringify({ status, message, result }, null, 2)
-    console.debug(`Bad Polygon API Response: ${apiCall}\n${json}`)
-  }
 }

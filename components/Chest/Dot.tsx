@@ -1,6 +1,6 @@
-import styled from 'styled-components'
+import { COLORS, MEDIA_QUERY } from '../styles'
 import { useGame } from '../../providers'
-import { COLORS } from '../styles'
+import styled from 'styled-components'
 
 const StyledDot = styled((props) => <div {...props} />)`
   position: fixed;
@@ -9,15 +9,16 @@ const StyledDot = styled((props) => <div {...props} />)`
   background: url('./lit_dot.png') top left;
   background-size: contain;
   background-repeat: no-repeat;
-  top: ${(props) => `${props.$position.dot.md[1]}px`};
-  left: ${(props) => `${props.$position.dot.md[0]}px`};
-  width: 60px;
-  height: 60px;
-  @media only screen and (max-width: 814px) {
-    width: 35px;
-    height: 35px;
-    top: ${(props) => `${props.$position.dot.sm?.[1]}px`};
-    left: ${(props) => `${props.$position.dot.sm?.[0]}px`};
+  top: ${(props) => `${props.$position.dot.sm[1]}px`};
+  left: ${(props) => `${props.$position.dot.sm[0]}px`};
+  width: 50px;
+  height: 50px;
+
+  @media only screen and (min-width: ${MEDIA_QUERY.wide}) {
+    width: 80px;
+    height: 80px;
+    top: ${(props) => `${props.$position.dot.lg?.[1]}px`};
+    left: ${(props) => `${props.$position.dot.lg?.[0]}px`};
   }
 `
 const Tooltip = styled((props) => <div {...props} />)`
@@ -38,8 +39,30 @@ const Tooltip = styled((props) => <div {...props} />)`
     display: block;
   }
 `
+interface IDotProps {
+  idx: number
+  tooltip: string
+  position: {
+    dot?: {
+      sm?: number[]
+      md?: number[]
+      lg: number[]
+    }
+    tooltip?: {
+      sm?: number[]
+      md?: number[]
+      lg: number[]
+    }
+  }
+  isCompleted: boolean
+}
 
-export const Dot = ({ idx, position, tooltip, isCompleted }) => {
+export const Dot = ({
+  idx,
+  position,
+  tooltip,
+  isCompleted,
+}: IDotProps): JSX.Element => {
   const { handleSetActiveDot } = useGame()
   return (
     <>

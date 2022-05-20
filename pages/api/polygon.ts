@@ -5,16 +5,8 @@ import type {
   IGameTaskState,
   IAPIRequestQueryParams,
 } from '../../types'
-import {
-  NEXT_PUBLIC_DEBUG_ENABLE_DOTS,
-  NODE_ENV,
-  DEBUG_ENABLE,
-} from '../../lib/constants'
-import {
-  fetchCurrentGameState,
-  fetchDebugGameState,
-  validateRequest,
-} from '../../lib'
+
+import { fetchCurrentGameState, validateRequest } from '../../lib'
 
 export default async function handler(
   req: NextApiRequest,
@@ -23,7 +15,6 @@ export default async function handler(
   try {
     const {
       wallet: debugWallet,
-      debug,
       wallet_address: walletAddress,
     }: IAPIRequestQueryParams = req.query
     const { status, error }: IRequestValidationResponse = validateRequest(req)

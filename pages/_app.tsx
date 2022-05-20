@@ -2,8 +2,8 @@ import { ConnectionProvider, GameProvider, LoadingProvider } from '../providers'
 import type { AppProps } from 'next/app'
 
 import 'react-toastify/dist/ReactToastify.css'
-import '../styles/index.css'
-import { useEffect } from 'react'
+import '../public/index.css'
+import 'normalize.css'
 
 function NextWeb3App({ Component, pageProps }: AppProps) {
   return (

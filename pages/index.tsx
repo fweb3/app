@@ -1,16 +1,23 @@
-import { ContentSection } from '../components/GameGrid/ContentSection'
+import { ContentSection } from '../components/GameViews/ContentSection'
 import { ChestSection } from '../components/Chest/ChestSection'
 import { Layout } from '../components/shared/Layout'
+import { MEDIA_QUERY, SPACING } from '../components/styles'
 import styled from 'styled-components'
 
 const GameGrid = styled.div`
   display: grid;
-  @media only screen and (min-width: 600px) {
-    justify-items: center;
-  }
-  @media only screen and (min-width: 1440px) {
+  justify-items: center;
+  align-items: center;
+
+  @media only screen and (min-width: ${MEDIA_QUERY.smallDesk}) {
     grid-template-columns: 1fr 1fr;
-    margin-top: 1rem;
+    align-items: flex-start;
+  }
+
+  @media only screen and (min-width: ${MEDIA_QUERY.wide}) {
+    grid-template-colums: auto auto;
+    align-items: center;
+    justify-items: flex-start;
   }
 `
 

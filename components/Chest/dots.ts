@@ -10,48 +10,58 @@ export enum DotKey {
   hasDeployedContract = 'hasDeployedContract',
 }
 
-export interface IDotsMap {
-  [idx: number]: {
-    task: string
-    tooltip: string
-    isCompleted: boolean
-    position: {
-      tooltip: {
-        lg?: number[]
-        md?: number[]
-        sm?: number[]
-      }
-      dot: {
-        lg?: number[]
-        md?: number[]
-        sm?: number[]
-      }
+export interface IDot {
+  task: string
+  tooltip: string
+  isCompleted: boolean
+  position: {
+    tooltip: {
+      lg?: number[]
+      md?: number[]
+      sm?: number[]
+    }
+    dot: {
+      lg?: number[]
+      md?: number[]
+      sm?: number[]
     }
   }
 }
 
-const ROW_1 = 149
-const ROW_2 = 217
-const ROW_3 = 287
-const COL_1 = 300
-const COL_2 = 370
-const COL_3 = 438
+export interface IDotsMap {
+  [idx: number]: IDot
+}
 
-const SM_ROW_1 = 91
-const SM_ROW_2 = 134
-const SM_ROW_3 = 176
-const SM_COL_1 = 185
-const SM_COL_2 = 227
-const SM_COL_3 = 269
+const LG_ROW_1 = 187
+const LG_ROW_2 = 276
+const LG_ROW_3 = 363
+const LG_COL_1 = 380
+const LG_COL_2 = 470
+const LG_COL_3 = 558
+
+const MD_ROW_1 = 149
+const MD_ROW_2 = 217
+const MD_ROW_3 = 287
+const MD_COL_1 = 300
+const MD_COL_2 = 370
+const MD_COL_3 = 438
+
+const SM_ROW_1 = 122
+const SM_ROW_2 = 179
+const SM_ROW_3 = 237
+const SM_COL_1 = 247
+const SM_COL_2 = 305
+const SM_COL_3 = 363
 
 export const DOTS_MAP: IDotsMap = {
   0: {
     task: DotKey.isConnected,
     tooltip: 'Connect your wallet',
-    isCompleted: false,
+    isCompleted: true,
     position: {
       dot: {
-        md: [COL_1, ROW_1],
+        lg: [LG_COL_1, LG_ROW_1],
+        md: [MD_COL_1, MD_ROW_1],
         sm: [SM_COL_1, SM_ROW_1],
       },
       tooltip: {
@@ -66,7 +76,8 @@ export const DOTS_MAP: IDotsMap = {
     isCompleted: false,
     position: {
       dot: {
-        md: [COL_2, ROW_1],
+        lg: [LG_COL_2, LG_ROW_1],
+        md: [MD_COL_2, MD_ROW_1],
         sm: [SM_COL_2, SM_ROW_1],
       },
       tooltip: {
@@ -81,7 +92,8 @@ export const DOTS_MAP: IDotsMap = {
     isCompleted: false,
     position: {
       dot: {
-        md: [COL_3, ROW_1],
+        lg: [LG_COL_3, LG_ROW_1],
+        md: [MD_COL_3, MD_ROW_1],
         sm: [SM_COL_3, SM_ROW_1],
       },
       tooltip: {
@@ -96,7 +108,8 @@ export const DOTS_MAP: IDotsMap = {
     isCompleted: false,
     position: {
       dot: {
-        md: [COL_1, ROW_2],
+        lg: [LG_COL_1, LG_ROW_2],
+        md: [MD_COL_1, MD_ROW_2],
         sm: [SM_COL_1, SM_ROW_2],
       },
       tooltip: {
@@ -111,7 +124,8 @@ export const DOTS_MAP: IDotsMap = {
     isCompleted: false,
     position: {
       dot: {
-        md: [COL_2, ROW_2],
+        lg: [LG_COL_2, LG_ROW_2],
+        md: [MD_COL_2, MD_ROW_2],
         sm: [SM_COL_2, SM_ROW_2],
       },
       tooltip: {
@@ -126,7 +140,8 @@ export const DOTS_MAP: IDotsMap = {
     isCompleted: false,
     position: {
       dot: {
-        md: [COL_3, ROW_2],
+        lg: [LG_COL_3, LG_ROW_2],
+        md: [MD_COL_3, MD_ROW_2],
         sm: [SM_COL_3, SM_ROW_2],
       },
       tooltip: {
@@ -140,7 +155,8 @@ export const DOTS_MAP: IDotsMap = {
     isCompleted: false,
     position: {
       dot: {
-        md: [COL_1, ROW_3],
+        lg: [LG_COL_1, LG_ROW_3],
+        md: [MD_COL_1, MD_ROW_3],
         sm: [SM_COL_1, SM_ROW_3],
       },
       tooltip: {
@@ -154,7 +170,8 @@ export const DOTS_MAP: IDotsMap = {
     isCompleted: false,
     position: {
       dot: {
-        md: [COL_2, ROW_3],
+        lg: [LG_COL_2, LG_ROW_3],
+        md: [MD_COL_2, MD_ROW_3],
         sm: [SM_COL_2, SM_ROW_3],
       },
       tooltip: {
@@ -168,7 +185,8 @@ export const DOTS_MAP: IDotsMap = {
     isCompleted: false,
     position: {
       dot: {
-        md: [COL_3, ROW_3],
+        lg: [LG_COL_3, LG_ROW_3],
+        md: [MD_COL_3, MD_ROW_3],
         sm: [SM_COL_3, SM_ROW_3],
       },
       tooltip: {

@@ -1,53 +1,71 @@
+import { COLORS, MEDIA_QUERY, SPACING, TEXT } from '../styles'
+import { useDevice } from '../../hooks/useDevice'
 import { FaGithubSquare } from 'react-icons/fa'
 import { MdHelpCenter } from 'react-icons/md'
 import { BsDiscord } from 'react-icons/bs'
-import { COLORS, SPACING } from '../styles'
 import styled from 'styled-components'
 import Link from 'next/link'
+import {
+  getDiscordUrl,
+  getGithubUrl,
+  getWalkthroughUrl,
+} from '../../interfaces'
 
 const FOOTER_ITEMS = [
   {
-    href: 'https://fweb3.notion.site/Walkthrough-8ac4fc0d3b814a068767c86d63fd8fb7',
+    href: getWalkthroughUrl(),
     text: 'Walkthrough',
     Icon: MdHelpCenter,
   },
   {
-    href: 'https://discord.gg/pNSFNfyVxA',
+    href: getDiscordUrl(),
     text: 'Discord',
     Icon: BsDiscord,
   },
   {
-    href: 'https://github.com/fweb3/app',
+    href: getGithubUrl(),
     text: 'Github',
     Icon: FaGithubSquare,
   },
 ]
 
 const Container = styled.div`
-  display: flex;
   position: fixed;
   bottom: 0;
-  width: 100%;
-  justify-content: space-evenly;
+  left: 0;
+  right: 0;
+  background: ${COLORS.background};
+  display: flex;
+  justify-content: space-around;
   align-items: center;
-  border-top: 1px solid #333;
+  border-top: 3px solid #333;
   padding: ${SPACING.medium};
+
+  @media only screen and (min-width: ${MEDIA_QUERY.tablet}) {
+    border-top: 3px solid #333;
+    padding: ${SPACING.extra};
+    font-size: ${TEXT.p};
+  }
 `
 
 const StyledLink = styled.a`
-  color: white;
-  font-size: ${SPACING.medium};
+  color: ${COLORS.light};
 `
 
-const LinkItem = ({ href, text, Icon }) => {
+const LinkItem = ({ href, text, Icon }): JSX.Element => {
+  const { device } = useDevice()
   return (
     <Link href={href} passHref>
-      <StyledLink>{text}</StyledLink>
+      {device === 'mobile' ? (
+        <Icon size={30} color={COLORS.light} />
+      ) : (
+        <StyledLink>{text}</StyledLink>
+      )}
     </Link>
   )
 }
 
-export const Footer = () => {
+export const Footer = (): JSX.Element => {
   return (
     <Container>
       {FOOTER_ITEMS.map((elem, i) => (

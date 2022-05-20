@@ -1,16 +1,18 @@
-import { FWEB3_GAME_ADDRESS, FWEB3_TOKEN_ADDRESS } from './addresses'
 import fweb3TokenInterface from '../interfaces/Fweb3Token.json'
 import fweb3GameInterface from '../interfaces/Fweb3Game.json'
+import { loadAddress } from './addresses'
 import { ethers } from 'ethers'
 
 export const loadGameContracts = (provider) => {
+  const tokenAddress = loadAddress('fweb3_token')[0]
+  const gameAddress = loadAddress('fweb3_game')[0]
   const tokenContract = new ethers.Contract(
-    FWEB3_TOKEN_ADDRESS,
+    tokenAddress,
     fweb3TokenInterface.abi,
     provider
   )
   const gameContract = new ethers.Contract(
-    FWEB3_GAME_ADDRESS,
+    gameAddress,
     fweb3GameInterface.abi,
     provider
   )
