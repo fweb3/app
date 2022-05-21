@@ -3,12 +3,6 @@ export interface IAPIRequest {
   method?: string
 }
 
-export interface IAPIRequestQueryParams {
-  debug?: string
-  wallet_address?: string
-  wallet?: string
-}
-
 interface IPolygonResponseBase {
   status: string
   message: string

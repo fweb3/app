@@ -1,2 +1,2 @@
-export { fetchCurrentGameState, fetchDebugGameState } from "./game";
-export { validateRequest } from "./validators";
+export { fetchCurrentGameState } from './game'
+export * from './index.d'

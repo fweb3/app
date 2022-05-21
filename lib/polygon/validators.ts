@@ -21,47 +21,12 @@ import {
 
 import { IGameTaskState } from '../../interfaces/game'
 
-export const validateRequest = (
-  req: IAPIRequest
-): IRequestValidationResponse => {
-  try {
-    const { wallet_address: walletAddress, debug } = req.query
-    if (req.method !== 'GET') {
-      return {
-        error: 'Bad request type',
-        status: 400,
-      }
-    } else if (!debug && !walletAddress) {
-      return {
-        error: 'Missing query params',
-        status: 400,
-      }
-    }
-    // ethers.utils throws if bad address
-    getAddress(walletAddress)
-    return {
-      status: 200,
-      error: null,
-    }
-  } catch (e) {
-    const error = e.message.includes('invalid address')
-      ? 'Malformatted address'
-      : 'An unknown error occured'
-    return {
-      status: 400,
-      error,
-    }
-  }
-}
-
 export const checkHasWonGame = async (
-  walletAddress: string
+  account: string
 ): Promise<IGameTaskState> => {
-  const rawResult: IPolygonDataResponse = await fetchTrophyTransactions(
-    walletAddress
-  )
+  const rawResult: IPolygonDataResponse = await fetchTrophyTransactions(account)
   const { result: trophyTxs }: { result: IPolygonData[] } = rawResult
-  const tokenBalance: string = await _walletBalance(walletAddress)
+  const tokenBalance: string = await _walletBalance(account)
   const genesysAddress = loadAddress('genesys')
   const trophy =
     trophyTxs?.filter((tx) => tx.from === genesysAddress[0])[0] || null
@@ -81,37 +46,33 @@ export const checkHasWonGame = async (
 }
 
 export const currentWalletGameState = async (
-  walletAddress: string
+  account: string
 ): Promise<IGameTaskState> => {
   const walletTxCompletedItems: IGameTaskState =
-    await _checkWalletTxCompletedItems(walletAddress)
+    await _checkWalletTxCompletedItems(account)
   const erc20CompletedItems: IGameTaskState = await _checkERC20CompletedItems(
-    walletAddress
+    account
   )
-  const tokenBalance: string = await _walletBalance(walletAddress)
+  const tokenBalance: string = await _walletBalance(account)
   return {
     ...walletTxCompletedItems,
     ...erc20CompletedItems,
     tokenBalance,
     hasEnoughTokens: parseInt(tokenBalance) >= 100,
-    hasMintedNFT: await _checkHasMintedNTF(walletAddress),
+    hasMintedNFT: await _checkHasMintedNTF(account),
   }
 }
 
-export const _walletBalance = async (
-  walletAddress: string
-): Promise<string> => {
+export const _walletBalance = async (account: string): Promise<string> => {
   const rawResult: IPolygonBalanceResponse = await fetchWalletTokenBalance(
-    walletAddress
+    account
   )
   const { result: walletBalance }: { result: string } = rawResult
   return walletBalance ? walletBalance : '0'
 }
 
-export const _checkHasMintedNTF = async (
-  walletAddress: string
-): Promise<boolean> => {
-  const rawResult: IPolygonDataResponse = await fetchNftsTxs(walletAddress)
+export const _checkHasMintedNTF = async (account: string): Promise<boolean> => {
+  const rawResult: IPolygonDataResponse = await fetchNftsTxs(account)
   const { result: nftsTx }: { result: IPolygonData[] } = rawResult
   const genesysAddress = loadAddress('genesys')
   return nftsTx?.filter((tx) => tx.from === genesysAddress[0]).length >= 1

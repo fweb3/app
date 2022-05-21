@@ -27,16 +27,3 @@ export const DEFAULT_WON_GAME_STATE: IGameTaskState = {
   hasMintedNFT: true,
   trophyId: '0',
 }
-
-export const GAME_TASKS: string[] = [
-  null, // Naturalize Index
-  'hasEnoughTokens',
-  'hasEnoughTokens',
-  'hasUsedFaucet',
-  'hasSentTokens',
-  'hasMintedNFT',
-  'hasBurnedTokens',
-  'hasSwappedTokens',
-  'hasVotedInPoll',
-  'hasDeployedContract',
-]

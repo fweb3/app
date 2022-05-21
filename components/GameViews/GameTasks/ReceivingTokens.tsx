@@ -3,7 +3,6 @@ import {
   ColoredText,
   CommonLink,
   CommonText,
-  StyledText,
   Subheading,
 } from '../../shared/Elements'
 import { COLORS } from '../../styles'
