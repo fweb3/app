@@ -14,8 +14,13 @@ const GameGrid = styled.div`
     align-items: flex-start;
   }
 
+  @media only screen and (min-width: ${MEDIA_QUERY.desktop}) {
+    margin-right: ${SPACING.large};
+  }
+
   @media only screen and (min-width: ${MEDIA_QUERY.wide}) {
-    grid-template-colums: auto auto;
+    grid-template-colums: 1fr 1fr;
+    margin-right: 0;
     align-items: center;
     justify-items: flex-start;
   }

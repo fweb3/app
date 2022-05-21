@@ -1,8 +1,8 @@
 import { TrophyImage } from '../CompletedView/TrophyImage'
 import { useConnection, useGame } from '../../providers'
-import { COLORS, MEDIA_QUERY, SPACING } from '../styles'
 import { ShareButton } from '../GameViews/ShareButton'
 import { useDevice } from '../../hooks/useDevice'
+import { MEDIA_QUERY } from '../styles'
 import styled from 'styled-components'
 import { Dot } from './Dot'
 
@@ -50,15 +50,6 @@ const Chest = styled.div`
   }
 `
 
-const ShareButtonContainer = styled.div`
-  padding: ${SPACING.large};
-  transition: background 0.3s linear;
-  border: 1px solid ${COLORS.russianViolet};
-  &:hover {
-    background: ${COLORS.midnight};
-  }
-`
-
 export const ChestSection = (): JSX.Element => {
   const { completedTasks, hasWonGame, trophyId } = useGame()
   const { isConnected } = useConnection()
@@ -68,24 +59,20 @@ export const ChestSection = (): JSX.Element => {
     return <Chest />
   }
 
-  const renderShareButton = (): JSX.Element => {
-    return (
-      <ShareButtonContainer>
-        <ShareButton />
-      </ShareButtonContainer>
-    )
-  }
-
   const renderGameChest = (): JSX.Element => {
+    const shouldShowShare =
+      isConnected &&
+      Object.entries(completedTasks).filter(([k, v]) => v.isCompleted).length >=
+        2
     return (
       <>
-        <Chest>
+        <Chest data-testid="chest-section_chest">
           {isConnected &&
             Object.entries(completedTasks).map(([key, value], i) => (
               <Dot key={i} idx={key} {...value} />
             ))}
         </Chest>
-        {isConnected && renderShareButton()}
+        {shouldShowShare && <ShareButton />}
       </>
     )
   }

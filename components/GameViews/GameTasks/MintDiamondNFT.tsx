@@ -19,11 +19,11 @@ export const MintDiamonNFT = (): JSX.Element => {
     <>
       <Subheading>Mint an NFT</Subheading>
       <CommonText>
-        Go to{' '}
+        Go to our{' '}
         <CommonLink href={nftPolygonscanUrl} target="_blank" rel="noreferrer">
-          our diamond NFT smart contract
+          diamond NFT
         </CommonLink>{' '}
-        and mint yourself a Diamond NFT that will last forever.
+        smart contract and mint yourself a Diamond NFT that will last forever.
       </CommonText>
       <CommonText>
         To mint yourself a unique diamond, pick a number of your choice and

@@ -19,11 +19,21 @@ import styled from 'styled-components'
 const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
+
   margin: ${SPACING.medium} ${SPACING.medium} 4rem ${SPACING.medium};
 
   @media only screen and (min-width: ${MEDIA_QUERY.tablet}) {
     margin: 0 ${SPACING.extra} 0 ${SPACING.extra};
   }
+
+  @media only screen and (min-width: ${MEDIA_QUERY.smallDesk}) {
+    margin ${SPACING.normal};
+  }
+
+  @media only screen and (min-width: ${MEDIA_QUERY.desktop}) {
+    margin-right: ${SPACING.large};
+  }
+
   @media only screen and (min-width: ${MEDIA_QUERY.wide}) {
     max-width: 80%;
   }
@@ -31,7 +41,7 @@ const ContentContainer = styled.div`
 
 export const ContentSection = (): JSX.Element => {
   const { activeDot, hasWonGame, trophyId } = useGame()
-  const { isConnected, displayName } = useConnection()
+  const { isConnected } = useConnection()
   const { device } = useDevice()
 
   const renderNotConnected = (): JSX.Element => {
@@ -52,17 +62,19 @@ export const ContentSection = (): JSX.Element => {
   }
 
   const renderConnected = (): JSX.Element => {
+    console.log({ activeDot })
     return (
       <>
-        {activeDot === 0 && <ReceivingTokens />}
-        {activeDot === 2 && <UseFaucets />}
-        {activeDot === 3 && <SendTokens />}
-        {activeDot === 4 && <MintDiamonNFT />}
-        {activeDot === 5 && <BurnToken />}
-        {activeDot === 6 && <SwapToken />}
-        {activeDot === 7 && <VoteWithTokens />}
-        {activeDot === 8 && <CreateToken />}
-        {activeDot === 9 && <DeployOwnContract />}
+        {activeDot === '0' && <ReceivingTokens />}
+        {activeDot === '1' && <ReceivingTokens />}
+        {activeDot === '2' && <UseFaucets />}
+        {activeDot === '3' && <SendTokens />}
+        {activeDot === '4' && <MintDiamonNFT />}
+        {activeDot === '5' && <BurnToken />}
+        {activeDot === '6' && <SwapToken />}
+        {activeDot === '7' && <VoteWithTokens />}
+        {activeDot === '8' && <CreateToken />}
+        {activeDot === '9' && <DeployOwnContract />}
       </>
     )
   }

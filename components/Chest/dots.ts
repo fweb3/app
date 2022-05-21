@@ -29,7 +29,7 @@ export interface IDot {
 }
 
 export interface IDotsMap {
-  [idx: number]: IDot
+  [idx: string]: IDot
 }
 
 const LG_ROW_1 = 187
@@ -46,7 +46,7 @@ const MD_COL_1 = 300
 const MD_COL_2 = 370
 const MD_COL_3 = 438
 
-const SM_ROW_1 = 122
+const SM_ROW_1 = 118
 const SM_ROW_2 = 179
 const SM_ROW_3 = 237
 const SM_COL_1 = 247
@@ -54,7 +54,7 @@ const SM_COL_2 = 305
 const SM_COL_3 = 363
 
 export const DOTS_MAP: IDotsMap = {
-  0: {
+  '0': {
     task: DotKey.isConnected,
     tooltip: 'Connect your wallet',
     isCompleted: true,
@@ -70,7 +70,7 @@ export const DOTS_MAP: IDotsMap = {
       },
     },
   },
-  1: {
+  '1': {
     task: DotKey.hasEnoughTokens,
     tooltip: 'Use the faucet to get 300 $FWEB3 tokens',
     isCompleted: false,
@@ -86,9 +86,9 @@ export const DOTS_MAP: IDotsMap = {
       },
     },
   },
-  2: {
+  '2': {
     task: DotKey.hasUsedFaucet,
-    tooltip: 'Use the faucet to get 0.042 $MATIC',
+    tooltip: 'Use the faucet to get $MATIC for gas',
     isCompleted: false,
     position: {
       dot: {
@@ -102,7 +102,7 @@ export const DOTS_MAP: IDotsMap = {
       },
     },
   },
-  3: {
+  '3': {
     task: DotKey.hasSentTokens,
     tooltip: 'Send 100 $FWEB3 tokens to someone',
     isCompleted: false,
@@ -118,7 +118,7 @@ export const DOTS_MAP: IDotsMap = {
       },
     },
   },
-  4: {
+  '4': {
     task: DotKey.hasMintedNFT,
     tooltip: 'Mint a Fweb3 NFT',
     isCompleted: false,
@@ -134,7 +134,7 @@ export const DOTS_MAP: IDotsMap = {
       },
     },
   },
-  5: {
+  '5': {
     task: DotKey.hasBurnedTokens,
     tooltip: 'Burn at least one $FWEB3 token',
     isCompleted: false,
@@ -149,7 +149,7 @@ export const DOTS_MAP: IDotsMap = {
       },
     },
   },
-  6: {
+  '6': {
     task: DotKey.hasSwappedTokens,
     tooltip: 'Swap a $FWEB3 token for some $MATIC',
     isCompleted: false,
@@ -164,7 +164,7 @@ export const DOTS_MAP: IDotsMap = {
       },
     },
   },
-  7: {
+  '7': {
     task: DotKey.hasVotedInPoll,
     tooltip: 'Vote on a Fweb3 poll',
     isCompleted: false,
@@ -179,7 +179,7 @@ export const DOTS_MAP: IDotsMap = {
       },
     },
   },
-  8: {
+  '8': {
     task: DotKey.hasDeployedContract,
     tooltip: 'Write and deploy a smart contract',
     isCompleted: false,

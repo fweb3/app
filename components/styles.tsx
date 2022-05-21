@@ -25,17 +25,29 @@ export const SPACING = {
 }
 
 export const COLORS = {
+  acidGreen: '#BDBF09',
+  alabaster: '#E8EDDF',
   background: 'black',
-  shadow: 'rgba(255, 149, 238, 0)',
+  error: '#D86F5C',
   light: '#E6E8E6',
+  maize: '#F5CB5C',
+  midnight: '#69306D',
+  russianViolet: '#0E103D',
+  shadow: 'rgba(255, 149, 238, 0)',
+  springGreen: '#59FFA0',
+  tangerine: '#F08700',
+  teaGreen: '#CCFCCB',
   violet: '#FF95EE',
   violetAlpha: `rgb(255,149,238, 0.7)`,
   violetDarkAlpha: `rgb(255,149,238, 0.3)`,
-  midnight: '#69306D',
-  russianViolet: '#0E103D',
-  alabaster: '#E8EDDF',
-  maize: '#F5CB5C',
   yellowish: 'rgba(229,222,132)',
-  tangerine: '#F08700',
-  error: '#FE5F55',
+}
+
+export const BORDERS = {
+  radius: {
+    sm: '0.5rem',
+    md: '1rem',
+    lg: '1.5rem',
+  },
+  line: '0.2rem solid #333',
 }

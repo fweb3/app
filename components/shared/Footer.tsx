@@ -1,4 +1,4 @@
-import { COLORS, MEDIA_QUERY, SPACING, TEXT } from '../styles'
+import { BORDERS, COLORS, MEDIA_QUERY, SPACING, TEXT } from '../styles'
 import { useDevice } from '../../hooks/useDevice'
 import { FaGithubSquare } from 'react-icons/fa'
 import { MdHelpCenter } from 'react-icons/md'
@@ -30,7 +30,7 @@ const FOOTER_ITEMS = [
 ]
 
 const Container = styled.div`
-  position: fixed;
+  position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
@@ -38,10 +38,11 @@ const Container = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  border-top: 3px solid #333;
+  border-top: ${BORDERS.line};
   padding: ${SPACING.medium};
 
   @media only screen and (min-width: ${MEDIA_QUERY.tablet}) {
+    postion: relative;
     border-top: 3px solid #333;
     padding: ${SPACING.extra};
     font-size: ${TEXT.p};
@@ -67,7 +68,7 @@ const LinkItem = ({ href, text, Icon }): JSX.Element => {
 
 export const Footer = (): JSX.Element => {
   return (
-    <Container>
+    <Container data-testid="footer_footer">
       {FOOTER_ITEMS.map((elem, i) => (
         <LinkItem key={i} {...elem} />
       ))}

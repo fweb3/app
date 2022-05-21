@@ -54,7 +54,7 @@ export const ConnectButton = () => {
   return !isConnected ? (
     <ButtonContainer>
       {isMetaMaskInstalled ? (
-        <PulseButton onClick={connect}>
+        <PulseButton data-testid="pulse-btn" onClick={connect}>
           {isConnecting ? (
             <SpinContainer>
               <Spinner size={40} />

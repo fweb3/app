@@ -3,23 +3,24 @@ import styled from 'styled-components'
 import Link from 'next/link'
 
 const StyledLink = styled.a`
-  text-decoration: none;
-  color: ${COLORS.violet};
+  color: ${COLORS.teaGreen};
 `
 export const CommonLink = (props) => {
   return (
-    <Link href={props.href} passHref>
-      <StyledLink {...props}>{props.children}</StyledLink>
+    <Link href={props.href || '#'} passHref>
+      <StyledLink {...props} target="_blank" rel="noreferrer">
+        {props.children}
+      </StyledLink>
     </Link>
   )
 }
 
-export const CommonText = styled.p`
+export const CommonText = styled((props) => <p {...props} />)`
   color: ${COLORS.light};
   margin: 0 0 ${SPACING.small} 0;
   padding: 0;
   text-indent: ${SPACING.large};
-  font-size: 1.1rem;
+  font-size: ${(props) => props.size || '1.1rem'};
   line-height: 1.3rem;
 
   @media only screen and (min-width: ${MEDIA_QUERY.tablet}) {
@@ -29,6 +30,7 @@ export const CommonText = styled.p`
   @media only screen and (min-width: ${MEDIA_QUERY.smallDesk}) {
     font-size: ${TEXT.p};
     text-indent: 0;
+    line-height: 1.7rem;
   }
   @media only screen and (min-width: ${MEDIA_QUERY.wide}) {
     font-size: ${TEXT.h4};
@@ -37,17 +39,22 @@ export const CommonText = styled.p`
 `
 
 export const Subheading = styled.h2`
-  margin: 0 0 1.2rem;
+  margin-bottom: ${SPACING.small};
   padding: 0;
-  font-size: ${TEXT.h2};
+  font-size: ${TEXT.h4};
   color: ${COLORS.maize};
+
+  // @media only screen and (min-width: ${MEDIA_QUERY.smallDesk}) {
+  //   font-size: ${TEXT.h4};
+  // }
 `
 
-export const ErrorText = styled.p`
-  color: ${COLORS.error};
+export const ErrorText = styled((props) => <p {...props} />)`
+  color: ${(props) => props.color || COLORS.error};
+  font-size: ${(props) => props.size || '1.1rem'};
 
   @media only screen and (min-width: ${MEDIA_QUERY.tablet}) {
-    font-size: ${TEXT.p};
+    font-size: ${(props) => props.size || TEXT.p};
   }
 `
 
@@ -63,7 +70,7 @@ export const HeadingText = styled.h1`
     font-size: ${TEXT.h3};
   }
   @media only screen and (min-width: ${MEDIA_QUERY.smallDesk}) {
-    font-size: 2.4rem;
+    font-size: ${TEXT.h4};
     text-align: left;
   }
   @media only screen and (min-width: ${MEDIA_QUERY.wide}) {
@@ -73,8 +80,9 @@ export const HeadingText = styled.h1`
 
 const AddColor = styled((props) => <span {...props} />)`
   color: ${(props) => props.$color};
+  font-size: ${(props) => props.$size || 'inherit'};
 `
 
-export const ColoredText = ({ children, color = 'white' }) => {
+export const ColoredText = ({ children, color = COLORS.violet }) => {
   return <AddColor $color={color}>{children}</AddColor>
 }

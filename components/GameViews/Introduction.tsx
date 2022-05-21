@@ -7,6 +7,7 @@ import {
   ErrorText,
   ColoredText,
 } from '../shared/Elements'
+import React from 'react'
 
 export const Introduction = (): JSX.Element => {
   const { device } = useDevice()
@@ -22,7 +23,9 @@ export const Introduction = (): JSX.Element => {
 
   return (
     <>
-      <HeadingText>Learn and Build in Web3</HeadingText>
+      <HeadingText data-testid="section-introduction">
+        Learn and Build in Web3
+      </HeadingText>
       <CommonText>
         There are 9 dots to light up by doing things on a blockchain (in this
         case, Polygon). Once you light them all up, you win additional{' '}
@@ -30,7 +33,7 @@ export const Introduction = (): JSX.Element => {
         commemorative NFT... and it&apos;s free!
       </CommonText>
       {device === 'desktop' && renderMetamaskInstructions()}
-      <ErrorText>
+      <ErrorText size="1rem">
         Note: there&apos;s lots of phishing happening out there! Our code is{' '}
         <CommonLink
           href="https://github.com/fweb3/app"
@@ -39,8 +42,8 @@ export const Introduction = (): JSX.Element => {
         >
           open source
         </CommonLink>{' '}
-        so you can make sure it&apos;s safe. We only use MetaMask to get your
-        wallet address.
+        so you can make sure it&apos;s safe. We use metamask to get your address
+        and your address only. Think of it like logging in.
       </ErrorText>
     </>
   )

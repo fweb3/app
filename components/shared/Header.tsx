@@ -1,13 +1,15 @@
-import { COLORS, TEXT, SPACING, MEDIA_QUERY } from '../styles'
+import { COLORS, TEXT, SPACING, MEDIA_QUERY, BORDERS } from '../styles'
 import { useConnection, useGame } from '../../providers'
 import { getPolygonscanUrl } from '../../interfaces'
 import { useDevice } from '../../hooks/useDevice'
 import { BsTrophyFill } from 'react-icons/bs'
-import { GiTwoCoins } from 'react-icons/gi'
-import { CommonLink } from './Elements'
-import styled from 'styled-components'
+import { GiUnplugged } from 'react-icons/gi'
 import { useEffect, useState } from 'react'
-
+import { GiTwoCoins } from 'react-icons/gi'
+import { ColoredText, CommonLink, CommonText } from './Elements'
+import { GoPlug } from 'react-icons/go'
+import styled from 'styled-components'
+import { ethers } from 'ethers'
 const LeftNav = styled.div``
 
 const Heading = styled.h2`
@@ -15,7 +17,6 @@ const Heading = styled.h2`
   padding: 0;
   margin: 0;
   font-size: ${TEXT.h4};
-  text-shadow: 2px 2px ${COLORS.violetAlpha};
 `
 
 const RightNav = styled.div``
@@ -48,7 +49,7 @@ const Container = styled.nav`
   z-index: 2;
   background: ${COLORS.background};
   align-items: center;
-  border-bottom: 2px solid #333;
+  border-bottom: ${BORDERS.line};
   flex-direction: column;
   padding: ${SPACING.large} 0 0 0;
 
@@ -63,6 +64,8 @@ const Container = styled.nav`
   }
 
   @media only screen and (min-width: ${MEDIA_QUERY.smallDesk}) {
+    padding-top: ${SPACING.extra};
+
     ${Heading} {
       font-size: ${TEXT.h1};
       margin-left: ${SPACING.medium};
@@ -86,6 +89,18 @@ const Container = styled.nav`
       padding: 0 ${SPACING.medium};
     }
   }
+`
+
+const StyledPlug = styled((props) => <GoPlug {...props} />)`
+  font-size: ${TEXT.h4};
+  color: ${COLORS.springGreen};
+  padding-right: ${SPACING.normal};
+`
+
+const StyledUnplug = styled((props) => <GiUnplugged {...props} />)`
+  color: ${COLORS.error};
+  font-size: ${TEXT.h4};
+  padding-right: ${SPACING.normal};
 `
 
 const WrongNetworkWrapper = styled.div`
@@ -118,25 +133,38 @@ export const Header = (): JSX.Element => {
   const renderMobileHeader = (): JSX.Element => {
     return (
       <>
-        <Heading>fWeb3</Heading>
-        <NavText>Not supported on mobile</NavText>
+        <Heading data-testid="header-mobile_heading">fweb3</Heading>
+        <NavText>
+          Not supported on mobile{' '}
+          <ColoredText color={COLORS.teaGreen}>yet</ColoredText>
+        </NavText>
       </>
     )
   }
 
   const renderDisconnectedNav = (): JSX.Element => {
-    return <NavText>Connect a wallet to get started</NavText>
+    return (
+      <>
+        <StyledUnplug />
+        <NavText data-testid="header__connect-msg">
+          Connect a wallet to get started
+        </NavText>
+      </>
+    )
   }
 
   const renderConnectedNav = (): JSX.Element => {
+    const balanceInEth = ethers.utils.formatEther(gameTaskState?.tokenBalance)
+    const balance = ethers.utils.commify(balanceInEth)
     return (
       <>
+        <StyledPlug />
         <CommonLink passHref href={getPolygonscanUrl(account)}>
           <DisplayName>{displayName}</DisplayName>
         </CommonLink>
         <BalanceContainer>
           <GiTwoCoins color={COLORS.yellowish} size={40} />
-          <AccountBalance>{gameTaskState?.tokenBalance || 0}</AccountBalance>
+          <AccountBalance>{balance}</AccountBalance>
         </BalanceContainer>
       </>
     )
@@ -144,7 +172,7 @@ export const Header = (): JSX.Element => {
 
   return (
     <>
-      <Container>
+      <Container data-testid="header_heading">
         {device !== 'desktop' ? (
           renderMobileHeader()
         ) : (
@@ -153,9 +181,9 @@ export const Header = (): JSX.Element => {
               {isConnected && trophyId && (
                 <BsTrophyFill color="gold" size={40} />
               )}
-              <Heading>fWeb3</Heading>
+              <Heading>fweb3</Heading>
             </LeftNav>
-            <RightNav>
+            <RightNav data-testid="header_right-nav">
               {isConnected ? renderConnectedNav() : renderDisconnectedNav()}
             </RightNav>
           </>

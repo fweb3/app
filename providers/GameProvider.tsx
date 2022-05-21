@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 import { Contract } from 'ethers'
 
 interface IGameProviderState {
-  handleSetActiveDot: (dot: number) => void
+  handleSetActiveDot: (dot: string) => void
   gameTaskState: IGameTaskState
   loadGameGameState: () => void
   isFetchingGameData: boolean
@@ -17,7 +17,7 @@ interface IGameProviderState {
   tokenContract: Contract
   gameContract: Contract
   hasWonGame: boolean
-  activeDot: number
+  activeDot: string
   trophyId: string
   trophyColor: string
   isVerified: boolean
@@ -45,7 +45,7 @@ const defaultGameState: IGameProviderState = {
   gameContract: null,
   completedTasks: {},
   hasWonGame: false,
-  activeDot: 0,
+  activeDot: '0',
   trophyId: '',
   trophyColor: '',
   isVerified: false,
@@ -55,8 +55,8 @@ const defaultGameState: IGameProviderState = {
 const GameContext = createContext(defaultGameState)
 
 const DEV_GAME_STATE: IGameTaskState = {
-  tokenBalance: '0',
-  hasEnoughTokens: false, // 1
+  tokenBalance: '300000000000000000000',
+  hasEnoughTokens: true, // 1
   hasUsedFaucet: false, // 2
   hasSentTokens: false, // 3
   hasMintedNFT: false, // 4
@@ -93,7 +93,7 @@ const GameProvider = ({ children }) => {
   const [trophyColor, setTrophyColor] = useState<string>('')
   const [tokenContract, setTokenContract] = useState(null)
   const [gameContract, setGameContract] = useState(null)
-  const [activeDot, setActiveDot] = useState<number>(-1)
+  const [activeDot, setActiveDot] = useState<string>('0')
   const [trophyId, setTrophyId] = useState<string>('')
   const { fullscreenLoader } = useLoading()
   const [gameTaskState, setGameTaskState] =
@@ -102,8 +102,8 @@ const GameProvider = ({ children }) => {
     query: { wallet },
   } = useRouter()
 
-  const handleSetActiveDot = (dot: number) => {
-    setActiveDot(dot)
+  const handleSetActiveDot = (idx: string) => {
+    setActiveDot(idx)
   }
 
   const loadDevGameState = async () => {
@@ -161,6 +161,7 @@ const GameProvider = ({ children }) => {
           ...taskState,
           isConnected: true,
         })
+
         setCompletedTasks(mappedDots)
 
         const shareInfo: ISocialShare = createShareInfo(
@@ -210,7 +211,8 @@ const GameProvider = ({ children }) => {
       }
       obj[key] = { ...value, isCompleted }
     })
-    setActiveDot(currentDot)
+    console.log('current set dot', currentDot.toString())
+    setActiveDot(currentDot.toString())
     return obj
   }
 

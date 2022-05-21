@@ -1,10 +1,10 @@
-import { HeadingText, CommonText } from '../../shared/Elements'
+import { HeadingText, CommonText, Subheading } from '../../shared/Elements'
 import { loadAddress } from '../../../interfaces'
 
 export const BurnToken = (): JSX.Element => {
   return (
     <>
-      <HeadingText>Burn a token</HeadingText>
+      <Subheading>Burn a token</Subheading>
       <CommonText>Do this by sending at least 1 $FWEB3 token to: </CommonText>
       <pre>{loadAddress('burn')[0]}</pre>
       <CommonText>

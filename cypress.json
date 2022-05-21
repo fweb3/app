@@ -1,5 +1,6 @@
 {
   "baseUrl": "http://localhost:3000",
   "videoRecording": false,
-  "screenshotOnRunFailure": false
+  "screenshotOnRunFailure": false,
+  "viewportWidth": 1200
 }
