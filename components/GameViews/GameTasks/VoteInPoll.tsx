@@ -39,20 +39,20 @@ export const VoteInPoll = (): JSX.Element => {
 
   const renderCompleted = () => {
     return (
-      <>
+      <div data-testid="game-tasks_7-complete">
         <Subheading>Ahh Democracy...</Subheading>
         <CommonText>There is one last task.</CommonText>
         <CommonText>
           It&apos;s time to jump all the way in and create something from
           scratch...
         </CommonText>
-      </>
+      </div>
     )
   }
 
   const renderIncomplete = () => {
     return (
-      <>
+      <div data-testid="game-tasks_7-incomplete">
         <Subheading>Vote on a proposal with your tokens</Subheading>
         <CommonText>
           Use our fweb3 poll found at this contract address
@@ -75,7 +75,7 @@ export const VoteInPoll = (): JSX.Element => {
           function... you&apos;ve already had to do something similar once so
           far.
         </ErrorText>
-      </>
+      </div>
     )
   }
   return hasVotedInPoll ? renderCompleted() : renderIncomplete()

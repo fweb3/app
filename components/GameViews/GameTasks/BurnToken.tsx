@@ -42,18 +42,18 @@ export const BurnToken = (): JSX.Element => {
 
   const renderCompleted = () => {
     return (
-      <>
+      <div data-testid="game-tasks_5-complete">
         <Subheading>You&apos;ve burned tokens!</Subheading>
         <CommonText>
           From the ashes rises the glorious phoenix that is exchange.
         </CommonText>
-      </>
+      </div>
     )
   }
 
   const renderIncomplete = () => {
     return (
-      <>
+      <div data-testid="game-tasks_5-incomplete">
         <Subheading>Burn a token</Subheading>
         <CommonText>Do this by sending at least 1 FWEB3 token to:</CommonText>
         <CopyableContainer>
@@ -66,7 +66,7 @@ export const BurnToken = (): JSX.Element => {
           won&apos;t tip the scales as far as supply and demand goes, but there
           is a paper trail that you effectively destroyed one token. Deflation!
         </CommonText>
-      </>
+      </div>
     )
   }
 

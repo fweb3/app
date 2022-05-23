@@ -1,13 +1,13 @@
 import { SeekVerification } from '../CompletedView/SeekVerification'
 import { VerifiedWinner } from '../CompletedView/VerifiedWinner'
-import { ReceivingTokens } from './GameTasks/ReceivingTokens'
+import { HasEnoughTokens } from './GameTasks/HasEnoughTokens'
+import { ConnectedWallet } from './GameTasks/ConnectedWallet'
 import { MintDiamonNFT } from './GameTasks/MintDiamondNFT'
 import { useConnection, useGame } from '../../providers'
-import { CompletedTask } from '../shared/CompletedTask'
-import { CreateToken } from './GameTasks/CreateToken'
+import { DeployedContract } from './GameTasks/DeployedContract'
 import styled, { keyframes } from 'styled-components'
 import { UseFaucets } from './GameTasks/UseFaucets'
-import { SendTokens } from './GameTasks/SendTokens'
+import { HasSentTokens } from './GameTasks/HasSentTokens'
 import { VoteInPoll } from './GameTasks/VoteInPoll'
 import { BurnToken } from './GameTasks/BurnToken'
 import { SwapToken } from './GameTasks/SwapToken'
@@ -68,15 +68,15 @@ export const ContentSection = (): JSX.Element => {
   const renderConnected = (): JSX.Element => {
     return (
       <>
-        {activeDot === '0' && <CompletedTask task="Connected Wallet" />}
-        {activeDot === '1' && <ReceivingTokens />}
+        {activeDot === '0' && <ConnectedWallet />}
+        {activeDot === '1' && <HasEnoughTokens />}
         {activeDot === '2' && <UseFaucets />}
-        {activeDot === '3' && <SendTokens />}
+        {activeDot === '3' && <HasSentTokens />}
         {activeDot === '4' && <MintDiamonNFT />}
         {activeDot === '5' && <BurnToken />}
         {activeDot === '6' && <SwapToken />}
         {activeDot === '7' && <VoteInPoll />}
-        {activeDot === '8' && <CreateToken />}
+        {activeDot === '8' && <DeployedContract />}
       </>
     )
   }

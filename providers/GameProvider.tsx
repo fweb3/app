@@ -84,7 +84,7 @@ const calcTrophyColor = (trophyId: string): string => {
   }
   return 'copper'
 }
-const LIVE = false
+const LIVE = true
 
 const fetchTaskState = async (account: string): Promise<IGameTaskState> => {
   if (!LIVE) {
@@ -203,7 +203,7 @@ const GameProvider = ({ children }) => {
     let currentDot = 0
     const obj = {}
     const maticBalance = ethers.utils.formatEther(
-      newGameTaskState?.maticBalance
+      newGameTaskState?.maticBalance || '0'
     )
 
     Object.entries(DOTS_MAP).map(([key, value]) => {
@@ -275,7 +275,7 @@ const GameProvider = ({ children }) => {
   useEffect(() => {
     ;(async () => {
       if (isConnected || query?.account) {
-        await loadGameGameState(query?.account.toString() ?? account)
+        await loadGameGameState(query?.account?.toString() ?? account)
       }
     })()
   }, [isConnected, query]) // eslint-disable-line

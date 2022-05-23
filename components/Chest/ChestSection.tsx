@@ -87,7 +87,7 @@ export const ChestSection = (): JSX.Element => {
   }
 
   const renderOpenChest = (): JSX.Element => {
-    return <OpenChest />
+    return <OpenChest data-testid="chest-section_open-chest" />
   }
 
   const renderContent = (): JSX.Element => {

@@ -30,12 +30,10 @@ export const checkHasWonGame = async (
   if (!trophy) {
     return null
   }
-  const formattedBal = ethers.utils.commify(
-    ethers.utils.formatEther(tokenBalance)
-  )
+
   return {
     ...DEFAULT_WON_GAME_STATE,
-    tokenBalance: formattedBal,
+    tokenBalance,
     hasWonGame: true,
     trophyId: trophy.tokenID,
   }

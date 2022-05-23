@@ -142,6 +142,7 @@ const ConnectionProvider = ({ children }) => {
   }
 
   const handleDisconnect = () => {
+    logger.log('DISCONNECT_EVENT')
     resetState()
     toast.success('Disconnected', { autoClose: 1000 })
   }

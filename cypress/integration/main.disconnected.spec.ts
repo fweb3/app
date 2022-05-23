@@ -7,7 +7,7 @@ describe('Desktop disconnected view', () => {
   })
   it('loads the header', () => {
     cy.get('[data-testid="header_heading"]').contains('fweb3')
-    cy.get('[data-testid="header__connect-msg"]').contains(
+    cy.get('[data-testid="header_connect-msg"]').contains(
       'Connect a wallet to get started'
     )
   })

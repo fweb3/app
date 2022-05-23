@@ -22,19 +22,19 @@ export const MintDiamonNFT = (): JSX.Element => {
 
   const renderCompleted = () => {
     return (
-      <>
+      <div data-testid="game-tasks_4-complete">
         <Subheading>So you&apos;ve minted a diamond, eh?</Subheading>
         <CommonText>
           Now that you&apos;ve created something, lets destroy something...
         </CommonText>
         <CommonText>Let it burn, baby. Burn.</CommonText>
-      </>
+      </div>
     )
   }
 
   const renderIncomplete = () => {
     return (
-      <>
+      <div data-testid="game-tasks_4-incomplete">
         <Subheading>Mint an NFT</Subheading>
         <CommonText>
           Go to our{' '}
@@ -62,7 +62,7 @@ export const MintDiamonNFT = (): JSX.Element => {
             69 and 420 have already been taken 😄 FYI.
           </ErrorText>
         </CommonText>
-      </>
+      </div>
     )
   }
   return hasMintedNFT ? renderCompleted() : renderIncomplete()

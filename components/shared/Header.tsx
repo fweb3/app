@@ -65,6 +65,11 @@ const Container = styled.nav`
     ${Heading} {
       font-size: ${TEXT.h2};
     }
+
+    ${RightNav} {
+      display: flex;
+      align-items: center;
+    }
   }
 
   @media only screen and (min-width: ${MEDIA_QUERY.smallDesk}) {
@@ -170,7 +175,7 @@ export const Header = (): JSX.Element => {
         <FlashingHeader data-testid="header-mobile_heading">
           fweb3
         </FlashingHeader>
-        <NavText>
+        <NavText data-testid="header-mobile_text">
           Not supported on mobile{' '}
           <ColoredText color={COLORS.teaGreen}>yet</ColoredText>
         </NavText>
@@ -182,7 +187,7 @@ export const Header = (): JSX.Element => {
     return (
       <>
         <StyledUnplug />
-        <NavText data-testid="header__connect-msg">
+        <NavText data-testid="header_connect-msg">
           Connect a wallet to get started
         </NavText>
       </>
@@ -190,18 +195,25 @@ export const Header = (): JSX.Element => {
   }
 
   const renderConnectedNav = (): JSX.Element => {
-    const balanceInEth = ethers.utils.formatEther(gameTaskState?.tokenBalance)
+    console.log({ gameTaskState })
+    const balanceInEth = ethers.utils.formatEther(
+      gameTaskState?.tokenBalance || '0'
+    )
     const balance = ethers.utils.commify(balanceInEth)
     const displayTouse = queryDisplayName ?? displayName
     return (
       <>
         <StyledPlug />
         <CommonLink passHref href={getPolygonscanUrl(account)}>
-          <DisplayName>{displayTouse}</DisplayName>
+          <DisplayName data-testid="header_displayname">
+            {displayTouse}
+          </DisplayName>
         </CommonLink>
         <BalanceContainer>
           <GiTwoCoins color={COLORS.yellowish} size={40} />
-          <AccountBalance>{balance}</AccountBalance>
+          <AccountBalance data-testid="header_balance">
+            {balance}
+          </AccountBalance>
         </BalanceContainer>
       </>
     )
@@ -229,7 +241,7 @@ export const Header = (): JSX.Element => {
         )}
       </Container>
       {isWrongNetwork && (
-        <WrongNetworkWrapper>
+        <WrongNetworkWrapper data-testid="header_wrong-network">
           Please connect to the Polygon Network
         </WrongNetworkWrapper>
       )}

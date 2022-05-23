@@ -10,17 +10,17 @@ export const UseFaucets = (): JSX.Element => {
 
   const renderCompleted = () => {
     return (
-      <>
+      <div data-testid="game-tasks_2-complete">
         <Subheading>You&apos;ve got MATIC for gas!</Subheading>
         <CommonText>Now we can start transacting!</CommonText>
         <CommonText>Lets send some of our FWEB3 to a friend</CommonText>
-      </>
+      </div>
     )
   }
 
   const renderIncomplete = () => {
     return (
-      <>
+      <div data-testid="game-tasks_2-incomplete">
         <Subheading>Get native tokens for gas</Subheading>
         <CommonText>
           You can use the *<CommonLink href={getFaucetUrl()}>faucet</CommonLink>{' '}
@@ -36,7 +36,7 @@ export const UseFaucets = (): JSX.Element => {
           </CommonLink>
         </CommonText>
         <FaucetDisclaimer />
-      </>
+      </div>
     )
   }
   return hasNativeTokens ? renderCompleted() : renderIncomplete()

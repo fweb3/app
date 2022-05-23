@@ -1,7 +1,7 @@
-import { BORDERS, COLORS, MEDIA_QUERY } from '../styles'
-import { BsCheckLg } from 'react-icons/bs'
+import { COLORS, MEDIA_QUERY } from '../styles'
 import { useGame } from '../../providers'
 import styled from 'styled-components'
+import { Tooltip } from './Tooltip'
 
 const MD_DOT_SIZE = '50px'
 const LG_DOT_SIZE = '80px'
@@ -15,22 +15,6 @@ const createAura = ({ $isCompleted, $isVisible }) => {
 const createBorder = ({ $isVisible, $isCompleted }) => {
   return $isVisible && !$isCompleted ? '1px solid white' : 'none'
 }
-
-const TooltipContainer = styled((props) => <div {...props} />)`
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: ${(props) => (props.$isVisible ? '1' : '0')};
-  top: 0;
-  left: 100px;
-  width: 460px;
-  height: 70px;
-  border-radius: ${BORDERS.radius.sm};
-  border: 1px solid ${COLORS.violet};
-  z-index: 3;
-  text-align: center;
-`
 
 const HoverStyle = styled((props) => <div {...props} />)`
   position: fixed;
@@ -83,11 +67,7 @@ const StyledDot = styled((props) => <div {...props} />)`
   }
 `
 
-const TooltipText = styled((props) => <div {...props} />)`
-  padding: 1rem;
-  color: ${(props) => (props.$isCompleted ? COLORS.acidGreen : COLORS.light)};
-`
-interface IDotProps {
+export interface IDotProps {
   idx: string
   tooltip: string
   position: {
@@ -105,33 +85,28 @@ interface IDotProps {
   isCompleted: boolean
 }
 
-export const Dot = ({
-  idx,
-  position,
-  tooltip,
-  isCompleted,
-}: IDotProps): JSX.Element => {
+export const Dot = (dotData: IDotProps): JSX.Element => {
   const { handleSetActiveDot, activeDot } = useGame()
-
+  const { idx, position, isCompleted } = dotData
+  const isVisible = idx === activeDot
   return (
-    <div onClick={() => handleSetActiveDot(idx)}>
+    <div
+      data-testid={`chest-dot_dot-${idx}`}
+      onClick={() => handleSetActiveDot(idx)}
+    >
       <HoverStyle
+        data-testid={`chest-dot_hover-${idx}`}
         $position={position}
-        $isVisible={idx === activeDot}
+        $isVisible={isVisible}
         $isCompleted={isCompleted}
       />
       <StyledDot
-        data-testid="chest-section_dot"
+        data-testid={`chest-dot_${idx}`}
         $position={position}
         $isCompleted={isCompleted}
-        $isVisible={idx === activeDot}
+        $isVisible={isVisible}
       />
-      <TooltipContainer $isVisible={idx === activeDot}>
-        <TooltipText $isCompleted={isCompleted} $position={position}>
-          {tooltip}
-        </TooltipText>
-        {isCompleted && <BsCheckLg color={COLORS.acidGreen} size={20} />}
-      </TooltipContainer>
+      <Tooltip {...dotData} />
     </div>
   )
 }

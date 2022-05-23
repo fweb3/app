@@ -15,13 +15,13 @@ import {
   Subheading,
 } from '../../shared/Elements'
 
-export const ReceivingTokens = () => {
+export const HasEnoughTokens = () => {
   const { hasCompletedTask } = useGame()
   const hasEnoughTokens = hasCompletedTask(DotKey.hasEnoughTokens)
 
   const renderHasCompleted = () => {
     return (
-      <>
+      <div data-testid="game-tasks_1-complete">
         <Subheading>You&apos;ve got tokens!</Subheading>
         <CommonText>
           Now that you have the required fweb3 we need to get you some native
@@ -29,13 +29,13 @@ export const ReceivingTokens = () => {
           <CommonLink href={getFaucetUrl()}>here</CommonLink> or ask politely in
           our <CommonLink href={getDiscordUrl()}>#support</CommonLink> channel.
         </CommonText>
-      </>
+      </div>
     )
   }
 
   const renderIncomplete = () => {
     return (
-      <>
+      <div data-testid="game-tasks_1-incomplete">
         <Subheading>Receive tokens (for free)</Subheading>
         <CommonText>
           <CommonLink href={getDiscordUrl()}>Join our Discord</CommonLink> and
@@ -68,7 +68,7 @@ export const ReceivingTokens = () => {
             to your wallet
           </ColoredText>
         </CommonText>
-      </>
+      </div>
     )
   }
 

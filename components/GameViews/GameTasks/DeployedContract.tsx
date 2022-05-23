@@ -4,7 +4,7 @@ import { getGithubUrl } from '../../../interfaces'
 import { useGame } from '../../../providers'
 import { DotKey } from '../../Chest/dots'
 
-export const CreateToken = (): JSX.Element => {
+export const DeployedContract = (): JSX.Element => {
   const { hasCompletedTask } = useGame()
   const hasDeployedContract = hasCompletedTask(DotKey.hasDeployedContract)
   const walkthroughLink =
@@ -16,7 +16,7 @@ export const CreateToken = (): JSX.Element => {
 
   const renderCompleted = () => {
     return (
-      <>
+      <div data-testid="game-tasks_8-complete">
         <Subheading>Winner winner chicken dinner!</Subheading>
         <CommonText>You killed it.</CommonText>
         <CommonText>
@@ -26,14 +26,16 @@ export const CreateToken = (): JSX.Element => {
           It&apos;s also time for you to collect your spoils - your FWEB3 trophy
           NFT.
         </CommonText>
-        <PulseButton onClick={handleSubmit}>Claim Trophy</PulseButton>
-      </>
+        <PulseButton data-testid="pulse-btn" onClick={handleSubmit}>
+          Claim Trophy
+        </PulseButton>
+      </div>
     )
   }
 
   const renderIncomplete = () => {
     return (
-      <>
+      <div data-testid="game-tasks_8-incomplete">
         <Subheading>Create your own token</Subheading>
         <CommonText>
           This is the final step. You&apos;re going to deploy your own code to
@@ -52,7 +54,7 @@ export const CreateToken = (): JSX.Element => {
           to arm you with the weapons necessary to slay this beast. Go forth.
           Conquer.
         </CommonText>
-      </>
+      </div>
     )
   }
   return hasDeployedContract ? renderCompleted() : renderIncomplete()

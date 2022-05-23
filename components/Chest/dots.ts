@@ -120,7 +120,7 @@ export const DOTS_MAP: IDotsMap = {
   },
   '4': {
     task: DotKey.hasMintedNFT,
-    tooltip: 'Mint a Fweb3 NFT',
+    tooltip: 'Mint a FWEB3 NFT',
     isCompleted: false,
     position: {
       dot: {

@@ -10,7 +10,7 @@ export const SwapToken = () => {
 
   const renderCompleted = () => {
     return (
-      <>
+      <div data-testid="game-tasks_6-complete">
         <Subheading>You&apos;ve swapped tokens!</Subheading>
         <CommonText>
           Now you&apos;re dangerous enough to start making real bad choices
@@ -24,13 +24,13 @@ export const SwapToken = () => {
           </CommonLink>
           are real.
         </CommonText>
-      </>
+      </div>
     )
   }
 
   const renderIncomplete = () => {
     return (
-      <>
+      <div data-testid="game-tasks_6-incomplete">
         <Subheading>Swap a token</Subheading>
         <CommonText>
           Go to Uniswap to swap 1 FWEB3 token for some more MATIC here{' '}
@@ -44,7 +44,7 @@ export const SwapToken = () => {
           that without any help now that you&apos;ve had to add our token to
           metamask already.
         </CommonText>
-      </>
+      </div>
     )
   }
 
