@@ -28,16 +28,6 @@ export const parseBalanceToNum = (
     )
   )
 
-// export const getTrophyColor = (trophyId: string): string => {
-//   const trophyInt = parseInt(trophyId);
-//   if (trophyInt <= 333) {
-//     return "gold";
-//   } else if (trophyInt <= 3333) {
-//     return "silver";
-//   }
-//   return "copper";
-// };
-
 export const sleep = (milliseconds): void => {
   const date: number = Date.now()
   let currentDate: number = null

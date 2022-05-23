@@ -49,20 +49,20 @@ const Container = styled.div`
   }
 `
 
-const StyledLink = styled.a`
+const StyledLink = styled(Link)`
   color: ${COLORS.light};
 `
 
 const LinkItem = ({ href, text, Icon }): JSX.Element => {
   const { device } = useDevice()
   return (
-    <Link href={href} passHref>
+    <StyledLink href={href} passHref>
       {device === 'mobile' ? (
         <Icon size={30} color={COLORS.light} />
       ) : (
-        <StyledLink>{text}</StyledLink>
+        <span>{text}</span>
       )}
-    </Link>
+    </StyledLink>
   )
 }
 

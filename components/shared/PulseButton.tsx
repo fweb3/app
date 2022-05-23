@@ -1,5 +1,6 @@
 import { COLORS, MEDIA_QUERY, SPACING, TEXT } from '../styles'
 import styled, { keyframes } from 'styled-components'
+import { pulse } from 'react-animations'
 
 const pulse = keyframes`
   0% {
@@ -20,7 +21,7 @@ const pulse = keyframes`
 
 const Button = styled.button`
   background: ${COLORS.violet};
-  color: ${COLORS.russianViolet};
+  color: black;
   font-size: ${TEXT.p};
   font-weight: bold;
   border: none;
@@ -28,7 +29,6 @@ const Button = styled.button`
   padding: ${SPACING.medium};
   width: 100%;
   cursor: pointer;
-  text-shadow: 2px 2px ${COLORS.light};
 
   @media only screen and (min-width: ${MEDIA_QUERY.smallDesk}) {
     animation: ${pulse} 2s infinite;

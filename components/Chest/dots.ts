@@ -72,7 +72,7 @@ export const DOTS_MAP: IDotsMap = {
   },
   '1': {
     task: DotKey.hasEnoughTokens,
-    tooltip: 'Use the faucet to get 300 $FWEB3 tokens',
+    tooltip: 'Get at least 300 FWEB3',
     isCompleted: false,
     position: {
       dot: {
@@ -88,7 +88,7 @@ export const DOTS_MAP: IDotsMap = {
   },
   '2': {
     task: DotKey.hasUsedFaucet,
-    tooltip: 'Use the faucet to get $MATIC for gas',
+    tooltip: 'Get native token, MATIC to pay gas',
     isCompleted: false,
     position: {
       dot: {
@@ -104,7 +104,7 @@ export const DOTS_MAP: IDotsMap = {
   },
   '3': {
     task: DotKey.hasSentTokens,
-    tooltip: 'Send 100 $FWEB3 tokens to someone',
+    tooltip: 'Send 100 FWEB3 tokens to someone',
     isCompleted: false,
     position: {
       dot: {
@@ -136,7 +136,7 @@ export const DOTS_MAP: IDotsMap = {
   },
   '5': {
     task: DotKey.hasBurnedTokens,
-    tooltip: 'Burn at least one $FWEB3 token',
+    tooltip: 'Burn at least one FWEB3 token',
     isCompleted: false,
     position: {
       dot: {
@@ -151,7 +151,7 @@ export const DOTS_MAP: IDotsMap = {
   },
   '6': {
     task: DotKey.hasSwappedTokens,
-    tooltip: 'Swap a $FWEB3 token for some $MATIC',
+    tooltip: 'Swap a FWEB3 token for some MATIC',
     isCompleted: false,
     position: {
       dot: {
@@ -166,7 +166,7 @@ export const DOTS_MAP: IDotsMap = {
   },
   '7': {
     task: DotKey.hasVotedInPoll,
-    tooltip: 'Vote on a Fweb3 poll',
+    tooltip: 'Vote in a FWEB3 poll',
     isCompleted: false,
     position: {
       dot: {

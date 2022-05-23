@@ -18,8 +18,8 @@ export const SeekVerification = (): JSX.Element => {
         will only cost you more gas.
       </CommonText>
       <CommonText>
-        Once a judge verifies you, you&apos;ll be able to claim your 1,000
-        $FWEB3 tokens.
+        Once a judge verifies you, you&apos;ll be able to claim your 1,000 FWEB3
+        tokens.
       </CommonText>
       <PulseButton onClick={handleVerification}>Seek verification</PulseButton>
     </>

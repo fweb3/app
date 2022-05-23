@@ -16,6 +16,22 @@ const createBorder = ({ $isVisible, $isCompleted }) => {
   return $isVisible && !$isCompleted ? '1px solid white' : 'none'
 }
 
+const TooltipContainer = styled((props) => <div {...props} />)`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: ${(props) => (props.$isVisible ? '1' : '0')};
+  top: 0;
+  left: 100px;
+  width: 460px;
+  height: 70px;
+  border-radius: ${BORDERS.radius.sm};
+  border: 1px solid ${COLORS.violet};
+  z-index: 3;
+  text-align: center;
+`
+
 const HoverStyle = styled((props) => <div {...props} />)`
   position: fixed;
   border-radius: 50%;
@@ -67,22 +83,6 @@ const StyledDot = styled((props) => <div {...props} />)`
   }
 `
 
-const TooltipContainer = styled((props) => <div {...props} />)`
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: ${(props) => (props.$isVisible ? '1' : '0')};
-  top: 0;
-  left: 100px;
-  width: 460px;
-  height: 70px;
-  border-radius: ${BORDERS.radius.sm};
-  border: 1px solid ${COLORS.violet};
-  z-index: 3;
-  text-align: center;
-`
-
 const TooltipText = styled((props) => <div {...props} />)`
   padding: 1rem;
   color: ${(props) => (props.$isCompleted ? COLORS.acidGreen : COLORS.light)};
@@ -112,6 +112,7 @@ export const Dot = ({
   isCompleted,
 }: IDotProps): JSX.Element => {
   const { handleSetActiveDot, activeDot } = useGame()
+
   return (
     <div onClick={() => handleSetActiveDot(idx)}>
       <HoverStyle

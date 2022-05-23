@@ -137,7 +137,7 @@ export const GameFinish = () => {
   //   return (
   //     <>
   //       <button onClick={handleWin} className="pulse">
-  //         Claim 1,000 $FWEB3 tokens
+  //         Claim 1,000 FWEB3 tokens
   //       </button>
   //     </>
   //   )

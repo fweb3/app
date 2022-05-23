@@ -1,10 +1,13 @@
 import { TrophyImage } from '../CompletedView/TrophyImage'
 import { useConnection, useGame } from '../../providers'
 import { ShareButton } from '../GameViews/ShareButton'
+import styled, { keyframes } from 'styled-components'
 import { useDevice } from '../../hooks/useDevice'
+import { fadeIn } from 'react-animations'
 import { MEDIA_QUERY } from '../styles'
-import styled from 'styled-components'
 import { Dot } from './Dot'
+
+const fade = keyframes(fadeIn)
 
 const ChestContainer = styled.div`
   display: flex;
@@ -13,6 +16,7 @@ const ChestContainer = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
+  animation: 1s ${fade};
 `
 
 const OpenChest = styled.div`
@@ -33,7 +37,6 @@ const Chest = styled.div`
   background-size: contain;
   width: 390px;
   height: 250px;
-
   @media only screen and (min-width: ${MEDIA_QUERY.tablet}) {
     width: 750px;
     height: 500px;
@@ -51,9 +54,15 @@ const Chest = styled.div`
 `
 
 export const ChestSection = (): JSX.Element => {
-  const { completedTasks, hasWonGame, trophyId } = useGame()
+  const { completedTasks, hasWonGame, trophyId, isQueryLoad } = useGame()
   const { isConnected } = useConnection()
   const { device } = useDevice()
+
+  const shouldCountAsConnected = isConnected || isQueryLoad
+
+  const numTasksComplete = Object.entries(completedTasks).filter(
+    ([k, v]) => v.isCompleted
+  ).length
 
   const renderMobileChest = (): JSX.Element => {
     return <Chest />
@@ -67,7 +76,7 @@ export const ChestSection = (): JSX.Element => {
     return (
       <>
         <Chest data-testid="chest-section_chest">
-          {isConnected &&
+          {shouldCountAsConnected &&
             Object.entries(completedTasks).map(([key, value], i) => (
               <Dot key={i} idx={key} {...value} />
             ))}
@@ -85,10 +94,13 @@ export const ChestSection = (): JSX.Element => {
     if (device !== 'desktop') {
       return renderMobileChest()
     }
-    if (isConnected && trophyId && trophyId !== '0') {
+    if (shouldCountAsConnected && trophyId && trophyId !== '0') {
       return <TrophyImage />
     }
-    if (isConnected && hasWonGame) {
+    if (
+      (shouldCountAsConnected && hasWonGame) ||
+      (shouldCountAsConnected && numTasksComplete === 9)
+    ) {
       return renderOpenChest()
     }
     return renderGameChest()

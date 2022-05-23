@@ -27,7 +27,7 @@ export const VerifiedWinner = (): JSX.Element => {
       </Subheading>
       <CommonText>
         Enjoyed yourself? Consider onboarding a friend or family member by
-        sending them some <ColoredText>$FWEB3</ColoredText> tokens.
+        sending them some <ColoredText>FWEB3</ColoredText> tokens.
       </CommonText>
       <CommonText>
         Or help us build by chiming into the{' '}

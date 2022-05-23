@@ -59,7 +59,6 @@ export const ErrorText = styled((props) => <p {...props} />)`
 `
 
 export const HeadingText = styled.h1`
-  color: white;
   font-size: calc(${TEXT.p} + 0.1rem);
   margin: 0 0 ${SPACING.small} 0;
   padding: 0;
@@ -70,7 +69,7 @@ export const HeadingText = styled.h1`
     font-size: ${TEXT.h3};
   }
   @media only screen and (min-width: ${MEDIA_QUERY.smallDesk}) {
-    font-size: ${TEXT.h4};
+    font-size: ${TEXT.h1};
     text-align: left;
   }
   @media only screen and (min-width: ${MEDIA_QUERY.wide}) {

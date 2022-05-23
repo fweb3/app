@@ -1,17 +1,17 @@
-import { useState, useEffect, createContext, useContext } from 'react'
-import { DOTS_MAP, IDotsMap } from '../components/Chest/dots'
+import { useState, useEffect, createContext, useContext, useRef } from 'react'
+import { DotKey, DOTS_MAP, IDotsMap } from '../components/Chest/dots'
 import { useConnection, useLoading } from '../providers'
 import type { IGameTaskState } from '../interfaces/game'
-import { loadGameContracts } from '../interfaces'
-import { DEFAULT_GAME_STATE } from '../lib'
+import { DEFAULT_GAME_STATE, logger } from '../lib'
+import { loadFweb3Contracts } from '../interfaces'
+import { Contract, ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
-import { Contract } from 'ethers'
 
 interface IGameProviderState {
   handleSetActiveDot: (dot: string) => void
   gameTaskState: IGameTaskState
-  loadGameGameState: () => void
+  loadGameGameState: (account: string) => void
   isFetchingGameData: boolean
   completedTasks: IDotsMap
   tokenContract: Contract
@@ -22,6 +22,8 @@ interface IGameProviderState {
   trophyColor: string
   isVerified: boolean
   shareInfo?: ISocialShare
+  isQueryLoad: boolean
+  hasCompletedTask: (task: DotKey) => boolean
 }
 
 interface ISocialShare {
@@ -50,6 +52,8 @@ const defaultGameState: IGameProviderState = {
   trophyColor: '',
   isVerified: false,
   shareInfo: initShareInfo,
+  isQueryLoad: false,
+  hasCompletedTask: () => false,
 }
 
 const GameContext = createContext(defaultGameState)
@@ -58,15 +62,16 @@ const DEV_GAME_STATE: IGameTaskState = {
   tokenBalance: '300000000000000000000',
   hasEnoughTokens: true, // 1
   hasUsedFaucet: false, // 2
-  hasSentTokens: false, // 3
-  hasMintedNFT: false, // 4
-  hasBurnedTokens: false, // 5
-  hasSwappedTokens: false, // 6
-  hasVotedInPoll: false, // 7
-  hasDeployedContract: false, // 8
+  hasSentTokens: true, // 3
+  hasMintedNFT: true, // 4
+  hasBurnedTokens: true, // 5
+  hasSwappedTokens: true, // 6
+  hasVotedInPoll: true, // 7
+  hasDeployedContract: true, // 8
   hasWonGame: false,
   isConnected: false,
   trophyId: '',
+  maticBalance: '100000000000000000',
 }
 
 const calcTrophyColor = (trophyId: string): string => {
@@ -79,8 +84,20 @@ const calcTrophyColor = (trophyId: string): string => {
   }
   return 'copper'
 }
-
 const LIVE = false
+
+const fetchTaskState = async (account: string): Promise<IGameTaskState> => {
+  if (!LIVE) {
+    logger.log(
+      `LOADING DEV STATE: ${JSON.stringify(DEFAULT_GAME_STATE, null, 2)}`
+    )
+    return DEV_GAME_STATE
+  }
+  const url = `/api/polygon?account=${account}`
+  const apiResponse = await fetch(url)
+  const taskState: IGameTaskState = await apiResponse.json()
+  return taskState
+}
 
 const GameProvider = ({ children }) => {
   const { account, isConnected, provider, network, handleDisconnect } =
@@ -88,6 +105,7 @@ const GameProvider = ({ children }) => {
   const [isFetchingGameData, setIsFetchingGameData] = useState<boolean>(false)
   const [completedTasks, setCompletedTasks] = useState<IDotsMap>(DOTS_MAP)
   const [shareInfo, setShareInfo] = useState<ISocialShare>(initShareInfo)
+  const [isQueryLoad, setIsQueryLoad] = useState<boolean>(false)
   const [hasWonGame, setHasWonGame] = useState<boolean>(false)
   const [isVerified, setIsVerified] = useState<boolean>(false)
   const [trophyColor, setTrophyColor] = useState<string>('')
@@ -98,37 +116,10 @@ const GameProvider = ({ children }) => {
   const { fullscreenLoader } = useLoading()
   const [gameTaskState, setGameTaskState] =
     useState<IGameTaskState>(DEFAULT_GAME_STATE)
-  const {
-    query: { wallet },
-  } = useRouter()
+  const { query } = useRouter()
+  const toaster = useRef(null)
 
-  const handleSetActiveDot = (idx: string) => {
-    setActiveDot(idx)
-  }
-
-  const loadDevGameState = async () => {
-    if (isConnected && network.chainId !== 137) {
-      toast.error('Please connect to polygon network', {
-        autoClose: 6000,
-      })
-      handleDisconnect()
-      return
-    }
-    setGameTaskState(DEV_GAME_STATE)
-    setHasWonGame(DEV_GAME_STATE?.hasWonGame || false)
-    setTrophyId(DEV_GAME_STATE?.trophyId || '')
-
-    const trophyColor = calcTrophyColor(DEV_GAME_STATE?.trophyId)
-    setTrophyColor(trophyColor)
-
-    const completedTasks = mapCompletedTasks({
-      ...DEV_GAME_STATE,
-      isConnected: true,
-    })
-    setCompletedTasks(completedTasks)
-  }
-
-  const loadGameGameState = async () => {
+  const loadGameGameState = async (loadAccount: string) => {
     if (isConnected && network.chainId !== 137) {
       toast.error('Please connect to polygon network', {
         autoClose: 6000,
@@ -137,18 +128,17 @@ const GameProvider = ({ children }) => {
       return
     }
 
-    if (isConnected) {
-      const toaster = toast.loading('Loading game state', {
-        autoClose: 1000,
+    if (isConnected || query?.account) {
+      toaster.current = toast.loading('Loading game state', {
+        autoClose: 2000,
         pauseOnFocusLoss: false,
         toastId: 'GAME_LOAD',
       })
       try {
         fullscreenLoader(true)
+        setIsQueryLoad(!!query?.account)
         // if the wallet is coming from URL use that. else use connected
-        const url = `/api/polygon?wallet_address=${wallet ?? account}`
-        const apiResponse = await fetch(url)
-        const taskState: IGameTaskState = await apiResponse.json()
+        const taskState = await fetchTaskState(loadAccount)
         setGameTaskState(taskState)
 
         setHasWonGame(taskState?.hasWonGame || false)
@@ -176,8 +166,7 @@ const GameProvider = ({ children }) => {
 
         // Temp fix until toastify library gets fixed
         setTimeout(() => {
-          toast.update(toaster, {
-            toastId: 'GAME_LOAD',
+          toast.update(toaster.current, {
             render: 'Loaded!',
             type: toast.TYPE.SUCCESS,
             isLoading: false,
@@ -188,12 +177,11 @@ const GameProvider = ({ children }) => {
         }, 1000)
       } catch (err) {
         console.error(err)
-        toast.update(toaster, {
-          toastId: 'GAME_LOAD',
+        toast.update(toaster.current, {
           render: 'Error loading game state',
           type: toast.TYPE.ERROR,
           isLoading: false,
-          autoClose: 1000,
+          autoClose: 5000,
           pauseOnFocusLoss: false,
         })
         fullscreenLoader(false)
@@ -201,19 +189,43 @@ const GameProvider = ({ children }) => {
     }
   }
 
+  const hasCompletedTask = (task: DotKey) => {
+    return (
+      Object.entries(completedTasks).filter(([k, v]) => {
+        if (v.task === task && v.isCompleted) {
+          return v
+        }
+      }).length !== 0
+    )
+  }
+
   const mapCompletedTasks = (newGameTaskState: IGameTaskState): IDotsMap => {
     let currentDot = 0
     const obj = {}
+    const maticBalance = ethers.utils.formatEther(
+      newGameTaskState?.maticBalance
+    )
+
     Object.entries(DOTS_MAP).map(([key, value]) => {
       const isCompleted = newGameTaskState[value.task] || false
       if (isCompleted && parseInt(key) > currentDot) {
         currentDot = parseInt(key)
       }
-      obj[key] = { ...value, isCompleted }
+      // if they have matic already mark faucet as used.
+      if (value.task === 'hasUsedFaucet' && parseFloat(maticBalance) >= 0.1) {
+        obj[key] = { ...value, isCompleted: true }
+        currentDot = parseInt(key)
+      } else {
+        obj[key] = { ...value, isCompleted }
+      }
     })
-    console.log('current set dot', currentDot.toString())
+
     setActiveDot(currentDot.toString())
     return obj
+  }
+
+  const handleSetActiveDot = (idx: string) => {
+    setActiveDot(idx)
   }
 
   const createShareInfo = (
@@ -262,17 +274,15 @@ const GameProvider = ({ children }) => {
 
   useEffect(() => {
     ;(async () => {
-      if (LIVE) {
-        await loadGameGameState()
-      } else {
-        await loadDevGameState()
+      if (isConnected || query?.account) {
+        await loadGameGameState(query?.account.toString() ?? account)
       }
     })()
-  }, [isConnected, account, wallet]) // eslint-disable-line
+  }, [isConnected, query]) // eslint-disable-line
 
   useEffect(() => {
     if (provider) {
-      const { tokenContract, gameContract } = loadGameContracts(provider)
+      const { tokenContract, gameContract } = loadFweb3Contracts(provider)
       setTokenContract(tokenContract)
       setGameContract(gameContract)
     }
@@ -331,6 +341,8 @@ const GameProvider = ({ children }) => {
         trophyColor,
         isVerified,
         shareInfo,
+        isQueryLoad,
+        hasCompletedTask,
       }}
     >
       {children}

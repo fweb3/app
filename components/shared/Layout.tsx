@@ -18,7 +18,7 @@ const MainGrid = styled.div`
 export const Layout = ({ children }) => {
   return (
     <>
-      <ToastContainer theme="dark" />
+      <ToastContainer theme="dark" position="top-left" />
       <HtmlHead />
       <MainGrid>
         <Header />

@@ -1,33 +1,35 @@
 import { SeekVerification } from '../CompletedView/SeekVerification'
-import { DeployOwnContract } from './GameTasks/DeployOwnContract'
 import { VerifiedWinner } from '../CompletedView/VerifiedWinner'
 import { ReceivingTokens } from './GameTasks/ReceivingTokens'
-import { VoteWithTokens } from './GameTasks/VoteWithTokens'
 import { MintDiamonNFT } from './GameTasks/MintDiamondNFT'
 import { useConnection, useGame } from '../../providers'
+import { CompletedTask } from '../shared/CompletedTask'
 import { CreateToken } from './GameTasks/CreateToken'
+import styled, { keyframes } from 'styled-components'
 import { UseFaucets } from './GameTasks/UseFaucets'
 import { SendTokens } from './GameTasks/SendTokens'
+import { VoteInPoll } from './GameTasks/VoteInPoll'
 import { BurnToken } from './GameTasks/BurnToken'
 import { SwapToken } from './GameTasks/SwapToken'
 import { useDevice } from '../../hooks/useDevice'
 import { MEDIA_QUERY, SPACING } from '../styles'
 import { ConnectButton } from './ConnectButton'
 import { Introduction } from './Introduction'
-import styled from 'styled-components'
+import { fadeIn } from 'react-animations'
+
+const fade = keyframes(fadeIn)
 
 const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
-
+  animation: 0.5s ${fade};
   margin: ${SPACING.medium} ${SPACING.medium} 4rem ${SPACING.medium};
-
   @media only screen and (min-width: ${MEDIA_QUERY.tablet}) {
     margin: 0 ${SPACING.extra} 0 ${SPACING.extra};
   }
 
   @media only screen and (min-width: ${MEDIA_QUERY.smallDesk}) {
-    margin ${SPACING.normal};
+    margin: ${SPACING.normal};
   }
 
   @media only screen and (min-width: ${MEDIA_QUERY.desktop}) {
@@ -40,9 +42,11 @@ const ContentContainer = styled.div`
 `
 
 export const ContentSection = (): JSX.Element => {
-  const { activeDot, hasWonGame, trophyId } = useGame()
+  const { activeDot, hasWonGame, trophyId, isQueryLoad } = useGame()
   const { isConnected } = useConnection()
   const { device } = useDevice()
+
+  const shouldCountAsConnected = isConnected || isQueryLoad
 
   const renderNotConnected = (): JSX.Element => {
     return (
@@ -62,19 +66,17 @@ export const ContentSection = (): JSX.Element => {
   }
 
   const renderConnected = (): JSX.Element => {
-    console.log({ activeDot })
     return (
       <>
-        {activeDot === '0' && <ReceivingTokens />}
+        {activeDot === '0' && <CompletedTask task="Connected Wallet" />}
         {activeDot === '1' && <ReceivingTokens />}
         {activeDot === '2' && <UseFaucets />}
         {activeDot === '3' && <SendTokens />}
         {activeDot === '4' && <MintDiamonNFT />}
         {activeDot === '5' && <BurnToken />}
         {activeDot === '6' && <SwapToken />}
-        {activeDot === '7' && <VoteWithTokens />}
+        {activeDot === '7' && <VoteInPoll />}
         {activeDot === '8' && <CreateToken />}
-        {activeDot === '9' && <DeployOwnContract />}
       </>
     )
   }
@@ -88,15 +90,15 @@ export const ContentSection = (): JSX.Element => {
       return renderNotDesktop()
     }
 
-    if (isConnected && trophyId) {
+    if (shouldCountAsConnected && trophyId) {
       return renderHasTrophy()
     }
 
-    if (isConnected && hasWonGame) {
+    if (shouldCountAsConnected && hasWonGame) {
       return renderNeedsVerification()
     }
 
-    if (isConnected) {
+    if (shouldCountAsConnected || isQueryLoad) {
       return renderConnected()
     }
     return renderNotConnected()

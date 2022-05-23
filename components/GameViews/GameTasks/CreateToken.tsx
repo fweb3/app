@@ -1,31 +1,59 @@
 import { CommonLink, CommonText, Subheading } from '../../shared/Elements'
+import { PulseButton } from '../../shared/PulseButton'
+import { getGithubUrl } from '../../../interfaces'
+import { useGame } from '../../../providers'
+import { DotKey } from '../../Chest/dots'
 
 export const CreateToken = (): JSX.Element => {
+  const { hasCompletedTask } = useGame()
+  const hasDeployedContract = hasCompletedTask(DotKey.hasDeployedContract)
   const walkthroughLink =
     'https://www.notion.so/fweb3/Walkthrough-8ac4fc0d3b814a068767c86d63fd8fb7#3c526735ae074b88838ad7b467545614'
-  return (
-    <>
-      <Subheading>Create your own token</Subheading>
-      <CommonText>
-        This is the final step. You&apos;re going to deploy your own code to the
-        Polygon blockchain, just like we had to do to make this game.
-      </CommonText>
-      <CommonText>
-        So far, you have interfaced with **three** smart contracts we have
-        deployed:
-      </CommonText>
-      <ol>
-        <li>The ERC20 token for the 10,000,000 $FWEB3 tokens</li>
-        <li>The ERC721 token for the Diamond NFT</li>
-        <li>The scratch-made smart contract of the poll above</li>
-      </ol>
-      <CommonText>
-        Now you will deploy one of your own. Need help? Check out{' '}
-        <CommonLink href={walkthroughLink} target="_blank" rel="noreferrer">
-          this video
-        </CommonLink>{' '}
-        we made.
-      </CommonText>
-    </>
-  )
+
+  const handleSubmit = async () => {
+    console.log('make trophy')
+  }
+
+  const renderCompleted = () => {
+    return (
+      <>
+        <Subheading>Winner winner chicken dinner!</Subheading>
+        <CommonText>You killed it.</CommonText>
+        <CommonText>
+          Time to start shilling your own token to friends and family!
+        </CommonText>
+        <CommonText>
+          It&apos;s also time for you to collect your spoils - your FWEB3 trophy
+          NFT.
+        </CommonText>
+        <PulseButton onClick={handleSubmit}>Claim Trophy</PulseButton>
+      </>
+    )
+  }
+
+  const renderIncomplete = () => {
+    return (
+      <>
+        <Subheading>Create your own token</Subheading>
+        <CommonText>
+          This is the final step. You&apos;re going to deploy your own code to
+          the Polygon blockchain, just like we had to do to make this game.
+        </CommonText>
+        <CommonText>
+          So far, you have interacted with three of our fweb3 contracts. The
+          code for them is totally open and can be found{' '}
+          <CommonLink href={getGithubUrl()}>here</CommonLink>
+        </CommonText>
+        <CommonText>
+          It&apos;s time for you to deploy your own. Here is a{' '}
+          <CommonLink href={walkthroughLink} target="_blank" rel="noreferrer">
+            video
+          </CommonLink>{' '}
+          to arm you with the weapons necessary to slay this beast. Go forth.
+          Conquer.
+        </CommonText>
+      </>
+    )
+  }
+  return hasDeployedContract ? renderCompleted() : renderIncomplete()
 }

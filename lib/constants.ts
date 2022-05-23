@@ -13,6 +13,7 @@ export const DEFAULT_GAME_STATE: IGameTaskState = {
   hasWonGame: false,
   isConnected: false,
   trophyId: '',
+  maticBalance: '',
 }
 
 export const DEFAULT_WON_GAME_STATE: IGameTaskState = {
@@ -26,4 +27,5 @@ export const DEFAULT_WON_GAME_STATE: IGameTaskState = {
   hasBurnedTokens: true,
   hasMintedNFT: true,
   trophyId: '0',
+  maticBalance: '',
 }

@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useState } from 'react'
 import { LoadingDots } from '../components/shared/LoadingDots'
+import { createContext, useContext, useState } from 'react'
 interface ILoadingContext {
   isLoading: boolean
   fullscreenLoader: (val: boolean) => void

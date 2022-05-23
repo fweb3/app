@@ -1,15 +1,12 @@
+import { IGameTaskState } from '../../interfaces/game'
 import { DEFAULT_WON_GAME_STATE } from '../constants'
-import { getAddress } from 'ethers/lib/utils'
+import { loadAddress } from '../../interfaces'
 import { ethers } from 'ethers'
 import type {
-  IAPIRequest,
   IPolygonBalanceResponse,
   IPolygonData,
   IPolygonDataResponse,
-  IRequestValidationResponse,
 } from './index.d'
-
-import { loadAddress } from '../../interfaces'
 import {
   fetchTrophyTransactions,
   fetchWalletTokenBalance,
@@ -17,9 +14,8 @@ import {
   fetchWalletsInternalTxs,
   fetchERC20Txs,
   fetchNftsTxs,
+  fetchMaticBalance,
 } from './api'
-
-import { IGameTaskState } from '../../interfaces/game'
 
 export const checkHasWonGame = async (
   account: string
@@ -54,13 +50,20 @@ export const currentWalletGameState = async (
     account
   )
   const tokenBalance: string = await _walletBalance(account)
+  const maticBalance: string = await _maticBalance(account)
   return {
     ...walletTxCompletedItems,
     ...erc20CompletedItems,
     tokenBalance,
     hasEnoughTokens: parseInt(tokenBalance) >= 100,
     hasMintedNFT: await _checkHasMintedNTF(account),
+    maticBalance,
   }
+}
+
+export const _maticBalance = async (account: string) => {
+  const { result } = await fetchMaticBalance(account)
+  return result ?? '0'
 }
 
 export const _walletBalance = async (account: string): Promise<string> => {
@@ -96,7 +99,6 @@ const _checkWalletTxCompletedItems = async (
   }
 }
 
-// FIX ME check both matic and fweb3 faucets
 const _checkHasUsedFweb3Faucet = (walletsTxs: IPolygonData[]): boolean => {
   const fweb3FaucetAddresses = loadAddress('fweb3_token_faucet')
 

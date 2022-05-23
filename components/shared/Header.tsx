@@ -1,15 +1,19 @@
 import { COLORS, TEXT, SPACING, MEDIA_QUERY, BORDERS } from '../styles'
+import { ColoredText, CommonLink, HeadingText } from './Elements'
 import { useConnection, useGame } from '../../providers'
+import styled, { keyframes } from 'styled-components'
 import { getPolygonscanUrl } from '../../interfaces'
+import { AiOutlineDeleteRow } from 'react-icons/ai'
 import { useDevice } from '../../hooks/useDevice'
 import { BsTrophyFill } from 'react-icons/bs'
-import { GiUnplugged } from 'react-icons/gi'
 import { useEffect, useState } from 'react'
 import { GiTwoCoins } from 'react-icons/gi'
-import { ColoredText, CommonLink, CommonText } from './Elements'
+import { flash } from 'react-animations'
 import { GoPlug } from 'react-icons/go'
-import styled from 'styled-components'
 import { ethers } from 'ethers'
+
+const flicker = keyframes(flash)
+
 const LeftNav = styled.div``
 
 const Heading = styled.h2`
@@ -26,10 +30,10 @@ const NavText = styled.p`
 `
 
 const DisplayName = styled.div`
-  color: ${COLORS.tangerine};
-  text-decoration: underline;
-  font-size: ${TEXT.h3};
-  padding-right: ${SPACING.extra};
+  font-size: ${TEXT.h4};
+  padding-right: ${SPACING.medium};
+  animation: 0.2s ${flicker};
+  animation-delay: 0.6s;
 `
 
 const AccountBalance = styled.div`
@@ -91,16 +95,37 @@ const Container = styled.nav`
   }
 `
 
-const StyledPlug = styled((props) => <GoPlug {...props} />)`
-  font-size: ${TEXT.h4};
-  color: ${COLORS.springGreen};
-  padding-right: ${SPACING.normal};
+const plugin = keyframes`
+  0% {
+    transform: translateX(-50px);
+    color: red;
+  }
+  80% {
+    transform: scale(1.3);
+    color: red;
+
+  }
+  90% {
+    transform: scale(1);
+    transform: translateX(0);
+    color: red;
+  }
+  100% {
+    color: green;
+  }
 `
 
-const StyledUnplug = styled((props) => <GiUnplugged {...props} />)`
+const StyledPlug = styled((props) => <GoPlug {...props} />)`
+  font-size: ${TEXT.h3};
+  color: ${COLORS.springGreen};
+  padding-right: 0.8rem;
+  animation: 0.8s ${plugin};
+`
+
+const StyledUnplug = styled((props) => <AiOutlineDeleteRow {...props} />)`
   color: ${COLORS.error};
-  font-size: ${TEXT.h4};
-  padding-right: ${SPACING.normal};
+  font-size: ${TEXT.h3};
+  padding-right: ${SPACING.small};
 `
 
 const WrongNetworkWrapper = styled.div`
@@ -117,11 +142,20 @@ const WrongNetworkWrapper = styled.div`
   width: 100%;
 `
 
+const FlashingHeader = styled(HeadingText)`
+  animation: 0.2s repeat ${flicker};
+  animation-delay: 10s;
+  font-size: ${TEXT.h2};
+`
+
 export const Header = (): JSX.Element => {
-  const { displayName, isConnected, account, network } = useConnection()
+  const { displayName, isConnected, account, network, queryDisplayName } =
+    useConnection()
   const [isWrongNetwork, setIsWrongNetwork] = useState<boolean>(false)
-  const { trophyId, gameTaskState } = useGame()
+  const { trophyId, gameTaskState, isQueryLoad } = useGame()
   const { device } = useDevice()
+
+  const shouldCountAsConnected = isConnected || isQueryLoad
 
   useEffect(() => {
     if (account) {
@@ -133,7 +167,9 @@ export const Header = (): JSX.Element => {
   const renderMobileHeader = (): JSX.Element => {
     return (
       <>
-        <Heading data-testid="header-mobile_heading">fweb3</Heading>
+        <FlashingHeader data-testid="header-mobile_heading">
+          fweb3
+        </FlashingHeader>
         <NavText>
           Not supported on mobile{' '}
           <ColoredText color={COLORS.teaGreen}>yet</ColoredText>
@@ -156,11 +192,12 @@ export const Header = (): JSX.Element => {
   const renderConnectedNav = (): JSX.Element => {
     const balanceInEth = ethers.utils.formatEther(gameTaskState?.tokenBalance)
     const balance = ethers.utils.commify(balanceInEth)
+    const displayTouse = queryDisplayName ?? displayName
     return (
       <>
         <StyledPlug />
         <CommonLink passHref href={getPolygonscanUrl(account)}>
-          <DisplayName>{displayName}</DisplayName>
+          <DisplayName>{displayTouse}</DisplayName>
         </CommonLink>
         <BalanceContainer>
           <GiTwoCoins color={COLORS.yellowish} size={40} />
@@ -178,13 +215,15 @@ export const Header = (): JSX.Element => {
         ) : (
           <>
             <LeftNav>
-              {isConnected && trophyId && (
+              {shouldCountAsConnected && trophyId && (
                 <BsTrophyFill color="gold" size={40} />
               )}
-              <Heading>fweb3</Heading>
+              <FlashingHeader>fweb3</FlashingHeader>
             </LeftNav>
             <RightNav data-testid="header_right-nav">
-              {isConnected ? renderConnectedNav() : renderDisconnectedNav()}
+              {shouldCountAsConnected
+                ? renderConnectedNav()
+                : renderDisconnectedNav()}
             </RightNav>
           </>
         )}

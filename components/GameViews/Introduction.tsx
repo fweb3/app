@@ -7,7 +7,6 @@ import {
   ErrorText,
   ColoredText,
 } from '../shared/Elements'
-import React from 'react'
 
 export const Introduction = (): JSX.Element => {
   const { device } = useDevice()
@@ -29,7 +28,7 @@ export const Introduction = (): JSX.Element => {
       <CommonText>
         There are 9 dots to light up by doing things on a blockchain (in this
         case, Polygon). Once you light them all up, you win additional{' '}
-        <ColoredText color={COLORS.violet}>$FWEB3</ColoredText> tokens and a
+        <ColoredText color={COLORS.violet}>FWEB3</ColoredText> tokens and a
         commemorative NFT... and it&apos;s free!
       </CommonText>
       {device === 'desktop' && renderMetamaskInstructions()}

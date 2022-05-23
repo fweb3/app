@@ -1,3 +1,5 @@
+import { ethers } from 'ethers'
+
 export interface IGameTaskState {
   tokenBalance?: string
   hasEnoughTokens?: boolean
@@ -11,4 +13,9 @@ export interface IGameTaskState {
   hasWonGame?: boolean
   trophyId?: string
   isConnected?: boolean
+  maticBalance?: string
 }
+
+export type EthersProvider =
+  | ethers.providers.AlchemyProvider
+  | ethers.providers.JsonRpcProvider

@@ -6,6 +6,15 @@ const { POLYGON_API_KEY } = process.env
 
 // External Endpoints
 
+export const walletMaticBalanceURI = (walletAddress: string) => {
+  // https://api.polygonscan.com/api
+  //  ?module=account
+  //  &action=balance
+  //  &address=0x5A534988535cf27a70e74dFfe299D06486f185B7
+  //  &apikey=YourApiKeyToken
+  return `${POLYGON_BASE_API_URL}?module=account&action=balance&address=${walletAddress}&apikey=${POLYGON_API_KEY}`
+}
+
 export const walletsTokenBalanceURI = (walletAddress: string): string => {
   const fweb3TokenAddress = loadAddress('fweb3_token')[0]
   return `${POLYGON_BASE_API_URL}?module=account&action=tokenbalance&contractaddress=${fweb3TokenAddress}&address=${walletAddress}&tag=latest&apikey=${POLYGON_API_KEY}`

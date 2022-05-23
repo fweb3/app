@@ -1,21 +1,43 @@
 import { CommonLink, CommonText, Subheading } from '../../shared/Elements'
-import { getDiscordUrl, getFaucetUrl } from '../../../interfaces'
 import { FaucetDisclaimer } from '../FaucetDisclaimer'
+import { getFaucetUrl } from '../../../interfaces'
+import { useGame } from '../../../providers'
+import { DotKey } from '../../Chest/dots'
 
 export const UseFaucets = (): JSX.Element => {
-  return (
-    <>
-      <Subheading>Receive gas using tokens (for free!)</Subheading>
-      <CommonText>
-        Join our{' '}
-        <CommonLink href={getDiscordUrl()} target="_blank" rel="noreferrer">
-          Discord
-        </CommonLink>{' '}
-        and use the *<CommonLink href={getFaucetUrl()}>Faucet</CommonLink> to
-        receive gas in $MATIC. You&apos;ll need the 300 $FWEB3 tokens from the
-        fweb3 faucet in order to use it.
-      </CommonText>
-      <FaucetDisclaimer />
-    </>
-  )
+  const { hasCompletedTask } = useGame()
+  const hasNativeTokens = hasCompletedTask(DotKey.hasUsedFaucet)
+
+  const renderCompleted = () => {
+    return (
+      <>
+        <Subheading>You&apos;ve got MATIC for gas!</Subheading>
+        <CommonText>Now we can start transacting!</CommonText>
+        <CommonText>Lets send some of our FWEB3 to a friend</CommonText>
+      </>
+    )
+  }
+
+  const renderIncomplete = () => {
+    return (
+      <>
+        <Subheading>Get native tokens for gas</Subheading>
+        <CommonText>
+          You can use the *<CommonLink href={getFaucetUrl()}>faucet</CommonLink>{' '}
+          to receive the native tokens required to pay gas. You&apos;ll need at
+          least 300 FWEB3 tokens in your account to use it.
+        </CommonText>
+        <CommonText>
+          Alternatively, you can bridge another currency over to MATIC. This
+          process is a bit more advanced if you haven&apos;t swapped or used a
+          bridge across chains before. One of the bridges we use can be found{' '}
+          <CommonLink href="https://bridge.umbria.network/bridge/ethereum-polygon/matic">
+            here
+          </CommonLink>
+        </CommonText>
+        <FaucetDisclaimer />
+      </>
+    )
+  }
+  return hasNativeTokens ? renderCompleted() : renderIncomplete()
 }

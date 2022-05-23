@@ -7,10 +7,16 @@ import {
   walletsInternalTxsURI,
   erc20TxsURI,
   nftTxsURI,
+  walletMaticBalanceURI,
 } from './endpoints'
 
 // Because of our polygon rate limiting we need to
 // Sleep for 200ms between calls - totaling ~1s
+
+export const fetchMaticBalance = async (walletAddress: string) => {
+  sleep(200)
+  return fetcher(walletMaticBalanceURI(walletAddress))
+}
 
 export const fetchWalletTokenBalance = async (
   walletAddress: string

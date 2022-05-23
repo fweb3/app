@@ -11,9 +11,9 @@ export default async function handler(
     const payload: IGameTaskState = await fetchCurrentGameState(
       account.toString()
     )
-    return res.json(payload)
+    return res.json({ status: 'success', ...payload })
   } catch (e) {
     console.error(e)
-    return res.status(e?.status || 500).send(e?.message || e)
+    return res.status(500).json({ status: 'error', error: e.message })
   }
 }
