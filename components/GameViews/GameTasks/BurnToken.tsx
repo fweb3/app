@@ -30,8 +30,8 @@ const CopyIcon = styled(RiFileCopy2Line)`
 `
 
 export const BurnToken = (): JSX.Element => {
-  const { hasCompletedTask } = useGame()
-  const hasBurnedTokens = hasCompletedTask(DotKey.hasBurnedTokens)
+  const { isDotComplete } = useGame()
+  const hasBurnedTokens = isDotComplete(DotKey.hasBurnedTokens)
   const burnAddress = loadAddress('burn')[0]
   const handleCopy = () => {
     navigator?.clipboard.writeText(burnAddress)

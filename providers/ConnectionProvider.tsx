@@ -22,7 +22,6 @@ interface IConnectionContext {
   displayName: string
   isConnecting: boolean
   handleDisconnect: () => void
-  isJudge: boolean
   queryDisplayName: string
 }
 
@@ -36,20 +35,18 @@ const defaultConnectionContext: IConnectionContext = {
   displayName: '',
   isConnecting: false,
   handleDisconnect: () => {},
-  isJudge: false,
   queryDisplayName: '',
 }
 
 const ConnectionContext = createContext(defaultConnectionContext)
 
 const ConnectionProvider = ({ children }) => {
+  const { isLoading, fullscreenLoader, startToast, updateToast } = useLoading()
   const [initialized, setInitialized] = useState<boolean>(false)
   const [isConnected, setIsConnected] = useState<boolean>(false)
   const [queryDisplayName, setQueryDisplayName] = useState<string>('')
   const [displayName, setDisplayName] = useState<string>('')
   const [isConnecting, setIsConnecting] = useState(false)
-  const [isJudge, setIsJudge] = useState<boolean>(false)
-  const { isLoading, fullscreenLoader } = useLoading()
   const [account, setAccount] = useState<string>('')
   const [ensName, setEnsName] = useState<string>('')
   const [provider, setProvider] = useState(null)
@@ -67,10 +64,8 @@ const ConnectionProvider = ({ children }) => {
 
   const connect = async () => {
     if (!isLoading && window?.ethereum) {
+      const toaster = startToast('Connecting...')
       try {
-        toastId.current = toast.loading('Connecting', {
-          autoClose: 1000,
-        })
         setIsConnecting(true)
         fullscreenLoader(true)
         const { provider, account, currentNetwork, ensName } =
@@ -80,9 +75,6 @@ const ConnectionProvider = ({ children }) => {
         setAccount(account)
         setEnsName(ensName)
 
-        // const isJudge = await checkIsJudge(account, provider)
-        // setIsJudge(isJudge)
-        setIsJudge(true)
         const displayName = ensName ?? formatAccountDisplay(account)
         setDisplayName(displayName)
 
@@ -91,21 +83,15 @@ const ConnectionProvider = ({ children }) => {
 
         setInitialized(true)
         setIsConnecting(false)
-        toast.update(toastId.current, {
-          render: 'Connected!',
+        toast.update(toaster, {
           type: toast.TYPE.SUCCESS,
-          isLoading: false,
-          autoClose: 1000,
         })
         fullscreenLoader(false)
       } catch (err) {
         console.error(err)
         const errorMessage = getMessageFromCode(err.code, err.message)
-        toast.update(toastId.current, {
-          render: errorMessage,
+        updateToast(toaster, errorMessage, {
           type: toast.TYPE.ERROR,
-          isLoading: false,
-          autoClose: 6000,
         })
         resetState()
       }
@@ -151,13 +137,6 @@ const ConnectionProvider = ({ children }) => {
     console.log(`MESSAGE_CHANGE_EVENT: ${JSON.stringify(type)}`)
   }
 
-  const checkIsJudge = async (account: string, provider) => {
-    const gameContract = loadGameContract(provider)
-    const isJudge = await gameContract.isJudge(account)
-    logger.log(`IS_JUDGE: ${isJudge}`)
-    return isJudge
-  }
-
   const formatAccountDisplay = (account: string) => {
     return `${account.substring(0, 6)}...`
   }
@@ -195,7 +174,6 @@ const ConnectionProvider = ({ children }) => {
         displayName,
         isConnecting,
         handleDisconnect,
-        isJudge,
         queryDisplayName,
       }}
     >

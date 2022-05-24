@@ -34,8 +34,8 @@ const CopyIcon = styled(RiFileCopy2Line)`
 `
 export const VoteInPoll = (): JSX.Element => {
   const pollAddress = loadAddress('fweb3_poll')[0]
-  const { hasCompletedTask } = useGame()
-  const hasVotedInPoll = hasCompletedTask(DotKey.hasVotedInPoll)
+  const { isDotComplete } = useGame()
+  const hasVotedInPoll = isDotComplete(DotKey.hasVotedInPoll)
 
   const renderCompleted = () => {
     return (

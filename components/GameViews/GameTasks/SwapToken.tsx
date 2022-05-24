@@ -4,8 +4,8 @@ import { useGame } from '../../../providers'
 import { DotKey } from '../../Chest/dots'
 
 export const SwapToken = () => {
-  const { hasCompletedTask } = useGame()
-  const hasSwappedTokens = hasCompletedTask(DotKey.hasSwappedTokens)
+  const { isDotComplete } = useGame()
+  const hasSwappedTokens = isDotComplete(DotKey.hasSwappedTokens)
   const uniswapUrl = getUniswapUrl()
 
   const renderCompleted = () => {

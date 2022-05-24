@@ -5,8 +5,8 @@ import { useGame } from '../../../providers'
 import { DotKey } from '../../Chest/dots'
 
 export const UseFaucets = (): JSX.Element => {
-  const { hasCompletedTask } = useGame()
-  const hasNativeTokens = hasCompletedTask(DotKey.hasUsedFaucet)
+  const { isDotComplete } = useGame()
+  const hasNativeTokens = isDotComplete(DotKey.hasUsedFaucet)
 
   const renderCompleted = () => {
     return (

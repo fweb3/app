@@ -27,6 +27,7 @@ const GameGrid = styled.div`
 `
 
 export default function Home() {
+  const type = 'default'
   return (
     <Layout>
       <GameGrid>

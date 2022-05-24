@@ -29,7 +29,7 @@ export const getOpenseaUrl = (
   if (network !== Networks.MAINNET) {
     return `${MUMBAI_OPEANSEA_URL}/?search[chains][0]=MUMBAI&search[query]=${address}[resultModel]=ASSETS`
   }
-  return `${POLYGON_OPENSEA_URL}/matic/${address}`
+  return `${POLYGON_OPENSEA_URL}/${address}`
 }
 
 export const getOpensealAccountUrl = (

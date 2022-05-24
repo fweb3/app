@@ -86,14 +86,11 @@ export interface IDotProps {
 }
 
 export const Dot = (dotData: IDotProps): JSX.Element => {
-  const { handleSetActiveDot, activeDot } = useGame()
+  const { setActiveDot, activeDot } = useGame()
   const { idx, position, isCompleted } = dotData
   const isVisible = idx === activeDot
   return (
-    <div
-      data-testid={`chest-dot_dot-${idx}`}
-      onClick={() => handleSetActiveDot(idx)}
-    >
+    <div data-testid={`chest-dot_dot-${idx}`} onClick={() => setActiveDot(idx)}>
       <HoverStyle
         data-testid={`chest-dot_hover-${idx}`}
         $position={position}

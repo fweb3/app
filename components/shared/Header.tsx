@@ -5,13 +5,13 @@ import styled, { keyframes } from 'styled-components'
 import { getPolygonscanUrl } from '../../interfaces'
 import { AiOutlineDeleteRow } from 'react-icons/ai'
 import { useDevice } from '../../hooks/useDevice'
+import { MdOutlineGavel } from 'react-icons/md'
 import { BsTrophyFill } from 'react-icons/bs'
 import { useEffect, useState } from 'react'
 import { GiTwoCoins } from 'react-icons/gi'
 import { flash } from 'react-animations'
 import { GoPlug } from 'react-icons/go'
 import { ethers } from 'ethers'
-
 const flicker = keyframes(flash)
 
 const LeftNav = styled.div``
@@ -195,7 +195,6 @@ export const Header = (): JSX.Element => {
   }
 
   const renderConnectedNav = (): JSX.Element => {
-    console.log({ gameTaskState })
     const balanceInEth = ethers.utils.formatEther(
       gameTaskState?.tokenBalance || '0'
     )

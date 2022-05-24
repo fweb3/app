@@ -16,8 +16,8 @@ import {
 } from '../../shared/Elements'
 
 export const HasEnoughTokens = () => {
-  const { hasCompletedTask } = useGame()
-  const hasEnoughTokens = hasCompletedTask(DotKey.hasEnoughTokens)
+  const { isDotComplete } = useGame()
+  const hasEnoughTokens = isDotComplete(DotKey.hasEnoughTokens)
 
   const renderHasCompleted = () => {
     return (

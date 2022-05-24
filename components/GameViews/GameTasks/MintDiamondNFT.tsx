@@ -13,8 +13,8 @@ import {
 } from '../../shared/Elements'
 
 export const MintDiamonNFT = (): JSX.Element => {
-  const { hasCompletedTask } = useGame()
-  const hasMintedNFT = hasCompletedTask(DotKey.hasMintedNFT)
+  const { isDotComplete } = useGame()
+  const hasMintedNFT = isDotComplete(DotKey.hasMintedNFT)
   const diamondNftAddress = loadAddress('fweb3_diamond_nft')[0]
   const nftPolygonscanUrl = `${getPolygonscanUrl(
     diamondNftAddress

@@ -1,17 +1,19 @@
-import { useState, useEffect, createContext, useContext, useRef } from 'react'
+import { useState, useEffect, createContext, useContext } from 'react'
 import { DotKey, DOTS_MAP, IDotsMap } from '../components/Chest/dots'
+import { createShareInfo, ISocialShare } from './Game/social'
 import { useConnection, useLoading } from '../providers'
 import type { IGameTaskState } from '../interfaces/game'
-import { DEFAULT_GAME_STATE, logger } from '../lib'
 import { loadFweb3Contracts } from '../interfaces'
-import { Contract, ethers } from 'ethers'
+import { AllowedChainIds } from '../interfaces'
+import { getCurrentGame } from './Game/tasks'
+import { DEFAULT_GAME_STATE } from '../lib'
+import { Id, toast } from 'react-toastify'
 import { useRouter } from 'next/router'
-import { toast } from 'react-toastify'
-
+import { Contract } from 'ethers'
+import { logger } from '../lib'
 interface IGameProviderState {
-  handleSetActiveDot: (dot: string) => void
+  setActiveDot: (dot: string) => void
   gameTaskState: IGameTaskState
-  loadGameGameState: (account: string) => void
   isFetchingGameData: boolean
   completedTasks: IDotsMap
   tokenContract: Contract
@@ -23,13 +25,9 @@ interface IGameProviderState {
   isVerified: boolean
   shareInfo?: ISocialShare
   isQueryLoad: boolean
-  hasCompletedTask: (task: DotKey) => boolean
-}
-
-interface ISocialShare {
-  imageUrl?: string
-  tweetText?: string
-  tweetUrl?: string
+  isJudge: boolean
+  resetGameState: () => void
+  isDotComplete: (task: DotKey) => boolean
 }
 
 const initShareInfo = {
@@ -40,8 +38,7 @@ const initShareInfo = {
 
 const defaultGameState: IGameProviderState = {
   gameTaskState: DEFAULT_GAME_STATE,
-  handleSetActiveDot: () => {},
-  loadGameGameState: () => {},
+  setActiveDot: () => {},
   isFetchingGameData: false,
   tokenContract: null,
   gameContract: null,
@@ -53,26 +50,12 @@ const defaultGameState: IGameProviderState = {
   isVerified: false,
   shareInfo: initShareInfo,
   isQueryLoad: false,
-  hasCompletedTask: () => false,
+  isJudge: false,
+  resetGameState: () => {},
+  isDotComplete: () => false,
 }
 
 const GameContext = createContext(defaultGameState)
-
-const DEV_GAME_STATE: IGameTaskState = {
-  tokenBalance: '300000000000000000000',
-  hasEnoughTokens: true, // 1
-  hasUsedFaucet: false, // 2
-  hasSentTokens: true, // 3
-  hasMintedNFT: true, // 4
-  hasBurnedTokens: true, // 5
-  hasSwappedTokens: true, // 6
-  hasVotedInPoll: true, // 7
-  hasDeployedContract: true, // 8
-  hasWonGame: false,
-  isConnected: false,
-  trophyId: '',
-  maticBalance: '100000000000000000',
-}
 
 const calcTrophyColor = (trophyId: string): string => {
   if (!trophyId) return ''
@@ -84,20 +67,6 @@ const calcTrophyColor = (trophyId: string): string => {
   }
   return 'copper'
 }
-const LIVE = true
-
-const fetchTaskState = async (account: string): Promise<IGameTaskState> => {
-  if (!LIVE) {
-    logger.log(
-      `LOADING DEV STATE: ${JSON.stringify(DEFAULT_GAME_STATE, null, 2)}`
-    )
-    return DEV_GAME_STATE
-  }
-  const url = `/api/polygon?account=${account}`
-  const apiResponse = await fetch(url)
-  const taskState: IGameTaskState = await apiResponse.json()
-  return taskState
-}
 
 const GameProvider = ({ children }) => {
   const { account, isConnected, provider, network, handleDisconnect } =
@@ -105,41 +74,43 @@ const GameProvider = ({ children }) => {
   const [isFetchingGameData, setIsFetchingGameData] = useState<boolean>(false)
   const [completedTasks, setCompletedTasks] = useState<IDotsMap>(DOTS_MAP)
   const [shareInfo, setShareInfo] = useState<ISocialShare>(initShareInfo)
+  const { fullscreenLoader, startToast, updateToast } = useLoading()
   const [isQueryLoad, setIsQueryLoad] = useState<boolean>(false)
   const [hasWonGame, setHasWonGame] = useState<boolean>(false)
   const [isVerified, setIsVerified] = useState<boolean>(false)
   const [trophyColor, setTrophyColor] = useState<string>('')
   const [tokenContract, setTokenContract] = useState(null)
-  const [gameContract, setGameContract] = useState(null)
   const [activeDot, setActiveDot] = useState<string>('0')
+  const [gameContract, setGameContract] = useState(null)
+  const [isJudge, setIsJudge] = useState<boolean>(false)
   const [trophyId, setTrophyId] = useState<string>('')
-  const { fullscreenLoader } = useLoading()
   const [gameTaskState, setGameTaskState] =
     useState<IGameTaskState>(DEFAULT_GAME_STATE)
   const { query } = useRouter()
-  const toaster = useRef(null)
 
-  const loadGameGameState = async (loadAccount: string) => {
-    if (isConnected && network.chainId !== 137) {
-      toast.error('Please connect to polygon network', {
-        autoClose: 6000,
-      })
+  const loadGameGameState = async (player: string) => {
+    if (isConnected && network.chainId !== AllowedChainIds.POLYGON) {
       handleDisconnect()
-      return
+      throw new Error('Connected to wrong network')
     }
 
     if (isConnected || query?.account) {
-      toaster.current = toast.loading('Loading game state', {
-        autoClose: 2000,
-        pauseOnFocusLoss: false,
-        toastId: 'GAME_LOAD',
-      })
+      const toaster = startToast('Loading Game')
       try {
         fullscreenLoader(true)
         setIsQueryLoad(!!query?.account)
+
+        const { tokenContract, gameContract } = loadFweb3Contracts(provider)
+        setTokenContract(tokenContract)
+        setGameContract(gameContract)
+
         // if the wallet is coming from URL use that. else use connected
-        const taskState = await fetchTaskState(loadAccount)
+        const { taskState, currentCompletedDots, activeDot } =
+          await getCurrentGame(query?.account.toString() ?? player)
+
+        setCompletedTasks(currentCompletedDots)
         setGameTaskState(taskState)
+        setActiveDot(activeDot)
 
         setHasWonGame(taskState?.hasWonGame || false)
         setTrophyId(taskState?.trophyId || '')
@@ -147,49 +118,40 @@ const GameProvider = ({ children }) => {
         const trophyColor: string = calcTrophyColor(taskState?.trophyId)
         setTrophyColor(trophyColor)
 
-        const mappedDots: IDotsMap = mapCompletedTasks({
-          ...taskState,
-          isConnected: true,
-        })
-
-        setCompletedTasks(mappedDots)
+        const isJudge = await checkIsJudge(account)
+        setIsJudge(isJudge)
 
         const shareInfo: ISocialShare = createShareInfo(
           trophyId,
           trophyColor,
-          mappedDots
+          currentCompletedDots
         )
         setShareInfo(shareInfo)
-
-        setIsFetchingGameData(false)
-        fullscreenLoader(false)
-
-        // Temp fix until toastify library gets fixed
-        setTimeout(() => {
-          toast.update(toaster.current, {
-            render: 'Loaded!',
-            type: toast.TYPE.SUCCESS,
-            isLoading: false,
-            autoClose: 1000,
-            pauseOnFocusLoss: false,
-            hideProgressBar: undefined,
-          })
-        }, 1000)
+        handleSuccess()
+        updateToast(toaster, null, { type: toast.TYPE.SUCCESS })
       } catch (err) {
         console.error(err)
-        toast.update(toaster.current, {
-          render: 'Error loading game state',
-          type: toast.TYPE.ERROR,
-          isLoading: false,
-          autoClose: 5000,
-          pauseOnFocusLoss: false,
-        })
+        handleError(toaster, err.message)
+        resetGameState()
         fullscreenLoader(false)
       }
     }
   }
 
-  const hasCompletedTask = (task: DotKey) => {
+  const resetGameState = () => {
+    setCompletedTasks(DOTS_MAP)
+    setShareInfo(initShareInfo)
+    setHasWonGame(false)
+    setIsVerified(false)
+    setTrophyColor('')
+    setActiveDot('0')
+    setIsJudge(false)
+    setTrophyId('')
+    setGameTaskState(DEFAULT_GAME_STATE)
+    logger.log('GAME_RESET')
+  }
+
+  const isDotComplete = (task: DotKey): boolean => {
     return (
       Object.entries(completedTasks).filter(([k, v]) => {
         if (v.task === task && v.isCompleted) {
@@ -199,125 +161,54 @@ const GameProvider = ({ children }) => {
     )
   }
 
-  const mapCompletedTasks = (newGameTaskState: IGameTaskState): IDotsMap => {
-    let currentDot = 0
-    const obj = {}
-    const maticBalance = ethers.utils.formatEther(
-      newGameTaskState?.maticBalance || '0'
-    )
-
-    Object.entries(DOTS_MAP).map(([key, value]) => {
-      const isCompleted = newGameTaskState[value.task] || false
-      if (isCompleted && parseInt(key) > currentDot) {
-        currentDot = parseInt(key)
-      }
-      // if they have matic already mark faucet as used.
-      if (value.task === 'hasUsedFaucet' && parseFloat(maticBalance) >= 0.1) {
-        obj[key] = { ...value, isCompleted: true }
-        currentDot = parseInt(key)
-      } else {
-        obj[key] = { ...value, isCompleted }
-      }
-    })
-
-    setActiveDot(currentDot.toString())
-    return obj
+  const checkIsJudge = async (player: string): Promise<boolean> => {
+    const { gameContract } = loadFweb3Contracts(provider)
+    const isJudge = await gameContract.isJudge(player)
+    logger.log(`IS_JUDGE: [${isJudge}]`)
+    return isJudge
   }
 
-  const handleSetActiveDot = (idx: string) => {
-    setActiveDot(idx)
+  const handleSuccess = (data: any = {}, cb: any = () => {}) => {
+    cb(data)
+    fullscreenLoader(false)
+    setIsFetchingGameData(false)
   }
 
-  const createShareInfo = (
-    trophyId: string,
-    trophyColor: string,
-    mappedDots: IDotsMap
-  ): ISocialShare => {
-    const TWEET = 'https://twitter.com/intent/tweet?text='
-    const imageUrl = createSocialShareImageUrl(trophyId, trophyColor)
-    const tweetText = createTweetText(trophyId, trophyColor, mappedDots)
-    return {
-      tweetUrl: `${TWEET}${encodeURIComponent(tweetText)}`,
-      imageUrl,
-      tweetText,
-    }
-  }
-
-  const createTweetText = (
-    trophyId: string,
-    trophyColor: string,
-    mappedDots: IDotsMap
-  ) => {
-    if (parseInt(trophyId) >= 1 && trophyColor) {
-      return `🏆 I won a ${trophyColor} trophy in #fWeb3`
-    }
-    const numComplete = Object.entries(mappedDots).filter(([k, v]) => v).length
-    if (numComplete >= 1) {
-      let text = ''
-      Object.entries(mappedDots).forEach(([k, v], i) => {
-        text += v.isCompleted ? '🟣' : '⚫️'
-        if (i % 3 === 2 && i !== Object.keys(mappedDots).length - 1) {
-          text += '\n'
-        }
+  const handleError = (toaster: Id, message: string) => {
+    fullscreenLoader(false)
+    setIsFetchingGameData(false)
+    toaster &&
+      updateToast(toaster, message, {
+        type: toast.TYPE.ERROR,
       })
-      return `${text}\n♥️ #fweb3`
-    }
-    return 'I ♥️ #fweb3'
   }
 
-  const createSocialShareImageUrl = (trophyId, trophyColor) => {
-    if (parseInt(trophyId) >= 1) {
-      return `https://fweb3.xyz/fweb_yearone_${trophyColor}.png`
-    }
-    return 'https://fweb3.xyz/fweb3.png'
+  const checkVerification = async (player: string) => {
+    const isVerified = await gameContract.hasBeenVerifiedToWin(player)
+    return isVerified
   }
 
   useEffect(() => {
     ;(async () => {
       if (isConnected || query?.account) {
-        await loadGameGameState(query?.account?.toString() ?? account)
+        await loadGameGameState(query?.account.toString() ?? account)
       }
     })()
   }, [isConnected, query]) // eslint-disable-line
 
   useEffect(() => {
-    if (provider) {
-      const { tokenContract, gameContract } = loadFweb3Contracts(provider)
-      setTokenContract(tokenContract)
-      setGameContract(gameContract)
-    }
-  }, [provider])
-
-  useEffect(() => {
-    if (
-      LIVE &&
-      provider &&
-      account &&
-      gameContract &&
-      hasWonGame &&
-      trophyId === '0'
-    ) {
+    const shouldVerifyWin =
+      isConnected && gameContract && hasWonGame && trophyId === '0'
+    if (shouldVerifyWin) {
       ;(async () => {
+        const toaster = toast.loading('Checking verification')
         fullscreenLoader(true)
-        const toaster = toast.loading('Checking verification', {
-          autoClose: 1000,
-          pauseOnFocusLoss: false,
-          toastId: 'VERIFY_CHECK',
-        })
         try {
-          const isVerified = await gameContract.hasBeenVerifiedToWin(account)
+          const isVerified = await checkVerification(account)
           setIsVerified(isVerified)
-          fullscreenLoader(false)
         } catch (err) {
           console.error(err)
-          toast.update(toaster, {
-            toastId: 'VERIFY_CHECK',
-            render: 'Error checking verification',
-            type: toast.TYPE.ERROR,
-            isLoading: false,
-            autoClose: 1000,
-            pauseOnFocusLoss: false,
-          })
+          handleError(toaster, err.message)
           fullscreenLoader(false)
         }
       })()
@@ -329,20 +220,21 @@ const GameProvider = ({ children }) => {
     <GameContext.Provider
       value={{
         activeDot,
-        handleSetActiveDot,
+        setActiveDot,
         gameTaskState,
         trophyId,
         hasWonGame,
         isFetchingGameData,
         gameContract,
         tokenContract,
-        loadGameGameState,
         completedTasks,
         trophyColor,
         isVerified,
         shareInfo,
         isQueryLoad,
-        hasCompletedTask,
+        isJudge,
+        resetGameState,
+        isDotComplete,
       }}
     >
       {children}
