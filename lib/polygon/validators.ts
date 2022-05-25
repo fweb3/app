@@ -19,7 +19,7 @@ import {
 
 export const checkHasWonGame = async (
   account: string
-): Promise<IGameTaskState> => {
+): Promise<IGameTaskState | null> => {
   const rawResult: IPolygonDataResponse = await fetchTrophyTransactions(account)
   const { result: trophyTxs }: { result: IPolygonData[] } = rawResult
   const tokenBalance: string = await _walletBalance(account)
@@ -28,7 +28,7 @@ export const checkHasWonGame = async (
     trophyTxs?.filter((tx) => tx.from === genesysAddress[0])[0] || null
 
   if (!trophy) {
-    return DEFAULT_GAME_STATE
+    return null
   }
 
   return {

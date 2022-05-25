@@ -4,7 +4,7 @@ import { IGameTaskState } from '../../interfaces/game'
 export const fetchCurrentGameState = async (
   walletAddress: string
 ): Promise<IGameTaskState> => {
-  const wonGameState: IGameTaskState = await checkHasWonGame(walletAddress)
+  const wonGameState = await checkHasWonGame(walletAddress)
   if (wonGameState && wonGameState.trophyId) {
     return wonGameState
   }
