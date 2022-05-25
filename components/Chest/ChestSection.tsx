@@ -54,8 +54,8 @@ const Chest = styled.div`
 `
 
 export const ChestSection = (): JSX.Element => {
-  const { completedTasks, hasWonGame, trophyId, isQueryLoad } = useGame()
-  const { isConnected } = useConnection()
+  const { completedTasks, hasWonGame, trophyId } = useGame()
+  const { isConnected, isQueryLoad } = useConnection()
   const { device } = useDevice()
 
   const shouldCountAsConnected = isConnected || isQueryLoad

@@ -34,9 +34,7 @@ export const SwapToken = () => {
         <Subheading>Swap a token</Subheading>
         <CommonText>
           Go to Uniswap to swap 1 FWEB3 token for some more MATIC here{' '}
-          <CommonLink href={uniswapUrl} target="_blank" rel="noreferrer">
-            uniswap.org
-          </CommonLink>
+          <CommonLink href={uniswapUrl}>uniswap.org</CommonLink>
         </CommonText>
         <CommonText>
           You&apos;re gonna need to add our custom token to you&apos;re uniswap

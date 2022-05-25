@@ -34,13 +34,7 @@ export const Introduction = (): JSX.Element => {
       {device === 'desktop' && renderMetamaskInstructions()}
       <ErrorText size="1rem">
         Note: there&apos;s lots of phishing happening out there! Our code is{' '}
-        <CommonLink
-          href="https://github.com/fweb3/app"
-          target="_blank"
-          rel="noreferrer"
-        >
-          open source
-        </CommonLink>{' '}
+        <CommonLink href="https://github.com/fweb3/app">open source</CommonLink>{' '}
         so you can make sure it&apos;s safe. We use metamask to get your address
         and your address only. Think of it like logging in.
       </ErrorText>

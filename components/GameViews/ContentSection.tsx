@@ -42,8 +42,8 @@ const ContentContainer = styled.div`
 `
 
 export const ContentSection = (): JSX.Element => {
-  const { activeDot, hasWonGame, trophyId, isQueryLoad } = useGame()
-  const { isConnected } = useConnection()
+  const { activeDot, hasWonGame, trophyId } = useGame()
+  const { isConnected, isQueryLoad } = useConnection()
   const { device } = useDevice()
 
   const shouldCountAsConnected = isConnected || isQueryLoad
@@ -90,7 +90,7 @@ export const ContentSection = (): JSX.Element => {
       return renderNotDesktop()
     }
 
-    if (shouldCountAsConnected && trophyId) {
+    if (shouldCountAsConnected && trophyId !== '0') {
       return renderHasTrophy()
     }
 
@@ -98,7 +98,7 @@ export const ContentSection = (): JSX.Element => {
       return renderNeedsVerification()
     }
 
-    if (shouldCountAsConnected || isQueryLoad) {
+    if (shouldCountAsConnected) {
       return renderConnected()
     }
     return renderNotConnected()

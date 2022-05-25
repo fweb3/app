@@ -1,6 +1,6 @@
 import { COLORS, MEDIA_QUERY, SPACING, TEXT } from '../styles'
 import styled, { keyframes } from 'styled-components'
-import { pulse } from 'react-animations'
+import { IComponentProps } from '../component'
 
 const pulse = keyframes`
   0% {
@@ -39,8 +39,11 @@ const Button = styled.button`
     padding: ${SPACING.large};
   }
 `
+interface IButtonProps extends IComponentProps {
+  onClick: () => void
+}
 
-export const PulseButton = ({ children, onClick }) => {
+export const PulseButton = ({ children, onClick }: IButtonProps) => {
   return (
     <Button data-testid="pulse-btn" onClick={onClick}>
       {children}

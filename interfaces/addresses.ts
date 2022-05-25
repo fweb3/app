@@ -1,12 +1,20 @@
-interface IVersionedAddresses {
-  v1?: { [key: string]: string[] }
-  v2?: { [key: string]: string[] }
+import { Networks } from './networks'
+
+enum GameAddresses {
+  FWEB3_TOKEN = 'fweb3_token',
+  FWEB3_GAME = 'fweb3_game',
+  FWEB3_TROPHY = 'fweb3_trophy',
+  FWEB3_FAUCET = 'fweb3_token_faucet',
+  FWEB3_MATIC_FAUCET = 'fweb3_matic_faucet',
+  FWEB3_DIAMON_NFT = 'fweb3_diamond_nft',
+  FWEB3_POLL = 'fweb3_poll',
+  SWAP_ROUTER = 'swap_router',
+  GENESYS = 'genesys',
+  BURN = 'burn',
 }
 
-interface IFweb3Addresses {
-  local: IVersionedAddresses
-  mumbai: IVersionedAddresses
-  polygon: IVersionedAddresses
+interface IAddresses {
+  [key: string]: any
 }
 
 const POLYGON_MATIC_FAUCETS: string[] = [
@@ -21,7 +29,7 @@ const POLYGON_FWEB3_FAUCETS: string[] = [
   '0x32Ba4765d6538944ef4324E55B94797a422C72F9', // v4
 ]
 
-const ADDRESSES: IFweb3Addresses = {
+const ADDRESSES: IAddresses = {
   local: {},
   mumbai: {},
   polygon: {
@@ -42,7 +50,7 @@ const ADDRESSES: IFweb3Addresses = {
 
 export const loadAddress = (
   name: string,
-  network: string = 'polygon',
+  network: string = Networks.MAINNET,
   version: string = 'v1'
 ): string[] => {
   return ADDRESSES[network]?.[version]?.[name] || []

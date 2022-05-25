@@ -26,7 +26,7 @@ const GameGrid = styled.div`
   }
 `
 
-export default function Home() {
+export default function Home(): JSX.Element {
   const type = 'default'
   return (
     <Layout>

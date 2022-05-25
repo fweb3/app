@@ -1,5 +1,5 @@
 import { COLORS, SPACING } from '../styles'
-import { useGame } from '../../providers'
+import { useConnection, useGame } from '../../providers'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
@@ -14,11 +14,12 @@ const ShareButtonContainer = styled.div`
   }
 `
 
-export const ShareButton = () => {
+export const ShareButton = (): JSX.Element => {
   const { hasWonGame, shareInfo } = useGame()
+  const { isQueryLoad } = useConnection()
   const { query } = useRouter()
 
-  const handleShare = () => {
+  const handleShare = (): void => {
     if (navigator.share) {
       navigator.share({
         text: shareInfo?.tweetText,
@@ -30,11 +31,11 @@ export const ShareButton = () => {
       return
     }
   }
-  return (
-    !query?.wallet && (
-      <ShareButtonContainer onClick={handleShare}>
-        {hasWonGame ? 'Share your win' : 'Share your progress'}
-      </ShareButtonContainer>
-    )
+  return !isQueryLoad ? (
+    <ShareButtonContainer onClick={handleShare}>
+      {hasWonGame ? 'Share your win' : 'Share your progress'}
+    </ShareButtonContainer>
+  ) : (
+    <></>
   )
 }

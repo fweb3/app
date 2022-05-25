@@ -3,7 +3,7 @@ import { PulseButton } from '../shared/PulseButton'
 import { useEffect } from 'react'
 
 export const SeekVerification = (): JSX.Element => {
-  const handleVerification = () => {}
+  const handleVerification = (): void => {}
 
   useEffect(() => {}, [])
 

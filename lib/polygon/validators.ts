@@ -1,5 +1,5 @@
 import { IGameTaskState } from '../../interfaces/game'
-import { DEFAULT_WON_GAME_STATE } from '../constants'
+import { DEFAULT_WON_GAME_STATE, DEFAULT_GAME_STATE } from '../constants'
 import { loadAddress } from '../../interfaces'
 import { ethers } from 'ethers'
 import type {
@@ -28,14 +28,14 @@ export const checkHasWonGame = async (
     trophyTxs?.filter((tx) => tx.from === genesysAddress[0])[0] || null
 
   if (!trophy) {
-    return null
+    return DEFAULT_GAME_STATE
   }
 
   return {
     ...DEFAULT_WON_GAME_STATE,
     tokenBalance,
     hasWonGame: true,
-    trophyId: trophy.tokenID,
+    trophyId: trophy.tokenID?.toString() || '0',
   }
 }
 

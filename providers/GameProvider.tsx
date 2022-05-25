@@ -1,30 +1,33 @@
-import { useState, useEffect, createContext, useContext } from 'react'
+import { useState, useEffect, createContext, useContext, Context } from 'react'
 import { DotKey, DOTS_MAP, IDotsMap } from '../components/Chest/dots'
+import { IFweb3Contracts, loadFweb3Contracts } from '../interfaces'
 import { createShareInfo, ISocialShare } from './Game/social'
 import { useConnection, useLoading } from '../providers'
-import type { IGameTaskState } from '../interfaces/game'
-import { loadFweb3Contracts } from '../interfaces'
+import type { GameError, IGameTaskState } from '../interfaces/game'
+import { getDefaultProvider } from '@ethersproject/providers'
+import { Contract } from '@ethersproject/contracts'
 import { AllowedChainIds } from '../interfaces'
 import { getCurrentGame } from './Game/tasks'
 import { DEFAULT_GAME_STATE } from '../lib'
 import { Id, toast } from 'react-toastify'
 import { useRouter } from 'next/router'
-import { Contract } from 'ethers'
 import { logger } from '../lib'
+import { providers } from 'ethers'
+import { IComponentProps } from '../components/component'
+
 interface IGameProviderState {
   setActiveDot: (dot: string) => void
   gameTaskState: IGameTaskState
   isFetchingGameData: boolean
   completedTasks: IDotsMap
-  tokenContract: Contract
-  gameContract: Contract
+  tokenContract: Contract | null
+  gameContract: Contract | null
   hasWonGame: boolean
   activeDot: string
   trophyId: string
   trophyColor: string
   isVerified: boolean
-  shareInfo?: ISocialShare
-  isQueryLoad: boolean
+  shareInfo: ISocialShare
   isJudge: boolean
   resetGameState: () => void
   isDotComplete: (task: DotKey) => boolean
@@ -36,12 +39,15 @@ const initShareInfo = {
   tweetUrl: '',
 }
 
+const defaultProvider = getDefaultProvider()
+const defaultContract = new Contract('default', '', defaultProvider)
+
 const defaultGameState: IGameProviderState = {
   gameTaskState: DEFAULT_GAME_STATE,
   setActiveDot: () => {},
   isFetchingGameData: false,
-  tokenContract: null,
-  gameContract: null,
+  tokenContract: defaultContract,
+  gameContract: defaultContract,
   completedTasks: {},
   hasWonGame: false,
   activeDot: '0',
@@ -49,13 +55,12 @@ const defaultGameState: IGameProviderState = {
   trophyColor: '',
   isVerified: false,
   shareInfo: initShareInfo,
-  isQueryLoad: false,
   isJudge: false,
   resetGameState: () => {},
   isDotComplete: () => false,
 }
 
-const GameContext = createContext(defaultGameState)
+const GameContext: Context<IGameProviderState> = createContext(defaultGameState)
 
 const calcTrophyColor = (trophyId: string): string => {
   if (!trophyId) return ''
@@ -68,58 +73,62 @@ const calcTrophyColor = (trophyId: string): string => {
   return 'copper'
 }
 
-const GameProvider = ({ children }) => {
-  const { account, isConnected, provider, network, handleDisconnect } =
-    useConnection()
+const GameProvider = ({ children }: IComponentProps): JSX.Element => {
+  const { fullscreenLoader, startToast, updateToast, errorToast } = useLoading()
   const [isFetchingGameData, setIsFetchingGameData] = useState<boolean>(false)
+  const [tokenContract, setTokenContract] = useState<Contract | null>(null)
+  const [gameContract, setGameContract] = useState<Contract | null>(null)
   const [completedTasks, setCompletedTasks] = useState<IDotsMap>(DOTS_MAP)
   const [shareInfo, setShareInfo] = useState<ISocialShare>(initShareInfo)
-  const { fullscreenLoader, startToast, updateToast } = useLoading()
-  const [isQueryLoad, setIsQueryLoad] = useState<boolean>(false)
   const [hasWonGame, setHasWonGame] = useState<boolean>(false)
   const [isVerified, setIsVerified] = useState<boolean>(false)
   const [trophyColor, setTrophyColor] = useState<string>('')
-  const [tokenContract, setTokenContract] = useState(null)
   const [activeDot, setActiveDot] = useState<string>('0')
-  const [gameContract, setGameContract] = useState(null)
   const [isJudge, setIsJudge] = useState<boolean>(false)
   const [trophyId, setTrophyId] = useState<string>('')
   const [gameTaskState, setGameTaskState] =
     useState<IGameTaskState>(DEFAULT_GAME_STATE)
   const { query } = useRouter()
+  const {
+    account,
+    isConnected,
+    isConnecting,
+    provider,
+    network,
+    handleDisconnect,
+  } = useConnection()
 
-  const loadGameGameState = async (player: string) => {
-    if (isConnected && network.chainId !== AllowedChainIds.POLYGON) {
+  const loadGameGameState = async (player: string): Promise<void> => {
+    if (isConnected && network?.chainId !== AllowedChainIds.POLYGON) {
       handleDisconnect()
       throw new Error('Connected to wrong network')
     }
 
     if (isConnected || query?.account) {
-      const toaster = startToast('Loading Game')
+      const toaster: Id = startToast('Loading Game')
       try {
+        logger.log('[+] game load [start]')
         fullscreenLoader(true)
-        setIsQueryLoad(!!query?.account)
 
-        const { tokenContract, gameContract } = loadFweb3Contracts(provider)
-        setTokenContract(tokenContract)
-        setGameContract(gameContract)
+        const { tokenContract, gameContract }: IFweb3Contracts =
+          loadFweb3Contracts(provider)
+        setTokenContract(tokenContract || null)
+        setGameContract(gameContract || null)
 
-        // if the wallet is coming from URL use that. else use connected
         const { taskState, currentCompletedDots, activeDot } =
-          await getCurrentGame(query?.account.toString() ?? player)
+          await getCurrentGame(player)
 
         setCompletedTasks(currentCompletedDots)
         setGameTaskState(taskState)
         setActiveDot(activeDot)
 
-        setHasWonGame(taskState?.hasWonGame || false)
-        setTrophyId(taskState?.trophyId || '')
+        setHasWonGame(!!taskState?.hasWonGame)
+        setTrophyId(taskState?.trophyId.toString() || '')
 
-        const trophyColor: string = calcTrophyColor(taskState?.trophyId)
+        const trophyColor: string = calcTrophyColor(
+          taskState?.trophyId.toString() || ''
+        )
         setTrophyColor(trophyColor)
-
-        const isJudge = await checkIsJudge(account)
-        setIsJudge(isJudge)
 
         const shareInfo: ISocialShare = createShareInfo(
           trophyId,
@@ -127,11 +136,14 @@ const GameProvider = ({ children }) => {
           currentCompletedDots
         )
         setShareInfo(shareInfo)
-        handleSuccess()
-        updateToast(toaster, null, { type: toast.TYPE.SUCCESS })
-      } catch (err) {
+
+        setIsFetchingGameData(false)
+        fullscreenLoader(false)
+        updateToast('Loaded!', toaster, { type: toast.TYPE.SUCCESS })
+        logger.log('[+] game load [end]')
+      } catch (err: GameError) {
         console.error(err)
-        handleError(toaster, err.message)
+        errorToast(err.message, toaster)
         resetGameState()
         fullscreenLoader(false)
       }
@@ -148,7 +160,7 @@ const GameProvider = ({ children }) => {
     setIsJudge(false)
     setTrophyId('')
     setGameTaskState(DEFAULT_GAME_STATE)
-    logger.log('GAME_RESET')
+    logger.log('[+] game reset!')
   }
 
   const isDotComplete = (task: DotKey): boolean => {
@@ -162,53 +174,63 @@ const GameProvider = ({ children }) => {
   }
 
   const checkIsJudge = async (player: string): Promise<boolean> => {
-    const { gameContract } = loadFweb3Contracts(provider)
-    const isJudge = await gameContract.isJudge(player)
-    logger.log(`IS_JUDGE: [${isJudge}]`)
-    return isJudge
-  }
-
-  const handleSuccess = (data: any = {}, cb: any = () => {}) => {
-    cb(data)
-    fullscreenLoader(false)
-    setIsFetchingGameData(false)
-  }
-
-  const handleError = (toaster: Id, message: string) => {
-    fullscreenLoader(false)
-    setIsFetchingGameData(false)
-    toaster &&
-      updateToast(toaster, message, {
-        type: toast.TYPE.ERROR,
-      })
+    if (gameContract) {
+      const isJudge: boolean = await gameContract?.isJudge(player)
+      logger.log(`[+] is judge: [${isJudge}]`)
+      return isJudge
+    }
+    return false
   }
 
   const checkVerification = async (player: string) => {
-    const isVerified = await gameContract.hasBeenVerifiedToWin(player)
-    return isVerified
+    if (gameContract) {
+      const isVerified: boolean = await gameContract?.hasBeenVerifiedToWin(
+        player
+      )
+      return isVerified
+    }
+    return false
   }
+
+  useEffect(() => {
+    if (isConnected && provider) {
+      ;(async () => {
+        const toaster: Id = startToast('Checking state...')
+        try {
+          logger.log('[+] check judge [start]')
+          // only check connected account for judge
+          const isJudge: boolean = await checkIsJudge(account)
+          setIsJudge(isJudge)
+          logger.log(`[+] check judge [end]`)
+        } catch (err: GameError) {
+          console.error(err)
+          errorToast(err.message, toaster)
+        }
+      })()
+    }
+  }, [isConnected, provider]) // eslint-disable-line
 
   useEffect(() => {
     ;(async () => {
       if (isConnected || query?.account) {
-        await loadGameGameState(query?.account.toString() ?? account)
+        await loadGameGameState(query?.account?.toString() ?? account)
       }
     })()
   }, [isConnected, query]) // eslint-disable-line
 
   useEffect(() => {
-    const shouldVerifyWin =
-      isConnected && gameContract && hasWonGame && trophyId === '0'
+    const shouldVerifyWin: boolean =
+      isConnected && !!gameContract && hasWonGame && trophyId === '0'
     if (shouldVerifyWin) {
       ;(async () => {
-        const toaster = toast.loading('Checking verification')
+        const toaster: Id = toast.loading('Checking verification')
         fullscreenLoader(true)
         try {
-          const isVerified = await checkVerification(account)
+          const isVerified: boolean = await checkVerification(account)
           setIsVerified(isVerified)
-        } catch (err) {
+        } catch (err: GameError) {
           console.error(err)
-          handleError(toaster, err.message)
+          errorToast(err.message, toaster)
           fullscreenLoader(false)
         }
       })()
@@ -231,7 +253,6 @@ const GameProvider = ({ children }) => {
         trophyColor,
         isVerified,
         shareInfo,
-        isQueryLoad,
         isJudge,
         resetGameState,
         isDotComplete,

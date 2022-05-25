@@ -2,9 +2,8 @@ import { loadAddress, getPolygonscanUrl } from '../../interfaces'
 import { CommonLink, CommonText } from '../shared/Elements'
 
 export const MintTrophy = (): JSX.Element => {
-  const trophyAddress = loadAddress('fweb3_trophy')
-  const contractUrl = `${getPolygonscanUrl(trophyAddress[0])}#writeContract`
-
+  const trophyAddress = loadAddress('fweb3_trophy')[0]
+  const contractUrl = `${getPolygonscanUrl(trophyAddress)}#writeContract`
   return (
     <>
       <CommonText>

@@ -6,13 +6,18 @@ import { Tooltip } from './Tooltip'
 const MD_DOT_SIZE = '50px'
 const LG_DOT_SIZE = '80px'
 
-const createAura = ({ $isCompleted, $isVisible }) => {
+interface IDotStyleProps {
+  $isCompleted: boolean
+  $isVisible: boolean
+}
+
+const createAura = ({ $isCompleted, $isVisible }: IDotStyleProps): string => {
   return $isVisible && !$isCompleted
     ? `0px 0px 207px 50px ${COLORS.violet}`
     : ''
 }
 
-const createBorder = ({ $isVisible, $isCompleted }) => {
+const createBorder = ({ $isVisible, $isCompleted }: IDotStyleProps): string => {
   return $isVisible && !$isCompleted ? '1px solid white' : 'none'
 }
 
@@ -43,14 +48,14 @@ const HoverStyle = styled((props) => <div {...props} />)`
   }
 `
 
-const showDot = ({ $isCompleted, $isVisible }) => {
+const dotOpacity = ({ $isCompleted, $isVisible }: IDotStyleProps): string => {
   return $isCompleted || $isVisible ? '1' : '0'
 }
 
 const StyledDot = styled((props) => <div {...props} />)`
   position: fixed;
   z-index: 6;
-  opacity: ${(props) => showDot(props)};
+  opacity: ${(props) => dotOpacity(props)};
   background: url('./lit_dot.png') top left;
   background-size: contain;
   background-repeat: no-repeat;

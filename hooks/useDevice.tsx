@@ -11,8 +11,8 @@ interface IDeviceInfo {
 export const useDevice = (): IDeviceInfo => {
   const [device, setDevice] = useState<string>('')
   const [windowSize, setWindowSize] = useState({
-    width: null,
-    height: null,
+    width: 1024,
+    height: 900,
   })
 
   useEffect(() => {

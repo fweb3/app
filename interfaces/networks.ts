@@ -1,5 +1,5 @@
 export enum Networks {
-  LOCAL = 'localhost',
+  LOCAL = 'local',
   TESTNET = 'mumbai',
   MAINNET = 'polygon',
 }

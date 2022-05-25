@@ -1,15 +1,21 @@
 import { COLORS, MEDIA_QUERY, SPACING, TEXT } from '../styles'
-import styled from 'styled-components'
+import { IComponentProps } from '../component'
+import styled, { StyledComponent } from 'styled-components'
 import Link from 'next/link'
 
 const StyledLink = styled.a`
   color: ${COLORS.teaGreen};
 `
-export const CommonLink = (props) => {
+
+interface ILinkProps extends IComponentProps {
+  href?: string
+}
+
+export const CommonLink = ({ href, children }: ILinkProps) => {
   return (
-    <Link href={props.href || '#'} passHref>
-      <StyledLink {...props} target="_blank" rel="noreferrer">
-        {props.children}
+    <Link href={href || '#'} passHref={true}>
+      <StyledLink target="_blank" rel="noreferrer">
+        {children}
       </StyledLink>
     </Link>
   )
@@ -82,6 +88,13 @@ const AddColor = styled((props) => <span {...props} />)`
   font-size: ${(props) => props.$size || 'inherit'};
 `
 
-export const ColoredText = ({ children, color = COLORS.violet }) => {
+interface ITextProps extends IComponentProps {
+  color?: string
+}
+
+export const ColoredText = ({
+  children,
+  color = COLORS.violet,
+}: ITextProps) => {
   return <AddColor $color={color}>{children}</AddColor>
 }

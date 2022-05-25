@@ -10,11 +10,11 @@ export const DeployedContract = (): JSX.Element => {
   const walkthroughLink =
     'https://www.notion.so/fweb3/Walkthrough-8ac4fc0d3b814a068767c86d63fd8fb7#3c526735ae074b88838ad7b467545614'
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     console.log('make trophy')
   }
 
-  const renderCompleted = () => {
+  const renderCompleted = (): JSX.Element => {
     return (
       <div data-testid="game-tasks_8-complete">
         <Subheading>Winner winner chicken dinner!</Subheading>
@@ -33,7 +33,7 @@ export const DeployedContract = (): JSX.Element => {
     )
   }
 
-  const renderIncomplete = () => {
+  const renderIncomplete = (): JSX.Element => {
     return (
       <div data-testid="game-tasks_8-incomplete">
         <Subheading>Create your own token</Subheading>
@@ -48,11 +48,8 @@ export const DeployedContract = (): JSX.Element => {
         </CommonText>
         <CommonText>
           It&apos;s time for you to deploy your own. Here is a{' '}
-          <CommonLink href={walkthroughLink} target="_blank" rel="noreferrer">
-            video
-          </CommonLink>{' '}
-          to arm you with the weapons necessary to slay this beast. Go forth.
-          Conquer.
+          <CommonLink href={walkthroughLink}>video</CommonLink> to arm you with
+          the weapons necessary to slay this beast. Go forth. Conquer.
         </CommonText>
       </div>
     )

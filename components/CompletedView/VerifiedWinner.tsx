@@ -14,10 +14,10 @@ const WinnerText = styled(HeadingText)`
 `
 
 export const VerifiedWinner = (): JSX.Element => {
-  const trophyAddress = loadAddress('fweb3_trophy')
+  const trophyAddress = loadAddress('fweb3_trophy')[0]
   const { trophyId } = useGame()
 
-  const openSeaUrl = `${getOpenseaUrl(trophyAddress[0])}/${trophyId}`
+  const openSeaUrl = `${getOpenseaUrl(trophyAddress)}/${trophyId}`
 
   return (
     <>

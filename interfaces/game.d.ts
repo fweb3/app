@@ -1,21 +1,31 @@
-import { ethers } from 'ethers'
+import { DotKey } from './../components/Chest/dots'
+import {
+  AlchemyProvider,
+  JsonRpcProvider,
+  Web3Provider,
+} from '@ethersproject/providers'
+import { EthereumRpcError } from 'eth-rpc-errors'
 
-export interface IGameTaskState {
-  tokenBalance?: string
-  hasEnoughTokens?: boolean
-  hasUsedFaucet?: boolean
-  hasSwappedTokens?: boolean
-  hasVotedInPoll?: boolean
-  hasDeployedContract?: boolean
-  hasSentTokens?: boolean
-  hasBurnedTokens?: boolean
-  hasMintedNFT?: boolean
-  hasWonGame?: boolean
-  trophyId?: string
-  isConnected?: boolean
-  maticBalance?: string
+export type GameError = Err | EthereumRpcError
+
+export interface Err {
+  message?: string
 }
 
-export type EthersProvider =
-  | ethers.providers.AlchemyProvider
-  | ethers.providers.JsonRpcProvider
+interface IBalances {}
+export interface IGameTaskState extends IBalances {
+  [key: string]: boolean | string
+  // tokenBalance: string
+  // maticBalance: string
+  // trophyId: string
+  // hasEnoughTokens?: boolean
+  // hasUsedFaucet?: boolean
+  // hasSwappedTokens?: boolean
+  // hasVotedInPoll?: boolean
+  // hasDeployedContract?: boolean
+  // hasSentTokens?: boolean
+  // hasBurnedTokens?: boolean
+  // hasMintedNFT?: boolean
+  // hasWonGame?: boolean
+  // isConnected?: boolean
+}

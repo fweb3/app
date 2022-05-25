@@ -12,7 +12,7 @@ export default async function handler(
       account.toString()
     )
     return res.json({ status: 'success', ...payload })
-  } catch (e) {
+  } catch (e: any) {
     console.error(e)
     return res.status(500).json({ status: 'error', error: e.message })
   }

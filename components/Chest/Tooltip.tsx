@@ -1,8 +1,8 @@
 import { BORDERS, COLORS } from '../styles'
 import { BsCheckLg } from 'react-icons/bs'
+import { useGame } from '../../providers'
 import styled from 'styled-components'
 import { IDotProps } from './Dot'
-import { useGame } from '../../providers'
 
 const TooltipContainer = styled((props) => <div {...props} />)`
   position: absolute;
@@ -25,7 +25,7 @@ const TooltipText = styled((props) => <div {...props} />)`
   color: ${(props) => (props.$isCompleted ? COLORS.acidGreen : COLORS.light)};
 `
 
-export const Tooltip = (dotData: IDotProps) => {
+export const Tooltip = (dotData: IDotProps): JSX.Element => {
   const { activeDot } = useGame()
   const { idx, tooltip, position, isCompleted } = dotData
   const isVisible = idx === activeDot

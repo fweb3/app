@@ -10,8 +10,15 @@ import {
   getGithubUrl,
   getWalkthroughUrl,
 } from '../../interfaces'
+import { IconType } from 'react-icons'
 
-const FOOTER_ITEMS = [
+interface IFooterItems {
+  href: string
+  text: string
+  Icon: IconType
+}
+
+const FOOTER_ITEMS: IFooterItems[] = [
   {
     href: getWalkthroughUrl(),
     text: 'Walkthrough',
@@ -53,7 +60,13 @@ const StyledLink = styled(Link)`
   color: ${COLORS.light};
 `
 
-const LinkItem = ({ href, text, Icon }): JSX.Element => {
+interface ILinkItemProps {
+  href: string
+  text: string
+  Icon: IconType
+}
+
+const LinkItem = ({ href, text, Icon }: ILinkItemProps): JSX.Element => {
   const { device } = useDevice()
   return (
     <StyledLink href={href} passHref>

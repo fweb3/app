@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 
-export const fetcher = async (uri: string, config = null): Promise<any> => {
+export const fetcher = async (uri: string, config = {}): Promise<any> => {
   const res = await fetch(uri, config)
   return res.json()
 }
@@ -28,9 +28,9 @@ export const parseBalanceToNum = (
     )
   )
 
-export const sleep = (milliseconds): void => {
+export const sleep = (milliseconds: number): void => {
   const date: number = Date.now()
-  let currentDate: number = null
+  let currentDate = null
   do {
     currentDate = Date.now()
   } while (currentDate - date < milliseconds)

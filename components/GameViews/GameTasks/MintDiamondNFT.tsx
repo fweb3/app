@@ -38,10 +38,8 @@ export const MintDiamonNFT = (): JSX.Element => {
         <Subheading>Mint an NFT</Subheading>
         <CommonText>
           Go to our{' '}
-          <CommonLink href={nftPolygonscanUrl} target="_blank" rel="noreferrer">
-            diamond NFT
-          </CommonLink>{' '}
-          smart contract and mint yourself a Diamond NFT that will last forever.
+          <CommonLink href={nftPolygonscanUrl}>diamond NFT</CommonLink> smart
+          contract and mint yourself a Diamond NFT that will last forever.
         </CommonText>
         <CommonText>
           To mint yourself a unique diamond, pick a number of your choice and
@@ -49,11 +47,7 @@ export const MintDiamonNFT = (): JSX.Element => {
         </CommonText>
         <CommonText>
           This will show up in your OpenSea account shortly.{' '}
-          <CommonLink
-            href={getOpensealAccountUrl()}
-            target="_blank"
-            rel="noreferrer"
-          >
+          <CommonLink href={getOpensealAccountUrl()}>
             {getOpensealAccountUrl()}
           </CommonLink>
           <ErrorText>

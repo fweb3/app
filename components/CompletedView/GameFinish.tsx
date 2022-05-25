@@ -2,70 +2,54 @@ import { useConnection, useGame, useLoading } from '../../providers'
 import { SeekVerification } from './SeekVerification'
 import { useState, useEffect, useRef } from 'react'
 import { VerifiedWinner } from './VerifiedWinner'
+import { GameError } from '../../interfaces/game'
 import { ContractFunction } from 'ethers'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 
-export const GameFinish = () => {
+export const GameFinish = (): JSX.Element => {
+  const { fullscreenLoader, startToast, updateToast, errorToast } = useLoading()
   const [transaction, setTransaction] = useState(false)
   const [isVerified, setIsVerified] = useState(false)
-  const { fullscreenLoader } = useLoading()
   const { isConnected, account } = useConnection()
   const [isWinner, setIsWinner] = useState(false)
   const [isJudge, setIsJudge] = useState(false)
   const { gameContract } = useGame()
   const { query } = useRouter()
-  const toastId = useRef(null)
 
-  const sendTransaction = async (
-    method: ContractFunction,
-    args: string = ''
-  ) => {
+  const sendTransaction = async (method: ContractFunction, args?: string) => {
+    const toaster = startToast('Sending tx')
     try {
-      toastId.current = toast.loading('Sending tx', {
-        autoClose: 1000,
-      })
       fullscreenLoader(true)
       const tx = await method(args)
       const receipt = await tx.wait()
       setTransaction(receipt)
       fullscreenLoader(false)
-      toast.update(toastId.current, {
-        render: 'Sent!',
+      updateToast('Sent tx', toaster, {
         type: toast.TYPE.SUCCESS,
-        autoClose: 1000,
       })
     } catch (err) {
       console.error(err)
-      toast.update(toastId.current, {
-        render: 'Error sending tx',
-        type: toast.TYPE.ERROR,
-        autoClose: 1000,
-      })
+      errorToast('Error sending tx', toaster)
     }
   }
   const handleSeekVerification = async () => {
-    await sendTransaction(gameContract.seekVerification)
+    await sendTransaction(gameContract?.seekVerification)
   }
 
   const handleWin = async () => {
-    await sendTransaction(gameContract.win)
+    await sendTransaction(gameContract?.win)
   }
 
   const handleVerify = async () => {
-    await sendTransaction(
-      gameContract.verifyPlayer,
-      query.wallet.toString() ?? account
-    )
+    await sendTransaction(gameContract?.verifyPlayer, account)
   }
 
   useEffect(() => {
     ;(async () => {
       if (isConnected && gameContract) {
         fullscreenLoader(true)
-        toastId.current = toast.loading('Checking win state...', {
-          autoClose: 1000,
-        })
+        const toaster = startToast('Checking win state...')
         try {
           const user = query?.wallet ?? account
           const isVerified = await gameContract.hasBeenVerifiedToWin(user)
@@ -74,21 +58,13 @@ export const GameFinish = () => {
           setIsVerified(isVerified)
           setIsWinner(isWinner)
           setIsJudge(isJudge)
-          toast.update(toastId.current, {
-            render: 'Done!',
+          updateToast('Done', toaster, {
             type: toast.TYPE.SUCCESS,
-            isLoading: false,
-            autoClose: 1000,
           })
           fullscreenLoader(false)
-        } catch (err) {
+        } catch (err: GameError) {
           console.error(err)
-          toast.update(toastId.current, {
-            render: 'An error occured',
-            type: toast.TYPE.ERROR,
-            isLoading: false,
-            autoClose: 1000,
-          })
+          errorToast(err.message)
           fullscreenLoader(false)
         }
       }

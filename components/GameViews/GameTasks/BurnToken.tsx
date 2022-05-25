@@ -31,16 +31,16 @@ const CopyIcon = styled(RiFileCopy2Line)`
 
 export const BurnToken = (): JSX.Element => {
   const { isDotComplete } = useGame()
-  const hasBurnedTokens = isDotComplete(DotKey.hasBurnedTokens)
-  const burnAddress = loadAddress('burn')[0]
-  const handleCopy = () => {
+  const hasBurnedTokens: boolean = isDotComplete(DotKey.hasBurnedTokens)
+  const burnAddress: string = loadAddress('burn')[0]
+  const handleCopy = (): void => {
     navigator?.clipboard.writeText(burnAddress)
     toast.success('copied!', {
       autoClose: 1000,
     })
   }
 
-  const renderCompleted = () => {
+  const renderCompleted = (): JSX.Element => {
     return (
       <div data-testid="game-tasks_5-complete">
         <Subheading>You&apos;ve burned tokens!</Subheading>
@@ -51,7 +51,7 @@ export const BurnToken = (): JSX.Element => {
     )
   }
 
-  const renderIncomplete = () => {
+  const renderIncomplete = (): JSX.Element => {
     return (
       <div data-testid="game-tasks_5-incomplete">
         <Subheading>Burn a token</Subheading>

@@ -2,8 +2,9 @@ import { ToastContainer } from 'react-toastify'
 import styled from 'styled-components'
 import { HtmlHead } from './HtmlHead'
 import { COLORS } from '../styles'
-import { Header } from './Header'
+import { Header } from '../Header/Header'
 import { Footer } from './Footer'
+import { IComponentProps } from '../component'
 
 const MainGrid = styled.div`
   display: grid;
@@ -15,7 +16,7 @@ const MainGrid = styled.div`
   height: 100vh;
 `
 
-export const Layout = ({ children }) => {
+export const Layout = ({ children }: IComponentProps) => {
   return (
     <>
       <ToastContainer theme="dark" position="top-left" />

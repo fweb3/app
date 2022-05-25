@@ -1,4 +1,4 @@
-import { IDotsMap, DOTS_MAP } from '../../components/Chest/dots'
+import { IDotsMap, DOTS_MAP, DotKey, IDot } from '../../components/Chest/dots'
 import { IGameTaskState } from '../../interfaces/game'
 import { DEV_GAME_STATE, USE_LIVE_DATA } from './dev'
 import { ethers } from 'ethers'
@@ -34,23 +34,26 @@ const fetchTaskState = async (player: string): Promise<IGameTaskState> => {
 }
 
 const mapDotsCompleted = (newGameTaskState: IGameTaskState): IDotsCompleted => {
-  let activeDot = 0
-  const currentCompletedDots = {}
+  let activeDot: number = 0
+  const currentCompletedDots: IDotsMap = {}
   const maticBalance = ethers.utils.formatEther(
-    newGameTaskState?.maticBalance || '0'
+    newGameTaskState?.maticBalance.toString() || '0'
   )
 
-  Object.entries(DOTS_MAP).map(([key, value]) => {
-    const isCompleted = newGameTaskState[value.task] || false
+  Object.entries(DOTS_MAP).map(([key, value]: [string, IDot]) => {
+    const isCompleted = newGameTaskState[value?.task] || false
     if (isCompleted && parseInt(key) > activeDot) {
       activeDot = parseInt(key)
     }
     // if they have matic already mark faucet as used.
-    if (value.task === 'hasUsedFaucet' && parseFloat(maticBalance) >= 0.1) {
+    if (
+      value?.task === DotKey.hasUsedFaucet &&
+      parseFloat(maticBalance) >= 0.1
+    ) {
       currentCompletedDots[key] = { ...value, isCompleted: true }
       activeDot = parseInt(key)
     } else {
-      currentCompletedDots[key] = { ...value, isCompleted }
+      currentCompletedDots[key] = { ...value, isCompleted: true }
     }
   })
 

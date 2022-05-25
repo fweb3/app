@@ -1,4 +1,5 @@
 import styled, { keyframes } from 'styled-components'
+import { IComponentProps } from '../component'
 import { COLORS } from '../styles'
 
 const FadeInOut = keyframes`
@@ -61,7 +62,11 @@ const Dot = styled((props) => <div {...props} $s={props.$s} />)`
   animation: ${FadeInOut} ${(props) => `${props.$s}s`} infinite;
 `
 
-export const LoadingDots = ({ isLoading }) => {
+interface ILoadingProps {
+  isLoading: boolean
+}
+
+export const LoadingDots = ({ isLoading }: ILoadingProps) => {
   return isLoading ? (
     <OutterContainer>
       <InnerContainer $isLoading={isLoading}>

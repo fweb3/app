@@ -1,23 +1,29 @@
+import { Context, createContext, useContext, useState } from 'react'
 import { LoadingDots } from '../components/shared/LoadingDots'
-import { createContext, useContext, useState } from 'react'
-import { Id, toast, ToastContent, ToastOptions } from 'react-toastify'
+import { IComponentProps } from '../components/component'
+import { Id, toast, ToastOptions } from 'react-toastify'
+
 interface ILoadingContext {
   isLoading: boolean
   fullscreenLoader: (val: boolean) => void
   startToast: (msg: string) => Id
-  updateToast: (toaster: ToastContent, msg: string, opts?: ToastOptions) => void
+  updateToast: (msg: string, toaster?: Id, opts?: ToastOptions) => void
+  errorToast: (msg: string, toaster?: Id, opts?: ToastOptions) => void
 }
 
 const defaultLoadingContext: ILoadingContext = {
   isLoading: false,
   fullscreenLoader: () => {},
   updateToast: () => {},
-  startToast: () => null,
+  startToast: () => toast.success('default'),
+  errorToast: () => {},
 }
 
-const LoadingContext = createContext(defaultLoadingContext)
+const LoadingContext: Context<ILoadingContext> = createContext(
+  defaultLoadingContext
+)
 
-const LoadingProvider = ({ children }) => {
+const LoadingProvider = ({ children }: IComponentProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const fullscreenLoader = (val: boolean) => {
@@ -38,12 +44,7 @@ const LoadingProvider = ({ children }) => {
     })
   }
 
-  // Temp fix until toastify library gets fixed
-  const updateToast = (
-    toaster: Id,
-    message: string = 'Loaded!',
-    opts: ToastOptions = {}
-  ) => {
+  const updateToast = (message: string, toaster?: Id, opts?: ToastOptions) => {
     const defaultOpts = {
       type: toast.TYPE.INFO,
       isLoading: false,
@@ -53,11 +54,25 @@ const LoadingProvider = ({ children }) => {
       ...opts,
     }
     setTimeout(() => {
-      toast.update(toaster, {
+      toast.update(toaster || '', {
         render: message,
         ...defaultOpts,
       })
-    }, 1000)
+    }, 500)
+  }
+  const errorToast = (message: string, toaster?: Id): void => {
+    if (!toaster) {
+      toast.error(message, {
+        isLoading: false,
+        autoClose: 1000,
+        pauseOnFocusLoss: false,
+        hideProgressBar: undefined,
+      })
+      return
+    }
+    updateToast(message, toaster, {
+      type: toast.TYPE.ERROR,
+    })
   }
 
   return (
@@ -67,6 +82,7 @@ const LoadingProvider = ({ children }) => {
         fullscreenLoader,
         startToast,
         updateToast,
+        errorToast,
       }}
     >
       <>

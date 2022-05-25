@@ -43,7 +43,7 @@ const createTweetText = (
   return 'I ♥️ #fweb3'
 }
 
-const createSocialShareImageUrl = (trophyId, trophyColor) => {
+const createSocialShareImageUrl = (trophyId: string, trophyColor: string) => {
   if (parseInt(trophyId) >= 1) {
     return `https://fweb3.xyz/fweb_yearone_${trophyColor}.png`
   }

@@ -15,7 +15,7 @@ import {
   Subheading,
 } from '../../shared/Elements'
 
-export const HasEnoughTokens = () => {
+export const HasEnoughTokens = (): JSX.Element => {
   const { isDotComplete } = useGame()
   const hasEnoughTokens = isDotComplete(DotKey.hasEnoughTokens)
 

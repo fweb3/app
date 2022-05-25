@@ -1,46 +1,58 @@
 declare let window: any
 
-import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
+import { logger } from '../lib'
+import {
+  Web3Provider,
+  Network,
+  AlchemyProvider,
+  Provider,
+} from '@ethersproject/providers'
 import { ethers } from 'ethers'
 
 interface IEthersConnection {
-  ensName: string
-  provider: any
+  provider: Provider
   account: string
-  currentNetwork: any
+  currentNetwork: Network
 }
 
 export const createEthersConnection = async (): Promise<IEthersConnection> => {
-  const provider = await _createProvider()
-  const accounts = await _getAccounts(provider)
-  const network = await provider.getNetwork()
-  const ensName = await fetchEnsName('homestead', accounts[0])
+  const provider: Web3Provider =
+    (await _createProvider()) || ethers.providers.getDefaultProvider()
+  const accounts: any = await _getAccounts(provider)
+  const network: Network = await provider.getNetwork()
   return {
-    ensName,
     provider,
-    account: accounts[0],
+    account: accounts?.[0] || '',
     currentNetwork: network,
   }
 }
 
-const _createProvider = async () => {
-  return new ethers.providers.Web3Provider(window.ethereum)
+const _createProvider = async (): Promise<Web3Provider> => {
+  logger.log(`[+] creating web3 provider`)
+  return new Web3Provider(window.ethereum)
 }
 
-const _getAccounts = async (provider: JsonRpcProvider | Web3Provider) => {
+const _getAccounts = async (provider: Web3Provider): Promise<any> => {
+  logger.log('[+] requesting metamask connection')
   return provider.send('eth_requestAccounts', [])
 }
 
-export const createAlchemyProvider = async (network) => {
-  const provider = new ethers.providers.AlchemyProvider(
+export const createAlchemyProvider = async (
+  network: string
+): Promise<AlchemyProvider> => {
+  logger.log(`[+] creating alchemy provider for: [${network}]`)
+  const provider: AlchemyProvider = new AlchemyProvider(
     network,
     process.env.NEXT_PUBLIC_ALCHEMY_KEY
   )
   return provider
 }
 
-export const fetchEnsName = async (network, account) => {
-  const provider = await createAlchemyProvider(network)
-  const ensName = await provider.lookupAddress(account)
+export const fetchEnsName = async (
+  provider: Provider,
+  account: string
+): Promise<string> => {
+  logger.log(`[+] fetching ens name for: [${account.substring(0, 5)}...]`)
+  const ensName: string = (await provider.lookupAddress(account)) || ''
   return ensName
 }
