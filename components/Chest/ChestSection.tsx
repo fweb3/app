@@ -1,6 +1,6 @@
 import { TrophyImage } from '../CompletedView/TrophyImage'
 import { useConnection, useGame } from '../../providers'
-import { ShareButton } from '../GameViews/ShareButton'
+import { ShareButton } from './ShareButton'
 import styled, { keyframes } from 'styled-components'
 import { useDevice } from '../../hooks/useDevice'
 import { fadeIn } from 'react-animations'
@@ -65,7 +65,7 @@ export const ChestSection = (): JSX.Element => {
   ).length
 
   const renderMobileChest = (): JSX.Element => {
-    return <Chest />
+    return <Chest data-testid="chest-mobile" />
   }
 
   const renderGameChest = (): JSX.Element => {
@@ -75,7 +75,7 @@ export const ChestSection = (): JSX.Element => {
         2
     return (
       <>
-        <Chest data-testid="chest-section_chest">
+        <Chest data-testid="chest">
           {shouldCountAsConnected &&
             Object.entries(completedTasks).map(([key, value], i) => (
               <Dot key={i} idx={key} {...value} />
@@ -87,14 +87,14 @@ export const ChestSection = (): JSX.Element => {
   }
 
   const renderOpenChest = (): JSX.Element => {
-    return <OpenChest data-testid="chest-section_open-chest" />
+    return <OpenChest data-testid="open-chest" />
   }
 
   const renderContent = (): JSX.Element => {
     if (device !== 'desktop') {
       return renderMobileChest()
     }
-    if (shouldCountAsConnected && trophyId && trophyId !== '0') {
+    if (shouldCountAsConnected && parseInt(trophyId) >= 1) {
       return <TrophyImage />
     }
     if (

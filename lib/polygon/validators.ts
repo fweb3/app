@@ -35,7 +35,7 @@ export const checkHasWonGame = async (
     ...DEFAULT_WON_GAME_STATE,
     tokenBalance,
     hasWonGame: true,
-    trophyId: trophy.tokenID?.toString() || '0',
+    trophyId: trophy.tokenID?.toString(),
   }
 }
 

@@ -13,7 +13,7 @@ describe('Desktop disconnected view', () => {
   })
 
   it('loads the main chest without dots', () => {
-    cy.get('[data-testid="chest-section_chest"]').should('exist')
+    cy.get('[data-testid="chest"]').should('exist')
     cy.get('[data-testid="chest-section_dot"]').should('not.exist')
   })
 

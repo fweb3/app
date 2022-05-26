@@ -60,10 +60,11 @@ describe('Desktop connected view', () => {
   })
 
   // Task 3
-  it('lights up received native tokens', () => {
+  it.only('lights up received native tokens', () => {
     cy.visit('/?account=foobar')
     cy.intercept('/api/polygon*', {
       ...MOCK_TASK_STATE,
+      tokenBalance: '300',
       hasEnoughTokens: true,
       hasUsedFaucet: true,
     })
@@ -221,7 +222,7 @@ describe('Desktop connected view', () => {
       hasDeployedContract: true,
     })
     cy.get('[data-testid="game-tasks_8-complete"]').should('be.visible')
-    cy.get('[data-testid="chest-section_open-chest"]').should('be.visible')
+    cy.get('[data-testid="open-chest"]').should('be.visible')
     cy.get('[data-testid="pulse-btn"]').contains('Claim')
   })
 })

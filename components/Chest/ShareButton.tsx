@@ -32,7 +32,7 @@ export const ShareButton = (): JSX.Element => {
     }
   }
   return !isQueryLoad ? (
-    <ShareButtonContainer onClick={handleShare}>
+    <ShareButtonContainer data-testid="share-btn" onClick={handleShare}>
       {hasWonGame ? 'Share your win' : 'Share your progress'}
     </ShareButtonContainer>
   ) : (

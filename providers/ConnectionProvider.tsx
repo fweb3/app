@@ -66,7 +66,7 @@ const ConnectionProvider = ({ children }: IComponentProps) => {
 
   const handleAccountLookup = async (newAccount: string): Promise<void> => {
     if (provider) {
-      const ensName: string = await fetchEnsName(provider, newAccount)
+      const ensName: string = await fetchEnsName(newAccount)
       setAccount(newAccount)
       setEnsName(ensName)
       const displayName: string = ensName ?? `${account.substring(0, 6)}...`
@@ -88,7 +88,7 @@ const ConnectionProvider = ({ children }: IComponentProps) => {
         setAccount(account)
         setNetwork(currentNetwork)
 
-        const ensName: string = await fetchEnsName(provider, account)
+        const ensName: string = await fetchEnsName(account)
         logger.log(`ens: ${ensName}`)
         setEnsName(ensName)
 

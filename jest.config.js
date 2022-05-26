@@ -13,8 +13,11 @@ const customJestConfig = {
     '<rootDir>/components',
     '<rootDir>/providers',
     '<rootDir>/lib',
+    '<rootDir>/interfaces',
+    '<rootDir>/hooks',
   ],
   collectCoverageFrom: ['<rootDir>/**'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
 }
 
 module.exports = createJestConfig(customJestConfig)

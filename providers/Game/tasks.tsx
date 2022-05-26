@@ -16,10 +16,7 @@ export const getCurrentGame = async (
   player: string
 ): Promise<ICurrentTaskState> => {
   const taskState = await fetchTaskState(player)
-  const { currentCompletedDots, activeDot } = mapDotsCompleted({
-    ...taskState,
-    isConnected: true,
-  })
+  const { currentCompletedDots, activeDot } = mapDotsCompleted(taskState)
   return { taskState, currentCompletedDots, activeDot }
 }
 
@@ -37,10 +34,11 @@ const mapDotsCompleted = (newGameTaskState: IGameTaskState): IDotsCompleted => {
   let activeDot: number = 0
   const currentCompletedDots: IDotsMap = {}
   const maticBalance = ethers.utils.formatEther(
-    newGameTaskState?.maticBalance.toString() || '0'
+    newGameTaskState?.maticBalance?.toString() || '0'
   )
 
   Object.entries(DOTS_MAP).map(([key, value]: [string, IDot]) => {
+    // @ts-ignore
     const isCompleted = newGameTaskState[value?.task] || false
     if (isCompleted && parseInt(key) > activeDot) {
       activeDot = parseInt(key)
@@ -53,9 +51,10 @@ const mapDotsCompleted = (newGameTaskState: IGameTaskState): IDotsCompleted => {
       currentCompletedDots[key] = { ...value, isCompleted: true }
       activeDot = parseInt(key)
     } else {
-      currentCompletedDots[key] = { ...value, isCompleted: true }
+      currentCompletedDots[key] = { ...value }
     }
   })
+  console.log({ newGameTaskState })
 
   return { currentCompletedDots, activeDot: activeDot.toString() }
 }

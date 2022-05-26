@@ -48,10 +48,9 @@ export const createAlchemyProvider = async (
   return provider
 }
 
-export const fetchEnsName = async (
-  provider: Provider,
-  account: string
-): Promise<string> => {
+export const fetchEnsName = async (account: string): Promise<string> => {
+  const provider = await createAlchemyProvider('homestead')
+  console.log({ account })
   logger.log(`[+] fetching ens name for: [${account.substring(0, 5)}...]`)
   const ensName: string = (await provider.lookupAddress(account)) || ''
   return ensName

@@ -90,7 +90,7 @@ export const ContentSection = (): JSX.Element => {
       return renderNotDesktop()
     }
 
-    if (shouldCountAsConnected && trophyId !== '0') {
+    if (shouldCountAsConnected && parseInt(trophyId) >= 1) {
       return renderHasTrophy()
     }
 

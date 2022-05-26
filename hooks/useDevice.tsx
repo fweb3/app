@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 interface IDeviceInfo {
   device: string
-  windowSize: {
+  windowSize?: {
     width?: number
     height?: number
   }
