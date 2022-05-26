@@ -1,7 +1,5 @@
-import { DOTS_MAP } from '../../components/Chest/dots'
+import { MOCK_GAME_CONTEXT } from '../../jest/jest.fixtures'
 
 export const useGame = jest.fn(() => {
-  return {
-    completedTasks: DOTS_MAP,
-  }
+  return MOCK_GAME_CONTEXT
 })

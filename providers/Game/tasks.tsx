@@ -12,15 +12,13 @@ interface IDotsCompleted {
   activeDot: string
 }
 
-export const getCurrentGame = async (
-  player: string
-): Promise<ICurrentTaskState> => {
+export const getCurrentGame = async (player: string): Promise<ICurrentTaskState> => {
   const taskState = await fetchTaskState(player)
   const { currentCompletedDots, activeDot } = mapDotsCompleted(taskState)
   return { taskState, currentCompletedDots, activeDot }
 }
 
-const fetchTaskState = async (player: string): Promise<IGameTaskState> => {
+export const fetchTaskState = async (player: string): Promise<IGameTaskState> => {
   if (USE_LIVE_DATA) {
     const url = `/api/polygon?account=${player}`
     const apiResponse = await fetch(url)
@@ -31,11 +29,10 @@ const fetchTaskState = async (player: string): Promise<IGameTaskState> => {
 }
 
 const mapDotsCompleted = (newGameTaskState: IGameTaskState): IDotsCompleted => {
-  let activeDot: number = 0
+  let activeDot = 0
   const currentCompletedDots: IDotsMap = {}
-  const maticBalance = ethers.utils.formatEther(
-    newGameTaskState?.maticBalance?.toString() || '0'
-  )
+  const tokenBalance = ethers.utils.formatEther(newGameTaskState?.tokenBalance?.toString() || '0')
+  const maticBalance = ethers.utils.formatEther(newGameTaskState?.maticBalance?.toString() || '0')
 
   Object.entries(DOTS_MAP).map(([key, value]: [string, IDot]) => {
     // @ts-ignore
@@ -44,17 +41,13 @@ const mapDotsCompleted = (newGameTaskState: IGameTaskState): IDotsCompleted => {
       activeDot = parseInt(key)
     }
     // if they have matic already mark faucet as used.
-    if (
-      value?.task === DotKey.hasUsedFaucet &&
-      parseFloat(maticBalance) >= 0.1
-    ) {
+    if (value?.task === DotKey.hasUsedFaucet && parseFloat(maticBalance) >= 0.1) {
       currentCompletedDots[key] = { ...value, isCompleted: true }
       activeDot = parseInt(key)
     } else {
-      currentCompletedDots[key] = { ...value }
+      currentCompletedDots[key] = { ...value, isCompleted }
     }
   })
-  console.log({ newGameTaskState })
 
   return { currentCompletedDots, activeDot: activeDot.toString() }
 }

@@ -1,4 +1,5 @@
-import { DEFAULT_GAME_STATE } from './lib'
+import { DOTS_MAP } from '../components/Chest/dots'
+import { DEFAULT_GAME_STATE } from '../lib'
 
 export const MOCK_GAME_CONTEXT = {
   gameTaskState: DEFAULT_GAME_STATE,
@@ -6,7 +7,7 @@ export const MOCK_GAME_CONTEXT = {
   isFetchingGameData: false,
   tokenContract: null,
   gameContract: null,
-  completedTasks: {},
+  completedTasks: DOTS_MAP,
   hasWonGame: false,
   activeDot: '0',
   trophyId: '',

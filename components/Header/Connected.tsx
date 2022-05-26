@@ -1,13 +1,11 @@
-import { ethers } from 'ethers'
-import { useState } from 'react'
-import { GiTwoCoins } from 'react-icons/gi'
-import { getPolygonscanUrl } from '../../interfaces'
+import { formatBalance, getPolygonscanUrl } from '../../interfaces'
 import { useConnection, useGame } from '../../providers'
-import { CommonLink } from '../shared/Elements'
-import { COLORS, SPACING, TEXT } from '../styles'
 import styled, { keyframes } from 'styled-components'
-import { GoPlug } from 'react-icons/go'
+import { COLORS, SPACING, TEXT } from '../styles'
+import { CommonLink } from '../shared/Elements'
+import { GiTwoCoins } from 'react-icons/gi'
 import { flash } from 'react-animations'
+import { GoPlug } from 'react-icons/go'
 import { HeaderLogo } from './Logo'
 
 const flicker = keyframes(flash)
@@ -65,30 +63,20 @@ const BalanceContainer = styled.div`
 `
 
 export const ConnectedHeader = () => {
-  const { displayName, account, queryDisplayName } = useConnection()
+  const { displayName, account } = useConnection()
   const { gameTaskState } = useGame()
-
-  const balanceInEth = ethers.utils.formatEther(
-    gameTaskState?.tokenBalance?.toString() || '0'
-  )
-  const balance = ethers.utils.commify(balanceInEth)
-  const displayNameShown = queryDisplayName ?? displayName
-  console.log({ displayNameShown })
+  const balance = formatBalance(gameTaskState?.tokenBalance?.toString())
   return (
     <>
       <HeaderLogo />
       <Container>
         <StyledPlug />
         <CommonLink href={getPolygonscanUrl(account)}>
-          <DisplayName data-testid="header_displayname">
-            {displayNameShown}
-          </DisplayName>
+          <DisplayName data-testid="header_displayname">{displayName}</DisplayName>
         </CommonLink>
         <BalanceContainer>
           <GiTwoCoins color={COLORS.yellowish} size={40} />
-          <AccountBalance data-testid="header_balance">
-            {balance}
-          </AccountBalance>
+          <AccountBalance data-testid="header_balance">{balance}</AccountBalance>
         </BalanceContainer>
       </Container>
     </>

@@ -7,11 +7,7 @@ import { loadAddress } from './addresses'
 export const loadGameContract = (provider: Provider): Contract => {
   if (provider) {
     const gameAddress: string = loadAddress('fweb3_game')[0]
-    const gameContract: Contract = new Contract(
-      gameAddress,
-      fweb3GameInterface.abi,
-      provider
-    )
+    const gameContract: Contract = new Contract(gameAddress, fweb3GameInterface.abi, provider)
     return gameContract
   }
   return new Contract('default', '', provider)
@@ -19,22 +15,18 @@ export const loadGameContract = (provider: Provider): Contract => {
 
 export const loadTokenContract = (provider: Provider): Contract => {
   const tokenAddress: string = loadAddress('fweb3_game')[0]
-  const tokenContract: Contract = new Contract(
-    tokenAddress,
-    fweb3TokenInterface.abi,
-    provider
-  )
+  const tokenContract: Contract = new Contract(tokenAddress, fweb3TokenInterface.abi, provider)
   return tokenContract
 }
 
 export interface IFweb3Contracts {
-  gameContract?: Contract
-  tokenContract?: Contract
+  gameContract?: Contract | null
+  tokenContract?: Contract | null
 }
 
-export const loadFweb3Contracts = (provider: Provider): IFweb3Contracts => {
+export const loadFweb3Contracts = (provider: Provider | null): IFweb3Contracts => {
   return {
-    gameContract: loadGameContract(provider),
-    tokenContract: loadTokenContract(provider),
+    gameContract: provider ? loadGameContract(provider) : null,
+    tokenContract: provider ? loadTokenContract(provider) : null,
   }
 }

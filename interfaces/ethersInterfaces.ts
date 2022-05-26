@@ -1,12 +1,7 @@
 declare let window: any
 
+import { Web3Provider, Network, AlchemyProvider, Provider } from '@ethersproject/providers'
 import { logger } from '../lib'
-import {
-  Web3Provider,
-  Network,
-  AlchemyProvider,
-  Provider,
-} from '@ethersproject/providers'
 import { ethers } from 'ethers'
 
 interface IEthersConnection {
@@ -16,8 +11,7 @@ interface IEthersConnection {
 }
 
 export const createEthersConnection = async (): Promise<IEthersConnection> => {
-  const provider: Web3Provider =
-    (await _createProvider()) || ethers.providers.getDefaultProvider()
+  const provider: Web3Provider = await _createProvider()
   const accounts: any = await _getAccounts(provider)
   const network: Network = await provider.getNetwork()
   return {
@@ -37,21 +31,23 @@ const _getAccounts = async (provider: Web3Provider): Promise<any> => {
   return provider.send('eth_requestAccounts', [])
 }
 
-export const createAlchemyProvider = async (
-  network: string
-): Promise<AlchemyProvider> => {
+export const createAlchemyProvider = async (network: string): Promise<AlchemyProvider> => {
   logger.log(`[+] creating alchemy provider for: [${network}]`)
   const provider: AlchemyProvider = new AlchemyProvider(
     network,
     process.env.NEXT_PUBLIC_ALCHEMY_KEY
   )
+  logger.log(`[+] created alchemy provider!`)
   return provider
 }
 
 export const fetchEnsName = async (account: string): Promise<string> => {
   const provider = await createAlchemyProvider('homestead')
-  console.log({ account })
-  logger.log(`[+] fetching ens name for: [${account.substring(0, 5)}...]`)
   const ensName: string = (await provider.lookupAddress(account)) || ''
+  ensName && logger.log(`[+] found ens: ${ensName}`)
   return ensName
+}
+
+export const formatBalance = (amt: string | number | null | undefined) => {
+  return amt ? ethers.utils.commify(ethers.utils.formatEther(amt)) : '0'
 }

@@ -1,10 +1,10 @@
 import { ToastContainer } from 'react-toastify'
+import { IComponentProps } from '../component'
+import { Header } from '../Header/Header'
 import styled from 'styled-components'
 import { HtmlHead } from './HtmlHead'
 import { COLORS } from '../styles'
-import { Header } from '../Header/Header'
 import { Footer } from './Footer'
-import { IComponentProps } from '../component'
 
 const MainGrid = styled.div`
   display: grid;
@@ -19,7 +19,7 @@ const MainGrid = styled.div`
 export const Layout = ({ children }: IComponentProps) => {
   return (
     <>
-      <ToastContainer theme="dark" position="top-left" />
+      <ToastContainer theme="dark" position="top-center" />
       <HtmlHead />
       <MainGrid>
         <Header />

@@ -5,7 +5,7 @@ import { TEXT } from '../styles'
 
 const flicker = keyframes(flash)
 
-const FlashingHeader = styled(HeadingText)`
+const FlashingHeader = styled((props) => <HeadingText {...props} />)`
   padding: 0;
   margin: 0;
   animation: 0.2s repeat ${flicker};
@@ -14,7 +14,5 @@ const FlashingHeader = styled(HeadingText)`
 `
 
 export const HeaderLogo = () => {
-  return (
-    <FlashingHeader data-testid="header-mobile_heading">fweb3</FlashingHeader>
-  )
+  return <FlashingHeader data-testid="header-logo">fweb3</FlashingHeader>
 }

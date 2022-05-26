@@ -1,6 +1,8 @@
 declare let window: any
 
 import { Context, createContext, useContext, useEffect, useState } from 'react'
+import { createEthersConnection, fetchEnsName } from '../interfaces'
+import type { IComponentProps } from '../components/component'
 import { Provider, Network } from '@ethersproject/providers'
 import { getMessageFromCode } from 'eth-rpc-errors'
 import type { GameError } from '../interfaces/game'
@@ -8,16 +10,13 @@ import { useLoading } from './LoadingProvider'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { logger } from '../lib'
-import { createEthersConnection, fetchEnsName } from '../interfaces'
-import { ethers } from 'ethers'
-import { IComponentProps } from '../components/component'
 
 interface IConnectionContext {
   isConnected: boolean
   connect: () => void
   account: string
-  provider: Provider
-  network: Network
+  provider: Provider | null
+  network: Network | null
   ensName: string
   displayName: string
   isConnecting: boolean
@@ -27,15 +26,12 @@ interface IConnectionContext {
   queryAccount: string
 }
 
-const defaultProvider: Provider = ethers.providers.getDefaultProvider()
-const defaultNetwork: Network = ethers.providers.getNetwork(0)
-
 const defaultConnectionContext: IConnectionContext = {
   isConnected: false,
   connect: () => {},
   account: '',
-  provider: defaultProvider,
-  network: defaultNetwork,
+  provider: null,
+  network: null,
   ensName: '',
   displayName: '',
   isConnecting: false,
@@ -45,15 +41,13 @@ const defaultConnectionContext: IConnectionContext = {
   queryAccount: '',
 }
 
-const ConnectionContext: Context<IConnectionContext> = createContext(
-  defaultConnectionContext
-)
+const ConnectionContext: Context<IConnectionContext> = createContext(defaultConnectionContext)
 
 const ConnectionProvider = ({ children }: IComponentProps) => {
   const { isLoading, fullscreenLoader, startToast, updateToast } = useLoading()
   const [queryDisplayName, setQueryDisplayName] = useState<string>('')
-  const [provider, setProvider] = useState<Provider>(defaultProvider)
-  const [network, setNetwork] = useState<Network>(defaultNetwork)
+  const [provider, setProvider] = useState<Provider | null>(null)
+  const [network, setNetwork] = useState<Network | null>(null)
   const [isQueryLoad, setIsQueryLoad] = useState<boolean>(false)
   const [initialized, setInitialized] = useState<boolean>(false)
   const [isConnected, setIsConnected] = useState<boolean>(false)
@@ -78,25 +72,21 @@ const ConnectionProvider = ({ children }: IComponentProps) => {
     if (!isLoading && window?.ethereum) {
       const toaster = startToast('Connecting...')
       try {
-        logger.log(`[+] connect [start]`)
         setIsConnecting(true)
         fullscreenLoader(true)
 
-        const { provider, account, currentNetwork } =
-          await createEthersConnection()
+        const { provider, account, currentNetwork } = await createEthersConnection()
         setProvider(provider)
         setAccount(account)
         setNetwork(currentNetwork)
 
         const ensName: string = await fetchEnsName(account)
-        logger.log(`ens: ${ensName}`)
         setEnsName(ensName)
 
-        const displayName: string = ensName ?? formatAccountDisplay(account)
+        const displayName = ensName ?? formatAccountDisplay(account)
         setDisplayName(displayName)
 
-        const isConnected: boolean =
-          !!provider && !!account && !!currentNetwork?.chainId
+        const isConnected: boolean = !!provider && !!account && !!currentNetwork?.chainId
         setIsConnected(isConnected)
 
         updateToast('Connected!', toaster, {
@@ -105,7 +95,7 @@ const ConnectionProvider = ({ children }: IComponentProps) => {
         setInitialized(true)
         setIsConnecting(false)
         fullscreenLoader(false)
-        console.log('[-] connect [end]')
+        logger.log('[+] wallet connected!')
       } catch (err: GameError) {
         console.error(err)
         const errorMessage = getMessageFromCode(err.code, err.message)
@@ -138,10 +128,10 @@ const ConnectionProvider = ({ children }: IComponentProps) => {
     setIsConnected(false)
     setIsConnecting(false)
     setEnsName('')
-    setNetwork(defaultNetwork)
+    setNetwork(null)
     setAccount('')
     setDisplayName('')
-    setProvider(defaultProvider)
+    setProvider(null)
     fullscreenLoader(false)
     setInitialized(false)
   }
@@ -157,7 +147,7 @@ const ConnectionProvider = ({ children }: IComponentProps) => {
   }
 
   const formatAccountDisplay = (account: string) => {
-    return `${account.substring(0, 6)}...`
+    return `${account?.substring(0, 6) || 'UNKNOWN'}...`
   }
 
   useEffect(() => {

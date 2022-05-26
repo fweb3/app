@@ -1,7 +1,7 @@
 import { AiOutlineDeleteRow } from 'react-icons/ai'
 import { COLORS, TEXT, SPACING } from '../styles'
-import styled from 'styled-components'
 import { useRouter } from 'next/router'
+import styled from 'styled-components'
 import { HeaderLogo } from './Logo'
 
 const Container = styled.div`
@@ -28,21 +28,21 @@ export const DisconnectedHeader = () => {
   const { query } = useRouter()
 
   const renderQueryConnect = () => {
-    return <QueryConnect>Connect</QueryConnect>
+    return <QueryConnect data-testid="query-connect">Connect</QueryConnect>
   }
 
   const renderGetStarted = () => {
     return (
       <>
-        <HeaderLogo />
-        <Container>
-          <StyledUnplug />
-          <Text data-testid="header_connect-msg">
-            Connect a wallet to get started
-          </Text>
-        </Container>
+        <StyledUnplug />
+        <Text data-testid="header-get-started">Connect a wallet to get started</Text>
       </>
     )
   }
-  return query?.account ? renderQueryConnect() : renderGetStarted()
+  return (
+    <>
+      <HeaderLogo />
+      <Container>{query?.account ? renderQueryConnect() : renderGetStarted()}</Container>
+    </>
+  )
 }

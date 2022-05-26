@@ -12,9 +12,7 @@ interface IDotStyleProps {
 }
 
 const createAura = ({ $isCompleted, $isVisible }: IDotStyleProps): string => {
-  return $isVisible && !$isCompleted
-    ? `0px 0px 207px 50px ${COLORS.violet}`
-    : ''
+  return $isVisible && !$isCompleted ? `0px 0px 207px 50px ${COLORS.violet}` : ''
 }
 
 const createBorder = ({ $isVisible, $isCompleted }: IDotStyleProps): string => {
@@ -93,20 +91,21 @@ export interface IDotProps {
 export const Dot = (dotData: IDotProps): JSX.Element => {
   const { setActiveDot, activeDot } = useGame()
   const { idx, position, isCompleted } = dotData
-  const isVisible = idx === activeDot
+  const isActive = idx === activeDot
+  const testid = `dot_dot-${idx}${isCompleted ? '-visible' : ''}${isActive ? '-active' : ''}`
   return (
-    <div data-testid={`chest-dot_dot-${idx}`} onClick={() => setActiveDot(idx)}>
+    <div data-testid={`dot-wrapper-${idx}`} onClick={() => setActiveDot(idx)}>
       <HoverStyle
-        data-testid={`chest-dot_hover-${idx}`}
+        data-testid={`dot_dot-hover-${idx}`}
         $position={position}
-        $isVisible={isVisible}
+        $isVisible={isActive}
         $isCompleted={isCompleted}
       />
       <StyledDot
-        data-testid={`chest-dot_${idx}`}
+        data-testid={testid}
         $position={position}
         $isCompleted={isCompleted}
-        $isVisible={isVisible}
+        $isVisible={isActive}
       />
       <Tooltip {...dotData} />
     </div>
