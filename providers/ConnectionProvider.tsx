@@ -16,7 +16,6 @@ interface IConnectionContext {
   connect: () => void
   account: string
   provider: Provider | null
-  network: Network | null
   ensName: string
   displayName: string
   isConnecting: boolean
@@ -31,7 +30,6 @@ const defaultConnectionContext: IConnectionContext = {
   connect: () => {},
   account: '',
   provider: null,
-  network: null,
   ensName: '',
   displayName: '',
   isConnecting: false,
@@ -47,7 +45,6 @@ const ConnectionProvider = ({ children }: IComponentProps) => {
   const { isLoading, fullscreenLoader, startToast, updateToast } = useLoading()
   const [queryDisplayName, setQueryDisplayName] = useState<string>('')
   const [provider, setProvider] = useState<Provider | null>(null)
-  const [network, setNetwork] = useState<Network | null>(null)
   const [isQueryLoad, setIsQueryLoad] = useState<boolean>(false)
   const [initialized, setInitialized] = useState<boolean>(false)
   const [isConnected, setIsConnected] = useState<boolean>(false)
@@ -70,32 +67,31 @@ const ConnectionProvider = ({ children }: IComponentProps) => {
 
   const connect = async () => {
     if (!isLoading && window?.ethereum) {
-      const toaster = startToast('Connecting...')
+      const toaster = startToast('Connecting')
       try {
         setIsConnecting(true)
         fullscreenLoader(true)
 
-        const { provider, account, currentNetwork } = await createEthersConnection()
+        const { provider, account } = await createEthersConnection()
         setProvider(provider)
         setAccount(account)
-        setNetwork(currentNetwork)
 
         const ensName: string = await fetchEnsName(account)
-        setEnsName(ensName)
-
         const displayName = ensName ?? formatAccountDisplay(account)
+        setEnsName(ensName)
         setDisplayName(displayName)
 
-        const isConnected: boolean = !!provider && !!account && !!currentNetwork?.chainId
+        const isConnected: boolean = !!provider && !!account
         setIsConnected(isConnected)
 
-        updateToast('Connected!', toaster, {
+        updateToast('Connected', toaster, {
           type: toast.TYPE.SUCCESS,
         })
+
         setInitialized(true)
         setIsConnecting(false)
         fullscreenLoader(false)
-        logger.log('[+] wallet connected!')
+        logger.log('[+] Account connected!')
       } catch (err: GameError) {
         console.error(err)
         const errorMessage = getMessageFromCode(err.code, err.message)
@@ -119,7 +115,7 @@ const ConnectionProvider = ({ children }: IComponentProps) => {
 
   const handleChainChange = (chainId: number) => {
     logger.log(`CHAIN CHANGE EVENT: ${chainId}`)
-    if (initialized && chainId !== network?.chainId) {
+    if (initialized) {
       window.location.reload()
     }
   }
@@ -128,7 +124,6 @@ const ConnectionProvider = ({ children }: IComponentProps) => {
     setIsConnected(false)
     setIsConnecting(false)
     setEnsName('')
-    setNetwork(null)
     setAccount('')
     setDisplayName('')
     setProvider(null)
@@ -181,7 +176,6 @@ const ConnectionProvider = ({ children }: IComponentProps) => {
         connect,
         account,
         provider,
-        network,
         ensName,
         displayName,
         isConnecting,

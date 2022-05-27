@@ -30,7 +30,7 @@ describe('<ChestSection />', () => {
     expect(screen.getByTestId('open-chest')).toBeTruthy()
   })
 
-  fit('shows share button when at least 1 task is complete', () => {
+  it('shows share button when at least 1 task is complete', () => {
     mockUseGame.mockReturnValueOnce({
       ...MOCK_GAME_CONTEXT,
       completedTasks: setCompleteTasks(['hasVotedInPoll']),

@@ -71,7 +71,7 @@ export const ConnectedHeader = () => {
       <HeaderLogo />
       <Container>
         <StyledPlug />
-        <CommonLink href={getPolygonscanUrl(account)}>
+        <CommonLink href={getPolygonscanUrl(account, 'polygon')}>
           <DisplayName data-testid="header_displayname">{displayName}</DisplayName>
         </CommonLink>
         <BalanceContainer>

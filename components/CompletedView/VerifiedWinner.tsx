@@ -1,7 +1,7 @@
+import { CommonText, HeadingText, ColoredText, Subheading, CommonLink } from '../shared/Elements'
 import { getOpenseaUrl, loadAddress } from '../../interfaces'
 import { useGame } from '../../providers'
 import styled from 'styled-components'
-import { CommonText, HeadingText, ColoredText, Subheading, CommonLink } from '../shared/Elements'
 
 const WinnerText = styled(HeadingText)`
   font-size: 3.7rem;
@@ -11,7 +11,7 @@ export const VerifiedWinner = (): JSX.Element => {
   const trophyAddress = loadAddress('fweb3_trophy')[0]
   const { trophyId } = useGame()
 
-  const openSeaUrl = `${getOpenseaUrl(trophyAddress)}/${trophyId}`
+  const openSeaUrl = `${getOpenseaUrl(trophyAddress, 'polygon')}/${trophyId}`
 
   return (
     <div data-testid="verified-winner">

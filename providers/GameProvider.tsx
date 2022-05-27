@@ -6,7 +6,6 @@ import { createShareInfo, ISocialShare } from './Game/social'
 import { IComponentProps } from '../components/component'
 import { useConnection, useLoading } from '../providers'
 import { Contract } from '@ethersproject/contracts'
-import { AllowedChainIds } from '../interfaces'
 import { getCurrentGame } from './Game/tasks'
 import { DEFAULT_GAME_STATE } from '../lib'
 import { Id, toast } from 'react-toastify'
@@ -69,7 +68,7 @@ const calcTrophyColor = (trophyId: string): string => {
 }
 
 const GameProvider = ({ children }: IComponentProps): JSX.Element => {
-  const { account, isConnected, provider, network, handleDisconnect } = useConnection()
+  const { account, isConnected, provider, handleDisconnect } = useConnection()
   const [gameTaskState, setGameTaskState] = useState<IGameTaskState>(DEFAULT_GAME_STATE)
   const { fullscreenLoader, startToast, updateToast, errorToast } = useLoading()
   const [isFetchingGameData, setIsFetchingGameData] = useState<boolean>(false)
@@ -86,11 +85,6 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
   const { query } = useRouter()
 
   const loadGameGameState = async (player: string): Promise<void> => {
-    if (isConnected && network?.chainId !== AllowedChainIds.POLYGON) {
-      handleDisconnect()
-      throw new Error('Connected to wrong network')
-    }
-
     if (isConnected || query?.account) {
       const toaster = startToast('Loading Game')
       try {

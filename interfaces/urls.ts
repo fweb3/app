@@ -1,8 +1,3 @@
-import { Networks } from './networks'
-
-type OpenseaNetworks = Networks.MAINNET | Networks.TESTNET
-type PolygonscanNetworks = OpenseaNetworks
-
 const POLYGON_BASE_OPENSEA_URL = 'https://opensea.io'
 const MUMBAI_BASE_OPENSEA_URL = 'https://mumbai.polygonscan.com'
 
@@ -12,30 +7,22 @@ const MUMBAI_OPEANSEA_URL = `${MUMBAI_BASE_OPENSEA_URL}/assets`
 const POLYGONSCAN_URL = 'https://polygonscan.com/address'
 const MUMBAI_POLYGONSCAN_URL = 'https://mumbai.polygonscan.com/address'
 
-export const getPolygonscanUrl = (
-  address: string,
-  network: PolygonscanNetworks = Networks.MAINNET
-): string => {
-  if (network !== Networks.MAINNET) {
+export const getPolygonscanUrl = (address: string, network: string): string => {
+  if (network !== 'polygon') {
     return `${MUMBAI_POLYGONSCAN_URL}/${address}`
   }
   return `${POLYGONSCAN_URL}/${address}`
 }
 
-export const getOpenseaUrl = (
-  address: string,
-  network: OpenseaNetworks = Networks.MAINNET
-): string => {
-  if (network !== Networks.MAINNET) {
+export const getOpenseaUrl = (address: string, network: string): string => {
+  if (network !== 'polygon') {
     return `${MUMBAI_OPEANSEA_URL}/?search[chains][0]=MUMBAI&search[query]=${address}[resultModel]=ASSETS`
   }
   return `${POLYGON_OPENSEA_URL}/${address}`
 }
 
-export const getOpensealAccountUrl = (
-  network: OpenseaNetworks = Networks.MAINNET
-): string => {
-  if (network !== Networks.MAINNET) {
+export const getOpensealAccountUrl = (network: string): string => {
+  if (network !== 'polygon') {
     return `${MUMBAI_BASE_OPENSEA_URL}/account`
   }
   return `${POLYGON_BASE_OPENSEA_URL}/account`

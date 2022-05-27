@@ -1,5 +1,3 @@
-import { Networks } from './networks'
-
 interface IAddresses {
   [key: string]: any
 }
@@ -37,7 +35,7 @@ const ADDRESSES: IAddresses = {
 
 export const loadAddress = (
   name: string,
-  network: string = Networks.MAINNET,
+  network: string = 'polygon',
   version: string = 'v1'
 ): string[] => {
   return ADDRESSES[network]?.[version]?.[name] || []

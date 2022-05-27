@@ -1,4 +1,4 @@
-import { ConnectionProvider, GameProvider, LoadingProvider } from '../providers'
+import { ConnectionProvider, GameProvider, LoadingProvider, NetworkProvider } from '../providers'
 import { LoadingDots } from '../components/shared/LoadingDots'
 import { useState, useEffect } from 'react'
 
@@ -20,9 +20,11 @@ function NextWeb3App({ Component, pageProps }: AppProps) {
   ) : (
     <LoadingProvider>
       <ConnectionProvider>
-        <GameProvider>
-          <Component {...pageProps} />
-        </GameProvider>
+        <NetworkProvider>
+          <GameProvider>
+            <Component {...pageProps} />
+          </GameProvider>
+        </NetworkProvider>
       </ConnectionProvider>
     </LoadingProvider>
   )
