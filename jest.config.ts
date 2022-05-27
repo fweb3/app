@@ -17,6 +17,7 @@ const customJestConfig = {
     '<rootDir>/interfaces/',
   ],
   collectCoverageFrom: ['<rootDir>/**'],
+  coveragePathIgnorePatterns: ['<rootDir>/node_modules', '<rootDir>/interfaces/abi'],
   setupFilesAfterEnv: ['<rootDir>/jest/jest.setup.ts'],
 }
 

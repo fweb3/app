@@ -1,9 +1,9 @@
 # [fweb3.xyz](https://fweb3.xyz)
 
-![Statements](https://img.shields.io/badge/statements-87.5%25-yellow.svg?style=flat&logo=jest)
-![Branches](https://img.shields.io/badge/branches-60%25-red.svg?style=flat&logo=jest)
-![Functions](https://img.shields.io/badge/functions-100%25-brightgreen.svg?style=flat&logo=jest)
-![Lines](https://img.shields.io/badge/lines-87.5%25-yellow.svg?style=flat&logo=jest)
+![Statements](https://img.shields.io/badge/statements-26.6%25-red.svg?style=flat&logo=jest)
+![Branches](https://img.shields.io/badge/branches-11.7%25-red.svg?style=flat&logo=jest)
+![Functions](https://img.shields.io/badge/functions-16.46%25-red.svg?style=flat&logo=jest)
+![Lines](https://img.shields.io/badge/lines-22.77%25-red.svg?style=flat&logo=jest)
 
 Contributions are more than welcome! Please fork this repo, do work, then submit a PR!
 You will find the contribution guidlines [here](https://github.com/fweb3/CONTRIBUTING)
@@ -20,7 +20,14 @@ You will find all of them [here](https://github.com/fweb3/contracts)
 
 ## Local Development
 
+### Prerequsits
+
+- Node v16
+
 ```bash
+# Ensure correct node version (with nvm)
+nvm use
+
 # Install dependencies
 yarn install
 
@@ -37,10 +44,10 @@ yarn test
 yarn test:watch
 
 # cypress (start app first)
-yarn e2e
+yarn cypress
 
 # cypress standalone
-yarn e2e:run
+yarn cypress:run
 
 # Linting
 yarn lint

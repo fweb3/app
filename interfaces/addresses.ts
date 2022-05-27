@@ -1,18 +1,5 @@
 import { Networks } from './networks'
 
-enum GameAddresses {
-  FWEB3_TOKEN = 'fweb3_token',
-  FWEB3_GAME = 'fweb3_game',
-  FWEB3_TROPHY = 'fweb3_trophy',
-  FWEB3_FAUCET = 'fweb3_token_faucet',
-  FWEB3_MATIC_FAUCET = 'fweb3_matic_faucet',
-  FWEB3_DIAMON_NFT = 'fweb3_diamond_nft',
-  FWEB3_POLL = 'fweb3_poll',
-  SWAP_ROUTER = 'swap_router',
-  GENESYS = 'genesys',
-  BURN = 'burn',
-}
-
 interface IAddresses {
   [key: string]: any
 }

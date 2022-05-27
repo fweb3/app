@@ -1,5 +1,5 @@
-import fweb3TokenInterface from '../interfaces/Fweb3Token.json'
-import fweb3GameInterface from '../interfaces/Fweb3Game.json'
+import fweb3TokenInterface from '../interfaces/abi/Fweb3Token.json'
+import fweb3GameInterface from '../interfaces/abi/Fweb3Game.json'
 import { Provider } from '@ethersproject/providers'
 import { Contract } from '@ethersproject/contracts'
 import { loadAddress } from './addresses'
