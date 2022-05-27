@@ -1,11 +1,11 @@
 import { CommonLink, CommonText, Subheading } from '../../shared/Elements'
 import { FaucetDisclaimer } from '../FaucetDisclaimer'
-import { getFaucetUrl } from '../../../interfaces'
-import { useGame } from '../../../providers'
+import { useGame, useUrl } from '../../../hooks'
 import { DotKey } from '../../Chest/dots'
 
 export const UseFaucets = (): JSX.Element => {
   const { isDotComplete } = useGame()
+  const { faucetUrl } = useUrl()
   const hasNativeTokens = isDotComplete(DotKey.hasUsedFaucet)
 
   const renderCompleted = () => {
@@ -23,8 +23,8 @@ export const UseFaucets = (): JSX.Element => {
       <div data-testid="game-tasks_2-incomplete">
         <Subheading>Get native tokens for gas</Subheading>
         <CommonText>
-          You can use the *<CommonLink href={getFaucetUrl()}>faucet</CommonLink>{' '}
-          to receive the native tokens required to pay gas. You&apos;ll need at
+          You can use the *<CommonLink href={faucetUrl}>faucet</CommonLink> to
+          receive the native tokens required to pay gas. You&apos;ll need at
           least 300 FWEB3 tokens in your account to use it.
         </CommonText>
         <CommonText>

@@ -1,12 +1,14 @@
 import { numTasksCompleted } from '../../providers/Game/tasks'
 import { TrophyImage } from '../CompletedView/TrophyImage'
-import { useConnection, useGame } from '../../providers'
 import styled, { keyframes } from 'styled-components'
 import { useDevice } from '../../hooks/useDevice'
 import { ShareButton } from './ShareButton'
 import { fadeIn } from 'react-animations'
 import { MEDIA_QUERY } from '../styles'
 import { Dot } from './Dot'
+
+import { useGame, useConnection } from '../../hooks'
+
 const fade = keyframes(fadeIn)
 
 const ChestContainer = styled.div`
@@ -66,7 +68,9 @@ export const ChestSection = (): JSX.Element => {
 
   const renderGameChest = (): JSX.Element => {
     const shouldShowShare =
-      isConnected && Object.entries(completedTasks).filter(([k, v]) => v.isCompleted).length >= 2
+      isConnected &&
+      Object.entries(completedTasks).filter(([k, v]) => v.isCompleted).length >=
+        2
     return (
       <>
         <Chest data-testid="chest">

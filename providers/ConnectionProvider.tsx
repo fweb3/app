@@ -3,7 +3,7 @@ declare let window: any
 import { Context, createContext, useContext, useEffect, useState } from 'react'
 import { createEthersConnection, fetchEnsName } from '../interfaces'
 import type { IComponentProps } from '../components/component'
-import { Provider, Network } from '@ethersproject/providers'
+import { Provider } from '@ethersproject/providers'
 import { getMessageFromCode } from 'eth-rpc-errors'
 import type { GameError } from '../interfaces/game'
 import { useLoading } from './LoadingProvider'
@@ -39,7 +39,9 @@ const defaultConnectionContext: IConnectionContext = {
   queryAccount: '',
 }
 
-const ConnectionContext: Context<IConnectionContext> = createContext(defaultConnectionContext)
+const ConnectionContext: Context<IConnectionContext> = createContext(
+  defaultConnectionContext
+)
 
 const ConnectionProvider = ({ children }: IComponentProps) => {
   const { isLoading, fullscreenLoader, startToast, updateToast } = useLoading()

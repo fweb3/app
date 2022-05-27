@@ -1,11 +1,11 @@
 import { CommonLink, CommonText, Subheading } from '../../shared/Elements'
 import { PulseButton } from '../../shared/PulseButton'
-import { getGithubUrl } from '../../../interfaces'
-import { useGame } from '../../../providers'
+import { useUrl, useGame } from '../../../hooks'
 import { DotKey } from '../../Chest/dots'
 
 export const DeployedContract = (): JSX.Element => {
   const { isDotComplete } = useGame()
+  const { githubUrl } = useUrl()
   const hasDeployedContract = isDotComplete(DotKey.hasDeployedContract)
   const walkthroughLink =
     'https://www.notion.so/fweb3/Walkthrough-8ac4fc0d3b814a068767c86d63fd8fb7#3c526735ae074b88838ad7b467545614'
@@ -44,7 +44,7 @@ export const DeployedContract = (): JSX.Element => {
         <CommonText>
           So far, you have interacted with three of our fweb3 contracts. The
           code for them is totally open and can be found{' '}
-          <CommonLink href={getGithubUrl()}>here</CommonLink>
+          <CommonLink href={githubUrl}>here</CommonLink>
         </CommonText>
         <CommonText>
           It&apos;s time for you to deploy your own. Here is a{' '}

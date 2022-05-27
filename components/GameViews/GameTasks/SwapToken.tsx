@@ -1,12 +1,12 @@
 import { CommonLink, CommonText, Subheading } from '../../shared/Elements'
-import { getUniswapUrl } from '../../../interfaces'
-import { useGame } from '../../../providers'
+import { useGame, useUrl } from '../../../hooks'
 import { DotKey } from '../../Chest/dots'
 
 export const SwapToken = () => {
   const { isDotComplete } = useGame()
+  const { uniswapUrl } = useUrl()
+
   const hasSwappedTokens = isDotComplete(DotKey.hasSwappedTokens)
-  const uniswapUrl = getUniswapUrl()
 
   const renderCompleted = () => {
     return (

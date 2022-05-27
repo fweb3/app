@@ -4,37 +4,15 @@ import { FaGithubSquare } from 'react-icons/fa'
 import { MdHelpCenter } from 'react-icons/md'
 import { BsDiscord } from 'react-icons/bs'
 import styled from 'styled-components'
-import Link from 'next/link'
-import {
-  getDiscordUrl,
-  getGithubUrl,
-  getWalkthroughUrl,
-} from '../../interfaces'
 import { IconType } from 'react-icons'
+import { useUrl } from '../../hooks'
+import Link from 'next/link'
 
 interface IFooterItems {
   href: string
   text: string
   Icon: IconType
 }
-
-const FOOTER_ITEMS: IFooterItems[] = [
-  {
-    href: getWalkthroughUrl(),
-    text: 'Walkthrough',
-    Icon: MdHelpCenter,
-  },
-  {
-    href: getDiscordUrl(),
-    text: 'Discord',
-    Icon: BsDiscord,
-  },
-  {
-    href: getGithubUrl(),
-    text: 'Github',
-    Icon: FaGithubSquare,
-  },
-]
 
 const Container = styled.div`
   position: absolute;
@@ -80,6 +58,24 @@ const LinkItem = ({ href, text, Icon }: ILinkItemProps): JSX.Element => {
 }
 
 export const Footer = (): JSX.Element => {
+  const { walkthroughUrl, discordUrl, githubUrl } = useUrl()
+  const FOOTER_ITEMS: IFooterItems[] = [
+    {
+      href: walkthroughUrl,
+      text: 'Walkthrough',
+      Icon: MdHelpCenter,
+    },
+    {
+      href: discordUrl,
+      text: 'Discord',
+      Icon: BsDiscord,
+    },
+    {
+      href: githubUrl,
+      text: 'Github',
+      Icon: FaGithubSquare,
+    },
+  ]
   return (
     <Container data-testid="footer_footer">
       {FOOTER_ITEMS.map((elem, i) => (

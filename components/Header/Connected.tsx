@@ -1,7 +1,7 @@
-import { formatBalance, getPolygonscanUrl } from '../../interfaces'
-import { useConnection, useGame } from '../../providers'
+import { useConnection, useGame, useUrl } from '../../hooks'
 import styled, { keyframes } from 'styled-components'
 import { COLORS, SPACING, TEXT } from '../styles'
+import { formatBalance } from '../../interfaces'
 import { CommonLink } from '../shared/Elements'
 import { GiTwoCoins } from 'react-icons/gi'
 import { flash } from 'react-animations'
@@ -64,19 +64,26 @@ const BalanceContainer = styled.div`
 
 export const ConnectedHeader = () => {
   const { displayName, account } = useConnection()
+  const { getPolygonscanUrl } = useUrl()
   const { gameTaskState } = useGame()
+
   const balance = formatBalance(gameTaskState?.tokenBalance?.toString())
+
   return (
     <>
       <HeaderLogo />
       <Container>
         <StyledPlug />
-        <CommonLink href={getPolygonscanUrl(account, 'polygon')}>
-          <DisplayName data-testid="header_displayname">{displayName}</DisplayName>
+        <CommonLink href={getPolygonscanUrl(account)}>
+          <DisplayName data-testid="header_displayname">
+            {displayName}
+          </DisplayName>
         </CommonLink>
         <BalanceContainer>
           <GiTwoCoins color={COLORS.yellowish} size={40} />
-          <AccountBalance data-testid="header_balance">{balance}</AccountBalance>
+          <AccountBalance data-testid="header_balance">
+            {balance}
+          </AccountBalance>
         </BalanceContainer>
       </Container>
     </>

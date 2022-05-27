@@ -3,13 +3,8 @@ import { IComponentProps } from '../components/component'
 import { useConnection } from './ConnectionProvider'
 import { Provider } from '@ethersproject/providers'
 import { Network } from '@ethersproject/networks'
+import { AllowedChains } from './providers.d'
 import { logger } from '../lib'
-
-export enum AllowedChains {
-  LOCAL = 0,
-  MUMBAI = 30001,
-  POLYGON = 137,
-}
 
 interface INetwork {
   chainId: number
@@ -52,7 +47,11 @@ const NetworkProvider = ({ children }: IComponentProps) => {
     }
   }, [account, provider])
 
-  return <NetworkContext.Provider value={network}>{children}</NetworkContext.Provider>
+  return (
+    <NetworkContext.Provider value={network}>
+      {children}
+    </NetworkContext.Provider>
+  )
 }
 
 const useNetwork = () => useContext(NetworkContext)
