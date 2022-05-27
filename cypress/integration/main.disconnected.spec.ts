@@ -6,10 +6,8 @@ describe('Desktop disconnected view', () => {
     cy.visit('/')
   })
   it('loads the header', () => {
-    cy.get('[data-testid="header_heading"]').contains('fweb3')
-    cy.get('[data-testid="header_connect-msg"]').contains(
-      'Connect a wallet to get started'
-    )
+    cy.get('[data-testid="header-logo"]').contains('fweb3')
+    cy.get('[data-testid="header-get-started"]').contains('Connect a wallet to get started')
   })
 
   it('loads the main chest without dots', () => {

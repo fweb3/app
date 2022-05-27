@@ -1,10 +1,9 @@
-import { render, screen } from '@testing-library/react'
-import { ChestSection } from './ChestSection'
-import { useDevice } from '../../hooks/useDevice'
-import { useGame } from '../../providers/GameProvider'
 import { MOCK_GAME_CONTEXT } from '../../jest/jest.fixtures'
 import { setCompleteTasks } from '../../jest/jest.helpers'
-import { DOTS_MAP } from './dots'
+import { render, screen } from '@testing-library/react'
+import { useGame } from '../../providers/GameProvider'
+import { useDevice } from '../../hooks/useDevice'
+import { ChestSection } from './ChestSection'
 
 const renderComponent = (props?: any) => render(<ChestSection {...props} />)
 
@@ -15,19 +14,19 @@ const mockUseGame = useGame as jest.MockedFunction<typeof useGame>
 
 test('renders game chest', () => {
   renderComponent()
-  expect(screen.getByTestId('chest')).ok
+  expect(screen.getByTestId('chest')).toBeTruthy()
 })
 
 test('renders mobile chest', () => {
   mockUseDevice.mockReturnValueOnce({ device: 'mobile' })
   renderComponent()
-  expect(screen.getByTestId('chest-mobile')).ok
+  expect(screen.getByTestId('chest-mobile')).toBeTruthy()
 })
 
 test('renders open chest if the game has been won', () => {
   mockUseGame.mockReturnValueOnce({ ...MOCK_GAME_CONTEXT, hasWonGame: true })
   renderComponent()
-  expect(screen.getByTestId('open-chest')).ok
+  expect(screen.getByTestId('open-chest')).toBeTruthy()
 })
 
 test('shows share button when at least 1 task is complete', () => {
@@ -36,8 +35,8 @@ test('shows share button when at least 1 task is complete', () => {
     completedTasks: setCompleteTasks(['hasVotedInPoll']),
   })
   renderComponent()
-  expect(screen.getByTestId('share-btn')).ok
-  expect(screen.getByText('Share your progress')).ok
+  expect(screen.getByTestId('share-btn')).toBeTruthy()
+  expect(screen.getByText('Share your progress')).toBeTruthy()
 })
 
 test('chest lights up dots', () => {
@@ -47,7 +46,7 @@ test('chest lights up dots', () => {
     completedTasks: tasks,
   })
   renderComponent()
-  expect(screen.getByTestId('dot_dot-0-visible-active')).ok
-  expect(screen.getByTestId('dot_dot-2-visible')).ok
-  expect(screen.getByTestId('dot_dot-7-visible')).ok
+  expect(screen.getByTestId('dot_dot-0-visible-active')).toBeTruthy()
+  expect(screen.getByTestId('dot_dot-2-visible')).toBeTruthy()
+  expect(screen.getByTestId('dot_dot-7-visible')).toBeTruthy()
 })
