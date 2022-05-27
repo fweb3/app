@@ -1,3 +1,4 @@
+import { numTasksCompleted } from '../../providers/Game/tasks'
 import { TrophyImage } from '../CompletedView/TrophyImage'
 import { useConnection, useGame } from '../../providers'
 import styled, { keyframes } from 'styled-components'
@@ -6,7 +7,6 @@ import { ShareButton } from './ShareButton'
 import { fadeIn } from 'react-animations'
 import { MEDIA_QUERY } from '../styles'
 import { Dot } from './Dot'
-
 const fade = keyframes(fadeIn)
 
 const ChestContainer = styled.div`
@@ -59,7 +59,7 @@ export const ChestSection = (): JSX.Element => {
   const { device } = useDevice()
 
   const shouldCountAsConnected = isConnected || isQueryLoad
-  const numTasksComplete = Object.entries(completedTasks).filter(([k, v]) => v.isCompleted).length
+  const numTasksComplete = numTasksCompleted(completedTasks)
   const renderMobileChest = (): JSX.Element => {
     return <Chest data-testid="chest-mobile" />
   }

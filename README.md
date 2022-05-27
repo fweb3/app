@@ -60,7 +60,6 @@ yarn prettier
 
 Supports using either the VS Code debugger or Chrome DevTools.
 See official Next.js docs: https://nextjs.org/docs/advanced-features/debugging
-You can use `http://localhost:3000?wallet=<address>` to test using a specific wallet address
 
 ## Depolyment
 

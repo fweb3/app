@@ -51,3 +51,7 @@ const mapDotsCompleted = (newGameTaskState: IGameTaskState): IDotsCompleted => {
 
   return { currentCompletedDots, activeDot: activeDot.toString() }
 }
+
+export const numTasksCompleted = (completedTasks: IDotsMap) => {
+  return Object.entries(completedTasks).filter(([k, v]) => v.isCompleted).length
+}

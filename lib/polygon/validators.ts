@@ -1,8 +1,7 @@
-import { IGameTaskState } from '../../interfaces/game'
-import { DEFAULT_WON_GAME_STATE, DEFAULT_GAME_STATE } from '../constants'
-import { loadAddress } from '../../interfaces'
-import { ethers } from 'ethers'
 import type { IPolygonBalanceResponse, IPolygonData, IPolygonDataResponse } from './index.d'
+import { IGameTaskState } from '../../interfaces/game'
+import { DEFAULT_WON_GAME_STATE } from '../constants'
+import { loadAddress } from '../../interfaces'
 import {
   fetchTrophyTransactions,
   fetchWalletTokenBalance,

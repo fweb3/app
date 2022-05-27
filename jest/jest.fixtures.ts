@@ -1,4 +1,5 @@
 import { DOTS_MAP } from '../components/Chest/dots'
+import { IGameTaskState } from '../interfaces/game'
 import { DEFAULT_GAME_STATE } from '../lib'
 
 export const MOCK_GAME_CONTEXT = {
@@ -21,4 +22,20 @@ export const MOCK_GAME_CONTEXT = {
   isJudge: false,
   resetGameState: jest.fn(),
   isDotComplete: jest.fn().mockReturnValue(false),
+}
+
+export const WIN_GAME_STATE: IGameTaskState = {
+  tokenBalance: '300000000000000000000',
+  hasEnoughTokens: true, // 1
+  hasUsedFaucet: true, // 2
+  hasSentTokens: true, // 3
+  hasMintedNFT: true, // 4
+  hasBurnedTokens: true, // 5
+  hasSwappedTokens: true, // 6
+  hasVotedInPoll: true, // 7
+  hasDeployedContract: true, // 8
+  hasWonGame: true,
+  isConnected: true,
+  trophyId: '',
+  maticBalance: '100000000000000000',
 }
