@@ -1,6 +1,11 @@
 declare let window: any
 
-import { Web3Provider, Network, AlchemyProvider, Provider } from '@ethersproject/providers'
+import {
+  Web3Provider,
+  Network,
+  AlchemyProvider,
+  Provider,
+} from '@ethersproject/providers'
 import { logger } from '../lib'
 import { ethers } from 'ethers'
 
@@ -31,7 +36,9 @@ const _getAccounts = async (provider: Web3Provider): Promise<any> => {
   return provider.send('eth_requestAccounts', [])
 }
 
-export const createAlchemyProvider = async (network: string): Promise<AlchemyProvider> => {
+export const createAlchemyProvider = async (
+  network: string
+): Promise<AlchemyProvider> => {
   logger.log(`[+] creating alchemy provider for: [${network}]`)
   const provider: AlchemyProvider = new AlchemyProvider(
     network,

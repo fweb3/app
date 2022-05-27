@@ -1,3 +1,3 @@
 export interface IComponentProps {
-  children: any
+  children: any // eslint-disable-line
 }

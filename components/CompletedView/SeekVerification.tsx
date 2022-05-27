@@ -57,22 +57,21 @@ import { useEffect } from 'react'
 // }, [isConnected, account, query, gameContract]) // eslint-disable-line
 
 export const SeekVerification = (): JSX.Element => {
-  const handleVerification = (): void => {}
-
-  useEffect(() => {}, [])
-
   return (
     <div data-testid="seek-verification">
       <HeadingText>Tasks Complete!</HeadingText>
-      <CommonText>Please click the button below to seek verification from a judge.</CommonText>
       <CommonText>
-        If you have already clicked verify once you do not need to again. It will only cost you more
-        gas.
+        Please click the button below to seek verification from a judge.
       </CommonText>
       <CommonText>
-        Once a judge verifies you, you&apos;ll be able to claim your 1,000 FWEB3 tokens.
+        If you have already clicked verify once you do not need to again. It
+        will only cost you more gas.
       </CommonText>
-      <PulseButton onClick={handleVerification}>Seek verification</PulseButton>
+      <CommonText>
+        Once a judge verifies you, you&apos;ll be able to claim your 1,000 FWEB3
+        tokens.
+      </CommonText>
+      {/* <PulseButton onClick={handleVerification}>Seek verification</PulseButton> */}
     </div>
   )
 }

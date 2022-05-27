@@ -1,8 +1,8 @@
-declare let window: any
+declare let window: any // eslint-disable-line
 
 import { useConnection } from '../../providers'
 import styled, { keyframes } from 'styled-components'
-import { COLORS, SPACING, TEXT } from '../styles'
+import { SPACING, TEXT } from '../styles'
 // import MetaMaskOnboarding from "@metamask/onboarding";
 // import { OnboardingButton } from "./OnboardingButton";
 import { CgSpinner } from 'react-icons/cg'

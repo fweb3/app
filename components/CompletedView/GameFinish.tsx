@@ -1,9 +1,8 @@
-import { useGame } from '../../providers'
-import { numTasksCompleted } from '../../providers/Game/tasks'
+import { QueryAccountSection } from './QueryAccountSection'
 import { SeekVerification } from './SeekVerification'
 import { VerifiedWinner } from './VerifiedWinner'
+import { useGame } from '../../providers'
 import { useRouter } from 'next/router'
-import { QueryAccountSection } from './QueryAccountSection'
 
 export const GameFinish = (): JSX.Element => {
   const { trophyId } = useGame()

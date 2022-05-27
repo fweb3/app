@@ -1,4 +1,3 @@
-// @ts-nocheck
 import MetaMaskOnboarding from '@metamask/onboarding'
 import { useRef, useEffect, useState } from 'react'
 
@@ -9,7 +8,7 @@ export const OnboardingButton = () => {
   const handleOnboard = () => {
     if (onboarding) {
       setIsDisabled(true)
-      onboarding?.current.startOnboarding()
+      // onboarding?.current?.startOnboarding()
     }
   }
 
@@ -17,7 +16,7 @@ export const OnboardingButton = () => {
     // clear on load
     setIsDisabled(false)
     if (!onboarding?.current) {
-      onboarding.current = new MetaMaskOnboarding()
+      // onboarding.current = new MetaMaskOnboarding()
     }
   }, [])
 

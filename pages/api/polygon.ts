@@ -1,5 +1,5 @@
+import type { IGameTaskState, GameError } from '../../interfaces/game.d'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { IGameTaskState } from '../../interfaces/game'
 import { fetchCurrentGameState } from '../../lib'
 
 export default async function handler(
@@ -12,7 +12,7 @@ export default async function handler(
       account.toString()
     )
     return res.json({ status: 'success', ...payload })
-  } catch (e: any) {
+  } catch (e: GameError) {
     console.error(e)
     return res.status(500).json({ status: 'error', error: e.message })
   }

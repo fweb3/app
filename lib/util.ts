@@ -1,5 +1,6 @@
 import { ethers } from 'ethers'
 
+// eslint-disable-next-line
 export const fetcher = async (uri: string, config = {}): Promise<any> => {
   const res = await fetch(uri, config)
   return res.json()

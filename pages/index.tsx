@@ -1,7 +1,7 @@
 import { ContentSection } from '../components/GameViews/ContentSection'
 import { ChestSection } from '../components/Chest/ChestSection'
-import { Layout } from '../components/shared/Layout'
 import { MEDIA_QUERY, SPACING } from '../components/styles'
+import { Layout } from '../components/shared/Layout'
 import styled from 'styled-components'
 
 const GameGrid = styled.div`
@@ -27,7 +27,6 @@ const GameGrid = styled.div`
 `
 
 export default function Home(): JSX.Element {
-  const type = 'default'
   return (
     <Layout>
       <GameGrid>

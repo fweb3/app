@@ -69,7 +69,7 @@ export const ChestSection = (): JSX.Element => {
   const renderGameChest = (): JSX.Element => {
     const shouldShowShare =
       isConnected &&
-      Object.entries(completedTasks).filter(([k, v]) => v.isCompleted).length >=
+      Object.entries(completedTasks).filter(([, v]) => v.isCompleted).length >=
         2
     return (
       <>

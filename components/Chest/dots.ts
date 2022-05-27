@@ -64,36 +64,6 @@ const SM_COL_1 = 247
 const SM_COL_2 = 305
 const SM_COL_3 = 363
 
-// export const DOT_0_POS = {
-//   lg: [LG_COL_1, LG_ROW_1],
-//   md: [MD_COL_1, MD_ROW_1],
-//   sm: [SM_COL_1, SM_ROW_1],
-// }
-
-// export const DOT_1_POS = {
-//     lg: [LG_COL_2, LG_ROW_1],
-//     md: [MD_COL_2, MD_ROW_1],
-//     sm: [SM_COL_2, SM_ROW_1],
-// }
-
-// export const DOT_2_POS = {
-//   lg: [LG_COL_3, LG_ROW_1],
-//   md: [MD_COL_3, MD_ROW_1],
-//   sm: [SM_COL_3, SM_ROW_1],
-// }
-
-// export const DOT_3_POS = {
-//   lg: [LG_COL_1, LG_ROW_2],
-//   md: [MD_COL_1, MD_ROW_2],
-//   sm: [SM_COL_1, SM_ROW_2],
-// }
-
-// export const DOT_4_POS = {
-//   lg: [LG_COL_2, LG_ROW_2],
-//   md: [MD_COL_2, MD_ROW_2],
-//   sm: [SM_COL_2, SM_ROW_2],
-// }
-
 export const DOTS_MAP: IDotsMap = {
   '0': {
     task: DotKey.isConnected,

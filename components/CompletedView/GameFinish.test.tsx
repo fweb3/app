@@ -3,9 +3,11 @@ import { render, screen } from '@testing-library/react'
 import { useGame } from '../../providers/GameProvider'
 import { GameFinish } from './GameFinish'
 
+// eslint-disable-next-line
 const renderComponent = (props: any) => render(<GameFinish {...props} />)
 
 const mockUseGame = useGame as jest.MockedFunction<typeof useGame>
+// eslint-disable-next-line
 const mockUseRouter = jest.spyOn(require('next/router'), 'useRouter')
 
 describe('<GameFinish />', () => {
@@ -32,6 +34,6 @@ describe('<GameFinish />', () => {
       trophyId: '0',
     }))
     renderComponent(<GameFinish />)
-    expect(screen.getByTestId('seek-verification'))
+    expect(screen.getByTestId('seek-verification')).toBeTruthy()
   })
 })
