@@ -1,13 +1,13 @@
 declare let window: any // eslint-disable-line
 
+import { logger } from '../lib'
+import { ethers } from 'ethers'
 import {
   Web3Provider,
   Network,
   AlchemyProvider,
   Provider,
 } from '@ethersproject/providers'
-import { logger } from '../lib'
-import { ethers } from 'ethers'
 
 interface IEthersConnection {
   provider: Provider
@@ -48,11 +48,17 @@ export const createAlchemyProvider = async (
   return provider
 }
 
+const USE_LIVE_ENS = false
 export const fetchEnsName = async (account: string): Promise<string> => {
-  const provider = await createAlchemyProvider('homestead')
-  const ensName: string = (await provider.lookupAddress(account)) || ''
-  ensName && logger.log(`[+] found ens: ${ensName}`)
-  return ensName
+  if (USE_LIVE_ENS) {
+    logger.log('[+] fetching ens name')
+    const provider = await createAlchemyProvider('homestead')
+    const ensName: string = (await provider.lookupAddress(account)) || ''
+    ensName && logger.log(`[+] found ens: ${ensName}`)
+    return ensName
+  }
+  logger.log('[+] skipping ens')
+  return ''
 }
 
 export const formatBalance = (amt: string | number | null | undefined) => {

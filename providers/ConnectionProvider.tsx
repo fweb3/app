@@ -79,12 +79,12 @@ const ConnectionProvider = ({ children }: IComponentProps) => {
         setProvider(provider)
         setAccount(account)
 
-        const ensName: string = await fetchEnsName(account)
-        const displayName = ensName ?? formatAccountDisplay(account)
+        const ensName = await fetchEnsName(account)
+        const displayName = ensName ? ensName : formatAccountDisplay(account)
         setEnsName(ensName)
         setDisplayName(displayName)
 
-        const isConnected: boolean = !!provider && !!account
+        const isConnected = !!provider && !!account
         setIsConnected(isConnected)
 
         updateToast('Connected', toaster, {
@@ -113,13 +113,6 @@ const ConnectionProvider = ({ children }: IComponentProps) => {
     }
     if (accounts.length === 0) {
       handleDisconnect()
-    }
-  }
-
-  const handleChainChange = (chainId: number) => {
-    logger.log(`CHAIN CHANGE EVENT: ${chainId}`)
-    if (initialized) {
-      window.location.reload()
     }
   }
 
@@ -160,15 +153,13 @@ const ConnectionProvider = ({ children }: IComponentProps) => {
   useEffect(() => {
     if (window?.ethereum) {
       window.ethereum.on('accountsChanged', handleAccountChange)
-      window.ethereum.on('chainChanged', handleChainChange)
       window.ethereum.on('disconnect', handleDisconnect)
       window.ethereum.on('message', handleMessageChange)
-    }
-    return () => {
-      window.ethereum.removeListener('accountsChanged', handleAccountChange)
-      window.ethereum.removeListener('chainChanged', handleChainChange)
-      window.ethereum.removeListener('disconnect', handleDisconnect)
-      window.ethereum.removeListener('message', handleMessageChange)
+      return () => {
+        window.ethereum.removeListener('accountsChanged', handleAccountChange)
+        window.ethereum.removeListener('disconnect', handleDisconnect)
+        window.ethereum.removeListener('message', handleMessageChange)
+      }
     }
   }, []) // eslint-disable-line
 

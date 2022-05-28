@@ -1,51 +1,73 @@
+declare let window: any // eslint-disable-line
+
 import { createContext, useContext, useEffect, useState } from 'react'
 import { IComponentProps } from '../components/component'
 import { useConnection } from './ConnectionProvider'
 import { Provider } from '@ethersproject/providers'
 import { Network } from '@ethersproject/networks'
 import { AllowedChains } from './providers.d'
+import { toast } from 'react-toastify'
 import { logger } from '../lib'
 
-interface INetwork {
+interface INetworkContext {
   chainId: number
   name: string
   isAllowed: boolean
 }
 
-const defaultNetworkContext: INetwork = {
+const defaultNetworkContext: INetworkContext = {
   chainId: 0,
   name: '',
-  isAllowed: false,
+  isAllowed: true,
 }
 
 const NetworkContext = createContext(defaultNetworkContext)
 
 const NetworkProvider = ({ children }: IComponentProps) => {
-  const [network, setNetwork] = useState<INetwork>(defaultNetworkContext)
-  const { account, provider } = useConnection()
+  const [network, setNetwork] = useState<INetworkContext>(defaultNetworkContext)
+  const { isConnected, provider } = useConnection()
 
   const handleNetwork = async (provider: Provider) => {
     const network: Network = await provider.getNetwork()
+    const isAllowed = Object.values(AllowedChains).includes(network.chainId)
+    if (network.chainId === 80001) {
+      toast.success('Connected to tesnet.', {
+        position: toast.POSITION.TOP_CENTER,
+        isLoading: false,
+        autoClose: 10000,
+      })
+    }
     return {
       chainId: network.chainId,
       name: network.name,
-      isAllowed: Object.values(AllowedChains).includes(network.chainId),
+      isAllowed,
+    }
+  }
+
+  const handleChainChange = async (chainId: string) => {
+    const newChainId = parseInt(chainId, 16)
+    if (newChainId !== network.chainId && isConnected && provider) {
+      window.location.reload()
     }
   }
 
   useEffect(() => {
-    if (account && provider) {
-      (async () => {
+    if (window?.ethereum && isConnected && provider) {
+      ;(async () => {
         try {
           const network = await handleNetwork(provider)
           setNetwork(network)
-          logger.log(`[+] Set network: [${network}]`)
+          logger.log(`[+] Set network: [${network.name}]`)
         } catch (err) {
           console.error(err)
         }
+        window.ethereum.on('chainChanged', handleChainChange)
+        return () => {
+          window.ethereum.removeListener('chainChanged', handleChainChange)
+        }
       })()
     }
-  }, [account, provider])
+  }, [isConnected, provider]) // eslint-disable-line
 
   return (
     <NetworkContext.Provider value={network}>

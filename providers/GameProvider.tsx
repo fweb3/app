@@ -1,3 +1,5 @@
+declare let window: any // eslint-disable-line
+
 import { useState, useEffect, createContext, useContext, Context } from 'react'
 import { DotKey, DOTS_MAP, IDotsMap } from '../components/Chest/dots'
 import { IFweb3Contracts, loadFweb3Contracts } from '../interfaces'
@@ -7,6 +9,7 @@ import { createShareInfo, ISocialShare } from './Game/social'
 import { IComponentProps } from '../components/component'
 import { useConnection, useLoading } from '../providers'
 import { Contract } from '@ethersproject/contracts'
+import { useNetwork } from './NetworkProvider'
 import { getCurrentGame } from './Game/tasks'
 import { DEFAULT_GAME_STATE } from '../lib'
 import { useRouter } from 'next/router'
@@ -85,9 +88,13 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
   const [gameTaskState, setGameTaskState] =
     useState<IGameTaskState>(DEFAULT_GAME_STATE)
   const { query } = useRouter()
+  const network = useNetwork()
 
   const loadGameGameState = async (player: string): Promise<void> => {
-    if (isConnected || query?.account) {
+    const shouldLoadGame =
+      window?.Cypress || (network?.isAllowed && (isConnected || query?.account))
+    if (shouldLoadGame) {
+      logger.log('[+] start loading game state')
       const toaster = startToast('Loading Game')
       try {
         fullscreenLoader(true)
@@ -98,7 +105,7 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
         setGameContract(gameContract || null)
 
         const { taskState, currentCompletedDots, activeDot } =
-          await getCurrentGame(player)
+          await getCurrentGame(player, window?.Cypress)
 
         setCompletedTasks(currentCompletedDots)
         setGameTaskState(taskState)
@@ -173,8 +180,8 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
   }
 
   useEffect(() => {
-    if (isConnected) {
-      (async () => {
+    if (isConnected && network?.isAllowed) {
+      ;(async () => {
         const toaster = startToast('Checking state...')
         try {
           // only check connected account for judge
@@ -190,8 +197,8 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
   }, [isConnected]) // eslint-disable-line
 
   useEffect(() => {
-    (async () => {
-      if (isConnected || query?.account) {
+    ;(async () => {
+      if ((isConnected || query?.account) && network?.isAllowed) {
         await loadGameGameState(query?.account?.toString() ?? account)
       }
     })()
@@ -205,7 +212,7 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
       parseInt(trophyId || '0') < 1
 
     if (shouldVerifyWin) {
-      (async () => {
+      ;(async () => {
         const toaster = toast.loading('Checking verification')
         fullscreenLoader(true)
         try {

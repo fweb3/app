@@ -1,34 +1,13 @@
-import { useConnection, useGame, useUrl } from '../../hooks'
+import { useConnection, useGame, useNetwork, useUrl } from '../../hooks'
 import styled, { keyframes } from 'styled-components'
 import { COLORS, SPACING, TEXT } from '../styles'
 import { formatBalance } from '../../interfaces'
 import { CommonLink } from '../shared/Elements'
 import { GiTwoCoins } from 'react-icons/gi'
 import { flash } from 'react-animations'
-import { GoPlug } from 'react-icons/go'
 import { HeaderLogo } from './Logo'
 
 const flicker = keyframes(flash)
-
-const plugin = keyframes`
-  0% {
-    transform: translateX(-50px);
-    color: red;
-  }
-  80% {
-    transform: scale(1.3);
-    color: red;
-
-  }
-  90% {
-    transform: scale(1);
-    transform: translateX(0);
-    color: red;
-  }
-  100% {
-    color: green;
-  }
-`
 
 const Container = styled.div`
   display: flex;
@@ -36,18 +15,11 @@ const Container = styled.div`
   justify-content: flex-end;
 `
 
-const StyledPlug = styled((props) => <GoPlug {...props} />)`
-  font-size: ${TEXT.h3};
-  color: ${COLORS.springGreen};
-  padding-right: 0.8rem;
-  animation: 0.8s ${plugin};
-`
-
 const DisplayName = styled.div`
-  font-size: ${TEXT.h4};
-  padding-right: ${SPACING.medium};
+  font-size: 1.2rem;
+  padding-bottom: 0.4rem;
   animation: 0.2s ${flicker};
-  animation-delay: 0.6s;
+  animation-delay: 5s;
 `
 
 const AccountBalance = styled.div`
@@ -62,10 +34,23 @@ const BalanceContainer = styled.div`
   justify-content: flex-end;
 `
 
+const InnerContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-right: ${SPACING.medium};
+`
+
+const NetworkText = styled.p`
+  padding: 0;
+  margin: 0;
+`
+
 export const ConnectedHeader = () => {
   const { displayName, account } = useConnection()
   const { getPolygonscanUrl } = useUrl()
   const { gameTaskState } = useGame()
+  const network = useNetwork()
 
   const balance = formatBalance(gameTaskState?.tokenBalance?.toString())
 
@@ -73,17 +58,25 @@ export const ConnectedHeader = () => {
     <>
       <HeaderLogo />
       <Container>
-        <StyledPlug />
-        <CommonLink href={getPolygonscanUrl(account)}>
-          <DisplayName data-testid="header_displayname">
-            {displayName}
-          </DisplayName>
-        </CommonLink>
+        <InnerContainer>
+          <CommonLink href={getPolygonscanUrl(account)}>
+            <DisplayName data-testid="header_displayname">
+              {displayName}
+            </DisplayName>
+          </CommonLink>
+          <NetworkText>
+            {network.isAllowed ? `🟢 ${network.name}` : `🔴 ${network.name}`}
+          </NetworkText>
+        </InnerContainer>
         <BalanceContainer>
-          <GiTwoCoins color={COLORS.yellowish} size={40} />
-          <AccountBalance data-testid="header_balance">
-            {balance}
-          </AccountBalance>
+          {balance !== '0.0' && (
+            <>
+              <GiTwoCoins color={COLORS.yellowish} size={40} />
+              <AccountBalance data-testid="header_balance">
+                {balance}
+              </AccountBalance>
+            </>
+          )}
         </BalanceContainer>
       </Container>
     </>

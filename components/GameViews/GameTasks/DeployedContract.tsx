@@ -11,7 +11,7 @@ export const DeployedContract = (): JSX.Element => {
     'https://www.notion.so/fweb3/Walkthrough-8ac4fc0d3b814a068767c86d63fd8fb7#3c526735ae074b88838ad7b467545614'
 
   const handleSubmit = async (): Promise<void> => {
-    console.log('make trophy')
+    console.log('unused submit for trophy')
   }
 
   const renderCompleted = (): JSX.Element => {

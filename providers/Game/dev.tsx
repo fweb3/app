@@ -1,17 +1,17 @@
 import { IGameTaskState } from '../../interfaces/game'
 
-export const USE_LIVE_DATA = true
+export const USE_LIVE_DATA = false
 
 export const DEV_GAME_STATE: IGameTaskState = {
   tokenBalance: '300000000000000000000',
-  hasEnoughTokens: true, // 1
+  hasEnoughTokens: false, // 1
   hasUsedFaucet: false, // 2
-  hasSentTokens: true, // 3
-  hasMintedNFT: true, // 4
-  hasBurnedTokens: true, // 5
-  hasSwappedTokens: true, // 6
-  hasVotedInPoll: true, // 7
-  hasDeployedContract: true, // 8
+  hasSentTokens: false, // 3
+  hasMintedNFT: false, // 4
+  hasBurnedTokens: false, // 5
+  hasSwappedTokens: false, // 6
+  hasVotedInPoll: false, // 7
+  hasDeployedContract: false, // 8
   hasWonGame: false,
   isConnected: false,
   trophyId: '',
