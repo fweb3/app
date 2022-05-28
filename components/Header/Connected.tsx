@@ -1,13 +1,10 @@
 import { useConnection, useGame, useNetwork, useUrl } from '../../hooks'
-import styled, { keyframes } from 'styled-components'
 import { COLORS, SPACING, TEXT } from '../styles'
 import { formatBalance } from '../../interfaces'
 import { CommonLink } from '../shared/Elements'
 import { GiTwoCoins } from 'react-icons/gi'
-import { flash } from 'react-animations'
+import styled from 'styled-components'
 import { HeaderLogo } from './Logo'
-
-const flicker = keyframes(flash)
 
 const Container = styled.div`
   display: flex;
@@ -18,8 +15,6 @@ const Container = styled.div`
 const DisplayName = styled.div`
   font-size: 1.2rem;
   padding-bottom: 0.4rem;
-  animation: 0.2s ${flicker};
-  animation-delay: 5s;
 `
 
 const AccountBalance = styled.div`

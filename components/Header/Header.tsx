@@ -16,7 +16,7 @@ const Container = styled.nav`
   @media only screen and (min-width: ${MEDIA_QUERY.tablet}) {
     padding: ${SPACING.medium};
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
   }
 
   @media only screen and (min-width: ${MEDIA_QUERY.smallDesk}) {
@@ -34,5 +34,7 @@ const Container = styled.nav`
 export const Header = (): JSX.Element => {
   const { device } = useDevice()
   const isMobile = device !== 'desktop'
-  return <Container>{isMobile ? <MobileHeader /> : <DesktopHeader />}</Container>
+  return (
+    <Container>{isMobile ? <MobileHeader /> : <DesktopHeader />}</Container>
+  )
 }

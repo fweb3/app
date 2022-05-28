@@ -8,6 +8,7 @@ import { getMessageFromCode } from 'eth-rpc-errors'
 // eslint-disable-next-line
 import type { GameError } from '../interfaces/game'
 import { useLoading } from './LoadingProvider'
+import { useError } from './ErrorProvider'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { logger } from '../lib'
@@ -45,7 +46,6 @@ const ConnectionContext: Context<IConnectionContext> = createContext(
 )
 
 const ConnectionProvider = ({ children }: IComponentProps) => {
-  const { isLoading, fullscreenLoader, startToast, updateToast } = useLoading()
   const [queryDisplayName, setQueryDisplayName] = useState<string>('')
   const [provider, setProvider] = useState<Provider | null>(null)
   const [isQueryLoad, setIsQueryLoad] = useState<boolean>(false)
@@ -56,6 +56,8 @@ const ConnectionProvider = ({ children }: IComponentProps) => {
   const [isConnecting, setIsConnecting] = useState(false)
   const [account, setAccount] = useState<string>('')
   const [ensName, setEnsName] = useState<string>('')
+  const { isLoading, setIsLoading } = useLoading()
+  const { errorToast } = useError()
   const { query } = useRouter()
 
   const handleAccountLookup = async (newAccount: string): Promise<void> => {
@@ -70,12 +72,11 @@ const ConnectionProvider = ({ children }: IComponentProps) => {
 
   const connect = async () => {
     if (!isLoading && window?.ethereum) {
-      const toaster = startToast('Connecting')
       try {
         setIsConnecting(true)
-        fullscreenLoader(true)
 
         const { provider, account } = await createEthersConnection()
+        setIsLoading(true)
         setProvider(provider)
         setAccount(account)
 
@@ -87,20 +88,14 @@ const ConnectionProvider = ({ children }: IComponentProps) => {
         const isConnected = !!provider && !!account
         setIsConnected(isConnected)
 
-        updateToast('Connected', toaster, {
-          type: toast.TYPE.SUCCESS,
-        })
-
         setInitialized(true)
         setIsConnecting(false)
-        fullscreenLoader(false)
         logger.log('[+] Account connected!')
       } catch (err: GameError) {
+        setIsLoading(false)
         console.error(err)
         const errorMessage = getMessageFromCode(err.code, err.message)
-        updateToast(errorMessage, toaster, {
-          type: toast.TYPE.ERROR,
-        })
+        errorToast(errorMessage)
         resetState()
       }
     }
@@ -123,9 +118,9 @@ const ConnectionProvider = ({ children }: IComponentProps) => {
     setAccount('')
     setDisplayName('')
     setProvider(null)
-    fullscreenLoader(false)
     setInitialized(false)
   }
+  setIsLoading(false)
 
   const handleDisconnect = () => {
     logger.log('DISCONNECT_EVENT')

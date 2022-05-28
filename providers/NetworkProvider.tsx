@@ -6,7 +6,6 @@ import { useConnection } from './ConnectionProvider'
 import { Provider } from '@ethersproject/providers'
 import { Network } from '@ethersproject/networks'
 import { AllowedChains } from './providers.d'
-import { toast } from 'react-toastify'
 import { logger } from '../lib'
 
 interface INetworkContext {
@@ -30,13 +29,6 @@ const NetworkProvider = ({ children }: IComponentProps) => {
   const handleNetwork = async (provider: Provider) => {
     const network: Network = await provider.getNetwork()
     const isAllowed = Object.values(AllowedChains).includes(network.chainId)
-    if (network.chainId === 80001) {
-      toast.success('Connected to tesnet.', {
-        position: toast.POSITION.TOP_CENTER,
-        isLoading: false,
-        autoClose: 10000,
-      })
-    }
     return {
       chainId: network.chainId,
       name: network.name,

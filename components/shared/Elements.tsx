@@ -3,29 +3,42 @@ import { IComponentProps } from '../component'
 import styled from 'styled-components'
 import Link from 'next/link'
 
-const StyledLink = styled.a`
-  color: ${COLORS.teaGreen};
+export const HeadingText = styled.h1`
+  font-size: ${TEXT.h1};
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  color: ${COLORS.violet};
+
+  @media only screen and (min-width: ${MEDIA_QUERY.tablet}) {
+    padding-top: 1rem;
+    font-size: ${TEXT.h1};
+  }
+  @media only screen and (min-width: ${MEDIA_QUERY.smallDesk}) {
+    font-size: ${TEXT.h1};
+    text-align: left;
+  }
+  @media only screen and (min-width: ${MEDIA_QUERY.wide}) {
+    font-size: 3rem;
+  }
 `
 
-interface ILinkProps extends IComponentProps {
-  href?: string
-}
+export const Subheading = styled.h2`
+  margin-bottom: ${SPACING.small};
+  padding: 0;
+  font-size: ${TEXT.h4};
+  color: ${COLORS.maize};
 
-export const CommonLink = ({ href, children }: ILinkProps) => {
-  return (
-    <Link href={href || '#'} passHref={true}>
-      <StyledLink target="_blank" rel="noreferrer">
-        {children}
-      </StyledLink>
-    </Link>
-  )
-}
+  // @media only screen and (min-width: ${MEDIA_QUERY.tablet}) {
+  //   font-size: ${TEXT.h4};
+  //   background: green;
+  // }
+`
 
 export const CommonText = styled((props) => <p {...props} />)`
   color: ${COLORS.light};
   margin: 0 0 ${SPACING.small} 0;
   padding: 0;
-  text-indent: ${SPACING.large};
   font-size: ${(props) => props.size || '1.1rem'};
   line-height: 1.3rem;
 
@@ -44,16 +57,23 @@ export const CommonText = styled((props) => <p {...props} />)`
   }
 `
 
-export const Subheading = styled.h2`
-  margin-bottom: ${SPACING.small};
-  padding: 0;
-  font-size: ${TEXT.h4};
-  color: ${COLORS.maize};
-
-  // @media only screen and (min-width: ${MEDIA_QUERY.smallDesk}) {
-  //   font-size: ${TEXT.h4};
-  // }
+const StyledLink = styled.a`
+  color: ${COLORS.teaGreen};
 `
+
+interface ILinkProps extends IComponentProps {
+  href?: string
+}
+
+export const CommonLink = ({ href, children }: ILinkProps) => {
+  return (
+    <Link href={href || '#'} passHref={true}>
+      <StyledLink target="_blank" rel="noreferrer">
+        {children}
+      </StyledLink>
+    </Link>
+  )
+}
 
 export const ErrorText = styled((props) => <p {...props} />)`
   color: ${(props) => props.color || COLORS.error};
@@ -61,25 +81,6 @@ export const ErrorText = styled((props) => <p {...props} />)`
 
   @media only screen and (min-width: ${MEDIA_QUERY.tablet}) {
     font-size: ${(props) => props.size || TEXT.p};
-  }
-`
-
-export const HeadingText = styled.h1`
-  font-size: calc(${TEXT.p} + 0.1rem);
-  margin: 0 0 ${SPACING.small} 0;
-  padding: 0;
-  text-align: center;
-  color: ${COLORS.violet};
-
-  @media only screen and (min-width: ${MEDIA_QUERY.tablet}) {
-    font-size: ${TEXT.h3};
-  }
-  @media only screen and (min-width: ${MEDIA_QUERY.smallDesk}) {
-    font-size: ${TEXT.h1};
-    text-align: left;
-  }
-  @media only screen and (min-width: ${MEDIA_QUERY.wide}) {
-    font-size: 3rem;
   }
 `
 

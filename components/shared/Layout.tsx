@@ -1,5 +1,5 @@
 import { ToastContainer } from 'react-toastify'
-import { NetworkBanner } from './NetworkBanner'
+import { ErrorBanner } from './ErrorBanner'
 import { IComponentProps } from '../component'
 import { Header } from '../Header/Header'
 import styled from 'styled-components'
@@ -20,7 +20,7 @@ const MainGrid = styled.div`
 export const Layout = ({ children }: IComponentProps) => {
   return (
     <>
-      <NetworkBanner />
+      <ErrorBanner />
       <ToastContainer theme="dark" position="bottom-right" />
       <HtmlHead />
       <MainGrid>

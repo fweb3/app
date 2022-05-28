@@ -13,7 +13,6 @@ import { useNetwork } from './NetworkProvider'
 import { getCurrentGame } from './Game/tasks'
 import { DEFAULT_GAME_STATE } from '../lib'
 import { useRouter } from 'next/router'
-import { toast } from 'react-toastify'
 import { logger } from '../lib'
 
 interface IGameProviderState {
@@ -72,7 +71,6 @@ const calcTrophyColor = (trophyId: string): string => {
 }
 
 const GameProvider = ({ children }: IComponentProps): JSX.Element => {
-  const { fullscreenLoader, startToast, updateToast, errorToast } = useLoading()
   const [isFetchingGameData, setIsFetchingGameData] = useState<boolean>(false)
   const [tokenContract, setTokenContract] = useState<Contract | null>(null)
   const [gameContract, setGameContract] = useState<Contract | null>(null)
@@ -87,6 +85,7 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
   const [trophyId, setTrophyId] = useState<string>('')
   const [gameTaskState, setGameTaskState] =
     useState<IGameTaskState>(DEFAULT_GAME_STATE)
+  const { setIsLoading } = useLoading()
   const { query } = useRouter()
   const network = useNetwork()
 
@@ -95,9 +94,8 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
       window?.Cypress || (network?.isAllowed && (isConnected || query?.account))
     if (shouldLoadGame) {
       logger.log('[+] start loading game state')
-      const toaster = startToast('Loading Game')
       try {
-        fullscreenLoader(true)
+        setIsLoading(true)
 
         const { tokenContract, gameContract }: IFweb3Contracts =
           loadFweb3Contracts(provider)
@@ -127,14 +125,12 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
         setShareInfo(shareInfo)
 
         setIsFetchingGameData(false)
-        fullscreenLoader(false)
-        updateToast('Loaded!', toaster, { type: toast.TYPE.SUCCESS })
+        setIsLoading(false)
         logger.log('[+] game loaded')
       } catch (err: GameError) {
         console.error(err)
-        errorToast(err.message, toaster)
         resetGameState()
-        fullscreenLoader(false)
+        setIsLoading(false)
       }
     }
   }
@@ -182,15 +178,12 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
   useEffect(() => {
     if (isConnected && network?.isAllowed) {
       ;(async () => {
-        const toaster = startToast('Checking state...')
         try {
           // only check connected account for judge
           const isJudge = await checkIsJudge(account)
           setIsJudge(isJudge)
-          updateToast('State checked!', toaster, { type: toast.TYPE.SUCCESS })
         } catch (err: GameError) {
           console.error(err)
-          errorToast(err.message, toaster)
         }
       })()
     }
@@ -213,15 +206,13 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
 
     if (shouldVerifyWin) {
       ;(async () => {
-        const toaster = toast.loading('Checking verification')
-        fullscreenLoader(true)
+        setIsLoading(true)
         try {
           const isVerified = await checkVerification(account)
           setIsVerified(isVerified)
         } catch (err: GameError) {
           console.error(err)
-          errorToast(err.message, toaster)
-          fullscreenLoader(false)
+          setIsLoading(false)
         }
       })()
     }
