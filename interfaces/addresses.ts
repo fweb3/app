@@ -1,5 +1,5 @@
 interface IAddresses {
-  [key: string]: any
+  [key: string]: any // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
 const POLYGON_MATIC_FAUCETS: string[] = [
@@ -35,8 +35,8 @@ const ADDRESSES: IAddresses = {
 
 export const loadAddress = (
   name: string,
-  network: string = 'polygon',
-  version: string = 'v1'
+  network = 'polygon',
+  version = 'v1'
 ): string[] => {
   return ADDRESSES[network]?.[version]?.[name] || []
 }

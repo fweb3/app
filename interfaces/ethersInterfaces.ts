@@ -1,4 +1,4 @@
-declare let window: any
+declare let window: any // eslint-disable-line
 
 import {
   Web3Provider,
@@ -17,7 +17,7 @@ interface IEthersConnection {
 
 export const createEthersConnection = async (): Promise<IEthersConnection> => {
   const provider: Web3Provider = await _createProvider()
-  const accounts: any = await _getAccounts(provider)
+  const accounts: string[] = await _getAccounts(provider)
   const network: Network = await provider.getNetwork()
   return {
     provider,
@@ -31,7 +31,7 @@ const _createProvider = async (): Promise<Web3Provider> => {
   return new Web3Provider(window.ethereum)
 }
 
-const _getAccounts = async (provider: Web3Provider): Promise<any> => {
+const _getAccounts = async (provider: Web3Provider): Promise<string[]> => {
   logger.log('[+] requesting metamask connection')
   return provider.send('eth_requestAccounts', [])
 }

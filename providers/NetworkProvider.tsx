@@ -35,7 +35,7 @@ const NetworkProvider = ({ children }: IComponentProps) => {
 
   useEffect(() => {
     if (account && provider) {
-      ;(async () => {
+      (async () => {
         try {
           const network = await handleNetwork(provider)
           setNetwork(network)

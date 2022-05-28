@@ -1,6 +1,6 @@
 import { HeadingText, CommonText } from '../shared/Elements'
-import { PulseButton } from '../shared/PulseButton'
-import { useEffect } from 'react'
+// import { PulseButton } from '../shared/PulseButton'
+// import { useEffect } from 'react'
 
 // const sendTransaction = async (method: ContractFunction, args?: string) => {
 //   const toaster = startToast('Sending tx')

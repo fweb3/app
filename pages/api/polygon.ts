@@ -1,4 +1,5 @@
-import type { IGameTaskState, GameError } from '../../interfaces/game.d'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { GameError, IGameTaskState } from '../../interfaces/game.d'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { fetchCurrentGameState } from '../../lib'
 

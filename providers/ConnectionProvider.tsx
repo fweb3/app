@@ -1,10 +1,11 @@
-declare let window: any
+declare let window: any // eslint-disable-line
 
 import { Context, createContext, useContext, useEffect, useState } from 'react'
 import { createEthersConnection, fetchEnsName } from '../interfaces'
 import type { IComponentProps } from '../components/component'
 import { Provider } from '@ethersproject/providers'
 import { getMessageFromCode } from 'eth-rpc-errors'
+// eslint-disable-next-line
 import type { GameError } from '../interfaces/game'
 import { useLoading } from './LoadingProvider'
 import { useRouter } from 'next/router'
@@ -27,13 +28,13 @@ interface IConnectionContext {
 
 const defaultConnectionContext: IConnectionContext = {
   isConnected: false,
-  connect: () => {},
+  connect: () => null,
   account: '',
   provider: null,
   ensName: '',
   displayName: '',
   isConnecting: false,
-  handleDisconnect: () => {},
+  handleDisconnect: () => null,
   queryDisplayName: '',
   isQueryLoad: false,
   queryAccount: '',

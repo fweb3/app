@@ -1,5 +1,4 @@
 import styled, { keyframes } from 'styled-components'
-import { IComponentProps } from '../component'
 import { COLORS } from '../styles'
 
 const FadeInOut = keyframes`

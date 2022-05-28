@@ -12,13 +12,17 @@ interface IDotsCompleted {
   activeDot: string
 }
 
-export const getCurrentGame = async (player: string): Promise<ICurrentTaskState> => {
+export const getCurrentGame = async (
+  player: string
+): Promise<ICurrentTaskState> => {
   const taskState = await fetchTaskState(player)
   const { currentCompletedDots, activeDot } = mapDotsCompleted(taskState)
   return { taskState, currentCompletedDots, activeDot }
 }
 
-export const fetchTaskState = async (player: string): Promise<IGameTaskState> => {
+export const fetchTaskState = async (
+  player: string
+): Promise<IGameTaskState> => {
   if (USE_LIVE_DATA) {
     const url = `/api/polygon?account=${player}`
     const apiResponse = await fetch(url)
@@ -31,17 +35,22 @@ export const fetchTaskState = async (player: string): Promise<IGameTaskState> =>
 const mapDotsCompleted = (newGameTaskState: IGameTaskState): IDotsCompleted => {
   let activeDot = 0
   const currentCompletedDots: IDotsMap = {}
-  const tokenBalance = ethers.utils.formatEther(newGameTaskState?.tokenBalance?.toString() || '0')
-  const maticBalance = ethers.utils.formatEther(newGameTaskState?.maticBalance?.toString() || '0')
+  const maticBalance = ethers.utils.formatEther(
+    newGameTaskState?.maticBalance?.toString() || '0'
+  )
 
   Object.entries(DOTS_MAP).map(([key, value]: [string, IDot]) => {
+    // eslint-disable-next-line
     // @ts-ignore
     const isCompleted = newGameTaskState[value?.task] || false
     if (isCompleted && parseInt(key) > activeDot) {
       activeDot = parseInt(key)
     }
     // if they have matic already mark faucet as used.
-    if (value?.task === DotKey.hasUsedFaucet && parseFloat(maticBalance) >= 0.1) {
+    if (
+      value?.task === DotKey.hasUsedFaucet &&
+      parseFloat(maticBalance) >= 0.1
+    ) {
       currentCompletedDots[key] = { ...value, isCompleted: true }
       activeDot = parseInt(key)
     } else {
@@ -53,5 +62,5 @@ const mapDotsCompleted = (newGameTaskState: IGameTaskState): IDotsCompleted => {
 }
 
 export const numTasksCompleted = (completedTasks: IDotsMap) => {
-  return Object.entries(completedTasks).filter(([k, v]) => v.isCompleted).length
+  return Object.entries(completedTasks).filter(([, v]) => v.isCompleted).length
 }

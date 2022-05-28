@@ -1,6 +1,5 @@
-import { createContext, useContext, useEffect } from 'react'
 import { IComponentProps } from '../components/component'
-import { useConnection } from './ConnectionProvider'
+import { createContext, useContext } from 'react'
 import { useNetwork } from './NetworkProvider'
 import { AllowedChains } from './providers.d'
 
@@ -38,7 +37,6 @@ const POLYGON_OPENSEA_URL = `${POLYGON_BASE_OPENSEA_URL}/assets/matic`
 const MUMBAI_OPEANSEA_URL = `${MUMBAI_BASE_OPENSEA_URL}/assets`
 
 const UrlProvider = ({ children }: IComponentProps) => {
-  const { account } = useConnection()
   const { chainId } = useNetwork()
 
   const URLS = {
@@ -70,11 +68,6 @@ const UrlProvider = ({ children }: IComponentProps) => {
     }
     return `${POLYGON_BASE_OPENSEA_URL}/account`
   }
-
-  useEffect(() => {
-    if (account && chainId) {
-    }
-  }, [account, chainId])
 
   return (
     <UrlContext.Provider

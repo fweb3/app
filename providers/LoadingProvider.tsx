@@ -13,10 +13,10 @@ interface ILoadingContext {
 
 const defaultLoadingContext: ILoadingContext = {
   isLoading: false,
-  fullscreenLoader: () => {},
-  updateToast: () => {},
+  fullscreenLoader: () => null,
+  updateToast: () => null,
   startToast: () => toast.success('default'),
-  errorToast: () => {},
+  errorToast: () => null,
 }
 
 const LoadingContext: Context<ILoadingContext> = createContext(
@@ -30,10 +30,7 @@ const LoadingProvider = ({ children }: IComponentProps) => {
     setIsLoading(val)
   }
 
-  const startToast = (
-    message: string = 'Loading...',
-    opts: ToastOptions = {}
-  ): Id => {
+  const startToast = (message = 'Loading...', opts: ToastOptions = {}): Id => {
     const defaultOptions = {
       autoClose: 2000,
       pauseOnFocusLoss: false,

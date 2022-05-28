@@ -1,9 +1,3 @@
-import { DotKey } from './../components/Chest/dots'
-import {
-  AlchemyProvider,
-  JsonRpcProvider,
-  Web3Provider,
-} from '@ethersproject/providers'
 import { EthereumRpcError } from 'eth-rpc-errors'
 
 export type GameError = Err | EthereumRpcError

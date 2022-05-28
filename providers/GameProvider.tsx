@@ -1,6 +1,7 @@
 import { useState, useEffect, createContext, useContext, Context } from 'react'
 import { DotKey, DOTS_MAP, IDotsMap } from '../components/Chest/dots'
 import { IFweb3Contracts, loadFweb3Contracts } from '../interfaces'
+// eslint-disable-next-line
 import type { GameError, IGameTaskState } from '../interfaces/game'
 import { createShareInfo, ISocialShare } from './Game/social'
 import { IComponentProps } from '../components/component'
@@ -146,7 +147,7 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
 
   const isDotComplete = (task: DotKey): boolean => {
     return (
-      Object.entries(completedTasks).filter(([k, v]) => {
+      Object.entries(completedTasks).filter(([, v]) => {
         if (v.task === task && v.isCompleted) {
           return v
         }

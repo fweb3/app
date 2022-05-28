@@ -1,4 +1,4 @@
-import MetaMaskOnboarding from '@metamask/onboarding'
+// import MetaMaskOnboarding from '@metamask/onboarding'
 import { useRef, useEffect, useState } from 'react'
 
 export const OnboardingButton = () => {
