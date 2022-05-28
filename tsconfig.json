@@ -16,6 +16,16 @@
     "jsx": "preserve",
     "types": ["ethers", "jest"]
   },
-  "include": ["next-env.d.ts", "components", "hooks", "lib", "pages", "providers", "jest"],
+  "include": [
+    "next-env.d.ts",
+    "components",
+    "hooks",
+    "lib",
+    "pages",
+    "providers",
+    "jest",
+    "types/networks.d.ts",
+    "types/providers.d.ts"
+  ],
   "exclude": []
 }

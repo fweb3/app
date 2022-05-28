@@ -1,8 +1,8 @@
-import { useConnection } from '../../providers'
-import { ConnectedHeader } from './Connected'
 import { DisconnectedHeader } from './Disconnected'
+import { ConnectedHeader } from './Connected'
+import { useEthers } from '../../providers'
 
 export const DesktopHeader = () => {
-  const { isConnected } = useConnection()
+  const { isConnected } = useEthers()
   return isConnected ? <ConnectedHeader /> : <DisconnectedHeader />
 }

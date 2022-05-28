@@ -1,7 +1,7 @@
 import { IComponentProps } from '../components/component'
+import { AllowedChains } from '../types/providers.d'
 import { createContext, useContext } from 'react'
-import { useNetwork } from './NetworkProvider'
-import { AllowedChains } from './providers.d'
+import { useEthers } from './EthersProvider'
 
 interface IUrlContext {
   getPolygonscanUrl: (address: string) => string
@@ -37,7 +37,7 @@ const POLYGON_OPENSEA_URL = `${POLYGON_BASE_OPENSEA_URL}/assets/matic`
 const MUMBAI_OPEANSEA_URL = `${MUMBAI_BASE_OPENSEA_URL}/assets`
 
 const UrlProvider = ({ children }: IComponentProps) => {
-  const { chainId } = useNetwork()
+  const { chainId } = useEthers()
 
   const URLS = {
     discord: 'https://discord.gg/pNSFNfyVxA',

@@ -6,6 +6,7 @@
   },
   "scripts": {
     "dev": "next dev",
+    "dev:local": "NEXT_PUBLIC_LOCAL=true yarn dev",
     "dev:debug": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
@@ -20,6 +21,7 @@
     "test:coverage:badge": "istanbul-badges-readme --logo=jest"
   },
   "dependencies": {
+    "@metamask/detect-provider": "^1.2.0",
     "@metamask/onboarding": "^1.0.1",
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
@@ -40,6 +42,7 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.3",
     "@testing-library/react-hooks": "^8.0.0",
+    "@types/": "metamask/detect-provider",
     "@types/cypress": "^1.1.3",
     "@types/jest": "^27.5.1",
     "@types/node": "^17.0.33",

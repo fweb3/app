@@ -20,8 +20,8 @@ const defaultErrorContext: IErrorContext = {
 const ErrorContext = createContext(defaultErrorContext)
 
 const ErrorProvider = ({ children }: IComponentProps) => {
-  const { setIsLoading } = useLoading()
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const { setIsLoading } = useLoading()
 
   const errorWithToast = (msg: string, opts?: ToastOptions) => {
     setErrorMessage(msg)
@@ -37,11 +37,16 @@ const ErrorProvider = ({ children }: IComponentProps) => {
   }
 
   const errorToast = (msg: string, opts?: ToastOptions) => {
+    setIsLoading(false)
     toast.error(msg, {
       ...defaultToastOptions,
       ...opts,
     })
   }
+
+  // useEffect(() => {
+  //   console.log({ network })
+  // }, [network])
 
   return (
     <ErrorContext.Provider

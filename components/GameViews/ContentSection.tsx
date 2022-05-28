@@ -1,13 +1,13 @@
 import { SeekVerification } from '../CompletedView/SeekVerification'
 import { VerifiedWinner } from '../CompletedView/VerifiedWinner'
+import { DeployedContract } from './GameTasks/DeployedContract'
 import { HasEnoughTokens } from './GameTasks/HasEnoughTokens'
 import { ConnectedWallet } from './GameTasks/ConnectedWallet'
+import { useAccount, useEthers, useGame } from '../../hooks'
 import { MintDiamonNFT } from './GameTasks/MintDiamondNFT'
-import { useConnection, useGame } from '../../providers'
-import { DeployedContract } from './GameTasks/DeployedContract'
+import { HasSentTokens } from './GameTasks/HasSentTokens'
 import styled, { keyframes } from 'styled-components'
 import { UseFaucets } from './GameTasks/UseFaucets'
-import { HasSentTokens } from './GameTasks/HasSentTokens'
 import { VoteInPoll } from './GameTasks/VoteInPoll'
 import { BurnToken } from './GameTasks/BurnToken'
 import { SwapToken } from './GameTasks/SwapToken'
@@ -43,7 +43,8 @@ const ContentContainer = styled.div`
 
 export const ContentSection = (): JSX.Element => {
   const { activeDot, hasWonGame, trophyId } = useGame()
-  const { isConnected, isQueryLoad } = useConnection()
+  const { isConnected } = useEthers()
+  const { isQueryLoad } = useAccount()
   const { device } = useDevice()
 
   const shouldCountAsConnected = isConnected || isQueryLoad

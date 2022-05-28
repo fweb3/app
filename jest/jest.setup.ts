@@ -2,7 +2,8 @@ export {}
 
 import { cleanup } from '@testing-library/react'
 
-jest.mock('../providers/ConnectionProvider')
+jest.mock('../providers/AccountProvider')
+jest.mock('../providers/EthersProvider')
 jest.mock('../providers/GameProvider')
 jest.mock('../hooks/useDevice')
 jest.mock('next/router', () => ({

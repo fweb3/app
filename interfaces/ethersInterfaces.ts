@@ -15,6 +15,17 @@ interface IEthersConnection {
   currentNetwork: Network
 }
 
+export const createLocalConnection = async () => {
+  const provider = await new ethers.providers.JsonRpcProvider()
+  const account = await provider.getSigner().getAddress()
+  const network = await provider.getNetwork()
+  return {
+    provider,
+    account,
+    currentNetwork: network,
+  }
+}
+
 export const createEthersConnection = async (): Promise<IEthersConnection> => {
   const provider: Web3Provider = await _createProvider()
   const accounts: string[] = await _getAccounts(provider)
@@ -46,19 +57,6 @@ export const createAlchemyProvider = async (
   )
   logger.log(`[+] created alchemy provider!`)
   return provider
-}
-
-const USE_LIVE_ENS = false
-export const fetchEnsName = async (account: string): Promise<string> => {
-  if (USE_LIVE_ENS) {
-    logger.log('[+] fetching ens name')
-    const provider = await createAlchemyProvider('homestead')
-    const ensName: string = (await provider.lookupAddress(account)) || ''
-    ensName && logger.log(`[+] found ens: ${ensName}`)
-    return ensName
-  }
-  logger.log('[+] skipping ens')
-  return ''
 }
 
 export const formatBalance = (amt: string | number | null | undefined) => {

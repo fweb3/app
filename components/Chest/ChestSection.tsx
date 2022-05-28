@@ -1,4 +1,5 @@
 import { numTasksCompleted } from '../../providers/Game/tasks'
+import { useGame, useEthers, useAccount } from '../../hooks'
 import { TrophyImage } from '../CompletedView/TrophyImage'
 import styled, { keyframes } from 'styled-components'
 import { useDevice } from '../../hooks/useDevice'
@@ -6,8 +7,6 @@ import { ShareButton } from './ShareButton'
 import { fadeIn } from 'react-animations'
 import { MEDIA_QUERY } from '../styles'
 import { Dot } from './Dot'
-
-import { useGame, useConnection } from '../../hooks'
 
 const fade = keyframes(fadeIn)
 
@@ -57,7 +56,8 @@ const Chest = styled.div`
 
 export const ChestSection = (): JSX.Element => {
   const { completedTasks, hasWonGame, trophyId } = useGame()
-  const { isConnected, isQueryLoad } = useConnection()
+  const { isConnected } = useEthers()
+  const { isQueryLoad } = useAccount()
   const { device } = useDevice()
 
   const shouldCountAsConnected = isConnected || isQueryLoad

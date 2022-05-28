@@ -1,13 +1,13 @@
 declare let window: any // eslint-disable-line
 
-import { useConnection } from '../../providers'
-import styled, { keyframes } from 'styled-components'
-import { SPACING, TEXT } from '../styles'
+import { useEthers } from '../../providers/EthersProvider'
 // import MetaMaskOnboarding from "@metamask/onboarding";
 // import { OnboardingButton } from "./OnboardingButton";
-import { CgSpinner } from 'react-icons/cg'
-import { PulseButton } from '../shared/PulseButton'
+import styled, { keyframes } from 'styled-components'
 import { OnboardingButton } from './OnboardingButton'
+import { PulseButton } from '../shared/PulseButton'
+import { CgSpinner } from 'react-icons/cg'
+import { SPACING, TEXT } from '../styles'
 
 const Spin = keyframes`
   0% {
@@ -42,7 +42,7 @@ const ButtonText = styled.span`
 `
 
 export const ConnectButton = () => {
-  const { connect, isConnected, isConnecting } = useConnection()
+  const { connectAccount, isConnected, isConnecting } = useEthers()
   // todo onboarding
   // if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
   // const isMetaMaskInstalled = window && typeof window?.ethereum !== undefined
@@ -54,7 +54,7 @@ export const ConnectButton = () => {
   return !isConnected ? (
     <ButtonContainer>
       {isMetaMaskInstalled ? (
-        <PulseButton data-testid="pulse-btn" onClick={connect}>
+        <PulseButton data-testid="pulse-btn" onClick={connectAccount}>
           {isConnecting ? (
             <SpinContainer>
               <Spinner size={40} />

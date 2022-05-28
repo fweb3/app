@@ -1,5 +1,5 @@
+import { useAccount, useGame } from '../../providers'
 import { COLORS, SPACING } from '../styles'
-import { useConnection, useGame } from '../../providers'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
@@ -16,7 +16,7 @@ const ShareButtonContainer = styled.div`
 
 export const ShareButton = (): JSX.Element => {
   const { hasWonGame, shareInfo } = useGame()
-  const { isQueryLoad } = useConnection()
+  const { isQueryLoad } = useAccount()
   const { query } = useRouter()
 
   const handleShare = (): void => {

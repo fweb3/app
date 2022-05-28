@@ -7,8 +7,6 @@ import { ChestSection } from './ChestSection'
 
 const renderComponent = () => render(<ChestSection />)
 
-jest.mock('../../providers/ConnectionProvider')
-
 const mockUseDevice = useDevice as jest.MockedFunction<typeof useDevice>
 const mockUseGame = useGame as jest.MockedFunction<typeof useGame>
 
@@ -41,7 +39,11 @@ describe('<ChestSection />', () => {
   })
 
   it('chest lights up dots', () => {
-    const completedTasks = setCompleteTasks(['hasVotedInPoll', 'hasSentTokens', 'hasUsedFaucet'])
+    const completedTasks = setCompleteTasks([
+      'hasVotedInPoll',
+      'hasSentTokens',
+      'hasUsedFaucet',
+    ])
     mockUseGame.mockReturnValueOnce({
       ...MOCK_GAME_CONTEXT,
       completedTasks,

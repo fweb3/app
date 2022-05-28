@@ -1,5 +1,5 @@
 export { fetcher, parseBalanceToNum } from './util'
 export * from './constants'
-export * from './networks'
+export * from '../types/networks.d'
 export * from './polygon'
 export * from './logger'

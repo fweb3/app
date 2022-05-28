@@ -7,9 +7,8 @@ import { IFweb3Contracts, loadFweb3Contracts } from '../interfaces'
 import type { GameError, IGameTaskState } from '../interfaces/game'
 import { createShareInfo, ISocialShare } from './Game/social'
 import { IComponentProps } from '../components/component'
-import { useConnection, useLoading } from '../providers'
+import { useEthers, useLoading } from '../providers'
 import { Contract } from '@ethersproject/contracts'
-import { useNetwork } from './NetworkProvider'
 import { getCurrentGame } from './Game/tasks'
 import { DEFAULT_GAME_STATE } from '../lib'
 import { useRouter } from 'next/router'
@@ -73,12 +72,12 @@ const calcTrophyColor = (trophyId: string): string => {
 const GameProvider = ({ children }: IComponentProps): JSX.Element => {
   const [isFetchingGameData, setIsFetchingGameData] = useState<boolean>(false)
   const [tokenContract, setTokenContract] = useState<Contract | null>(null)
-  const [gameContract, setGameContract] = useState<Contract | null>(null)
   const [completedTasks, setCompletedTasks] = useState<IDotsMap>(DOTS_MAP)
+  const { account, isConnected, provider, isAllowedNetwork } = useEthers()
   const [shareInfo, setShareInfo] = useState<ISocialShare>(initShareInfo)
+  const [gameContract, setGameContract] = useState<Contract | null>(null)
   const [hasWonGame, setHasWonGame] = useState<boolean>(false)
   const [isVerified, setIsVerified] = useState<boolean>(false)
-  const { account, isConnected, provider } = useConnection()
   const [trophyColor, setTrophyColor] = useState<string>('')
   const [activeDot, setActiveDot] = useState<string>('0')
   const [isJudge, setIsJudge] = useState<boolean>(false)
@@ -87,11 +86,10 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
     useState<IGameTaskState>(DEFAULT_GAME_STATE)
   const { setIsLoading } = useLoading()
   const { query } = useRouter()
-  const network = useNetwork()
 
   const loadGameGameState = async (player: string): Promise<void> => {
     const shouldLoadGame =
-      window?.Cypress || (network?.isAllowed && (isConnected || query?.account))
+      window?.Cypress || (isAllowedNetwork && (isConnected || query?.account))
     if (shouldLoadGame) {
       logger.log('[+] start loading game state')
       try {
@@ -176,7 +174,7 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
   }
 
   useEffect(() => {
-    if (isConnected && network?.isAllowed) {
+    if (isConnected && isAllowedNetwork) {
       ;(async () => {
         try {
           // only check connected account for judge
@@ -191,7 +189,7 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
 
   useEffect(() => {
     ;(async () => {
-      if ((isConnected || query?.account) && network?.isAllowed) {
+      if ((isConnected || query?.account) && isAllowedNetwork) {
         await loadGameGameState(query?.account?.toString() ?? account)
       }
     })()

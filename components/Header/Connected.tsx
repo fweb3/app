@@ -1,4 +1,4 @@
-import { useConnection, useGame, useNetwork, useUrl } from '../../hooks'
+import { useAccount, useEthers, useGame, useUrl } from '../../hooks'
 import { COLORS, SPACING, TEXT } from '../styles'
 import { formatBalance } from '../../interfaces'
 import { CommonLink } from '../shared/Elements'
@@ -42,13 +42,13 @@ const NetworkText = styled.p`
 `
 
 export const ConnectedHeader = () => {
-  const { displayName, account } = useConnection()
+  const { isAllowedNetwork, network } = useEthers()
+  const { displayName, account } = useAccount()
   const { getPolygonscanUrl } = useUrl()
   const { gameTaskState } = useGame()
-  const network = useNetwork()
 
   const balance = formatBalance(gameTaskState?.tokenBalance?.toString())
-
+  const netName = network?.name || 'Unknown'
   return (
     <>
       <HeaderLogo />
@@ -60,7 +60,7 @@ export const ConnectedHeader = () => {
             </DisplayName>
           </CommonLink>
           <NetworkText>
-            {network.isAllowed ? `🟢 ${network.name}` : `🔴 ${network.name}`}
+            {isAllowedNetwork ? '🟢' : '🔴'} {netName}
           </NetworkText>
         </InnerContainer>
         <BalanceContainer>
