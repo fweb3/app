@@ -13,49 +13,58 @@ import {
 // Because of our polygon rate limiting we need to
 // Sleep for 200ms between calls - totaling ~1s
 
-export const fetchMaticBalance = async (walletAddress: string) => {
+export const fetchMaticBalance = async (
+  chainId: number,
+  walletAddress: string
+) => {
   sleep(200)
-  return fetcher(walletMaticBalanceURI(walletAddress))
+  return fetcher(walletMaticBalanceURI(chainId, walletAddress))
 }
 
 export const fetchWalletTokenBalance = async (
+  chainId: number,
   walletAddress: string
 ): Promise<IPolygonBalanceResponse> => {
   sleep(200)
-  return fetcher(walletsTokenBalanceURI(walletAddress))
+  return fetcher(walletsTokenBalanceURI(chainId, walletAddress))
 }
 
 export const fetchTrophyTransactions = async (
+  chainId: number,
   walletAddress: string
 ): Promise<IPolygonDataResponse> => {
   sleep(200)
-  return fetcher(trophyCheckURI(walletAddress))
+  return fetcher(trophyCheckURI(chainId, walletAddress))
 }
 
 export const fetchWalletsTxs = async (
+  chainId: number,
   walletAddress: string
 ): Promise<IPolygonDataResponse> => {
   sleep(200)
-  return fetcher(walletsTxsURI(walletAddress))
+  return fetcher(walletsTxsURI(chainId, walletAddress))
 }
 
 export const fetchWalletsInternalTxs = async (
+  chainId: number,
   walletAddress: string
 ): Promise<IPolygonDataResponse> => {
   sleep(200)
-  return fetcher(walletsInternalTxsURI(walletAddress))
+  return fetcher(walletsInternalTxsURI(chainId, walletAddress))
 }
 
 export const fetchERC20Txs = async (
+  chainId: number,
   walletAddress: string
 ): Promise<IPolygonDataResponse> => {
   sleep(200)
-  return fetcher(erc20TxsURI(walletAddress))
+  return fetcher(erc20TxsURI(chainId, walletAddress))
 }
 
 export const fetchNftsTxs = async (
+  chainId: number,
   walletAddress: string
 ): Promise<IPolygonDataResponse> => {
   sleep(200)
-  return fetcher(nftTxsURI(walletAddress))
+  return fetcher(nftTxsURI(chainId, walletAddress))
 }

@@ -1,3 +1,4 @@
+import { NETWORKS, AllowedChains } from './../types/networks.d'
 import { logger } from '../lib'
 
 interface IAddresses {
@@ -49,10 +50,16 @@ const ADDRESSES: IAddresses = {
 }
 
 export const loadAddress = (
+  chainId: number,
   name: string,
-  network = 'polygon',
   version = 'v1'
 ): string[] => {
-  logger.log(`[+] loading [${network}.${version}.${name}]`)
-  return ADDRESSES[network]?.[version]?.[name] || []
+  const netName = NETWORKS[chainId].toLowerCase()
+  const addresses = ADDRESSES[netName]?.[version]?.[name] || []
+
+  if (addresses.length === 0 || !AllowedChains[chainId]) {
+    throw new Error(`No address found for [${netName}.${version}.${name}]`)
+  }
+  logger.log(`[+] loaded [${netName}.${version}.${name}]`)
+  return addresses
 }

@@ -1,5 +1,4 @@
 import { FaucetDisclaimer } from '../FaucetDisclaimer'
-import { loadAddress } from '../../../interfaces'
 import { useGame } from '../../../providers'
 import { DotKey } from '../../Chest/dots'
 import { useUrl } from '../../../hooks'
@@ -13,7 +12,7 @@ import {
 
 export const HasEnoughTokens = (): JSX.Element => {
   const { discordUrl, faucetUrl, getPolygonscanUrl } = useUrl()
-  const { isDotComplete } = useGame()
+  const { isDotComplete, tokenAddress } = useGame()
   const hasEnoughTokens = isDotComplete(DotKey.hasEnoughTokens)
 
   const renderHasCompleted = () => {
@@ -58,7 +57,7 @@ export const HasEnoughTokens = (): JSX.Element => {
               Polygon Network
             </CommonLink>{' '}
             and you have added the{' '}
-            <CommonLink href={getPolygonscanUrl(loadAddress('fweb3_token')[0])}>
+            <CommonLink href={getPolygonscanUrl(tokenAddress)}>
               fweb3 token
             </CommonLink>{' '}
             to your wallet

@@ -36,7 +36,7 @@ export const ConnectButton = () => {
 
   return !isConnected ? (
     <ButtonContainer>
-      <PulseButton data-testid="connect-btn" onClick={connectAccount}>
+      <PulseButton onClick={connectAccount}>
         {isConnecting ? (
           <SpinContainer>
             <Spinner size={40} color="white" />

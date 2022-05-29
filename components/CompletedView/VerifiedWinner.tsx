@@ -1,5 +1,4 @@
 import { useGame, useUrl } from '../../hooks'
-import { loadAddress } from '../../interfaces'
 import styled from 'styled-components'
 import {
   CommonText,
@@ -15,8 +14,7 @@ const WinnerText = styled(HeadingText)`
 
 export const VerifiedWinner = (): JSX.Element => {
   const { getOpenseaUrl } = useUrl()
-  const trophyAddress = loadAddress('fweb3_trophy')[0]
-  const { trophyId } = useGame()
+  const { trophyId, trophyAddress } = useGame()
 
   const openSeaUrl = `${getOpenseaUrl(trophyAddress)}/${trophyId}`
 

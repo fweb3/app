@@ -1,12 +1,13 @@
 declare let window: any // eslint-disable-line
 
 import { createContext, useContext, useEffect, useState } from 'react'
-import { Network, Web3Provider } from '@ethersproject/providers'
+import { Web3Provider } from '@ethersproject/providers'
 import type { IComponentProps } from '../components/component'
-// eslint-disable-next-line
-import type { GameError } from '../interfaces/game.d'
-import { AllowedChains } from '../types/providers.d'
+import { AllowedChains } from '../types/networks.d'
 import { getMessageFromCode } from 'eth-rpc-errors'
+import { Network } from '@ethersproject/networks'
+// eslint-disable-next-line
+import type { GameError } from '../types/game.d'
 import { useError } from './ErrorProvider'
 import { logger, NETWORKS } from '../lib'
 
@@ -94,7 +95,9 @@ const EthersProvider = ({ children }: IComponentProps) => {
       const isLocalhost = network.chainId === AllowedChains.LOCAL
       const isAllowed = Object.values(AllowedChains).includes(network.chainId)
       if (!isAllowed) {
-        setErrorMessage(`${NETWORKS[chainId]} is not an allowed network`)
+        setErrorMessage(
+          `${NETWORKS[network.chainId]} is not an allowed network`
+        )
       }
       setWeb3Provider(web3Provider)
       setChainId(network.chainId)
@@ -102,7 +105,7 @@ const EthersProvider = ({ children }: IComponentProps) => {
       setIsAllowedNetwork(isAllowed)
       setIsInitialized(true)
       logger.log(
-        `[+] Initialized web3 on [${network.name}:${
+        `[+] Initialized web3 on [${NETWORKS[network.chainId]}:${
           network.chainId ?? 'unknown'
         }]`
       )

@@ -1,25 +1,29 @@
 import fweb3TokenInterface from '../interfaces/abi/Fweb3Token.json'
 import fweb3GameInterface from '../interfaces/abi/Fweb3Game.json'
-import { Provider } from '@ethersproject/providers'
+import type { IFweb3Contracts } from './../types/interfaces.d'
+import type { Provider } from '@ethersproject/providers'
 import { Contract } from '@ethersproject/contracts'
 import { loadAddress } from './addresses'
 import { logger } from '../lib'
 
-export const loadGameContract = (provider: Provider): Contract => {
-  if (provider) {
-    const gameAddress: string = loadAddress('fweb3_game')[0]
-    const gameContract: Contract = new Contract(
-      gameAddress,
-      fweb3GameInterface.abi,
-      provider
-    )
-    return gameContract
-  }
-  return new Contract('default', '', provider)
+export const loadGameContract = async (
+  chainId: number,
+  provider: Provider
+): Promise<Contract | null> => {
+  const gameAddress = loadAddress(chainId, 'fweb3_game')[0]
+  const gameContract = new Contract(
+    gameAddress,
+    fweb3GameInterface.abi,
+    provider
+  )
+  return gameContract
 }
 
-export const loadTokenContract = (provider: Provider): Contract => {
-  const tokenAddress: string = loadAddress('fweb3_game')[0]
+export const loadTokenContract = async (
+  chainId: number,
+  provider: Provider
+): Promise<Contract> => {
+  const tokenAddress = loadAddress(chainId, 'fweb3_game')[0]
   const tokenContract: Contract = new Contract(
     tokenAddress,
     fweb3TokenInterface.abi,
@@ -28,17 +32,16 @@ export const loadTokenContract = (provider: Provider): Contract => {
   return tokenContract
 }
 
-export interface IFweb3Contracts {
-  gameContract?: Contract | null
-  tokenContract?: Contract | null
-}
-
-export const loadFweb3Contracts = (
+export const loadFweb3Contracts = async (
   provider: Provider | null
-): IFweb3Contracts => {
+): Promise<IFweb3Contracts> => {
+  if (!provider) {
+    throw new Error('No provider to load contracts')
+  }
+  const network = await provider.getNetwork()
   logger.log('[+] loaded game contracts')
   return {
-    gameContract: provider ? loadGameContract(provider) : null,
-    tokenContract: provider ? loadTokenContract(provider) : null,
+    gameContract: await loadGameContract(network.chainId, provider),
+    tokenContract: await loadTokenContract(network.chainId, provider),
   }
 }

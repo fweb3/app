@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import type { IComponentProps } from '../components/component'
 import { createAlchemyProvider } from '../interfaces'
 // eslint-disable-next-line
-import type { GameError } from '../interfaces/game'
+import type { GameError } from '../types/game'
 import { useEthers } from './EthersProvider'
 import { useRouter } from 'next/router'
 import { logger } from '../lib'

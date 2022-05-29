@@ -1,4 +1,4 @@
-import { IGameTaskState } from '../../interfaces/game'
+import { IGameTaskState } from '../../types/game'
 
 export const USE_LIVE_DATA = false
 

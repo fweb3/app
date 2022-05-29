@@ -1,5 +1,4 @@
 import { useUrl, useEthers, useGame } from '../../../hooks'
-import { loadAddress } from '../../../interfaces'
 import { DotKey } from '../../Chest/dots'
 import {
   CommonLink,
@@ -11,10 +10,9 @@ import {
 export const MintDiamonNFT = (): JSX.Element => {
   const { getOpenseaAccountUrl, getPolygonscanUrl } = useUrl()
   const { account } = useEthers()
-  const { isDotComplete } = useGame()
+  const { isDotComplete, diamondNftAddress } = useGame()
 
   const hasMintedNFT = isDotComplete(DotKey.hasMintedNFT)
-  const diamondNftAddress = loadAddress('fweb3_diamond_nft')[0]
   const nftPolygonscanUrl = `${getPolygonscanUrl(
     diamondNftAddress
   )}#writeContract`

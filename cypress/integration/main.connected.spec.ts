@@ -17,9 +17,11 @@ const MOCK_TASK_STATE = {
   maticBalance: '',
 }
 
+const QUERY_URI = '/?account=foobar&chainId=137'
+
 describe('Desktop connected view', () => {
   it('displays connect button when query account is present', () => {
-    cy.visit('/?account=foobar')
+    cy.visit(QUERY_URI)
     cy.intercept('/api/polygon*', MOCK_TASK_STATE)
     cy.get('[data-testid="query-connect"]').should('be.visible')
     cy.get('[data-testid="header-logo"]').should('be.visible')
@@ -27,9 +29,14 @@ describe('Desktop connected view', () => {
 
   // Task 1
   it('lights up the isConnected dot', () => {
-    cy.visit('/?account=foobar')
+    cy.visit(QUERY_URI)
+
     cy.intercept('/api/polygon*', MOCK_TASK_STATE)
-    cy.get('[data-testid="dot_dot-0-visible-active"]').should('have.css', 'opacity', '1')
+    cy.get('[data-testid="dot_dot-0-visible-active"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
     cy.get('[data-testid="dot_dot-1"]').should('have.css', 'opacity', '0')
     cy.get('[data-testid="dot_dot-2"]').should('have.css', 'opacity', '0')
     cy.get('[data-testid="dot_dot-3"]').should('have.css', 'opacity', '0')
@@ -44,10 +51,18 @@ describe('Desktop connected view', () => {
   })
   // Task 2
   it('lights up has received enough tokens', () => {
-    cy.visit('/?account=foobar')
+    cy.visit(QUERY_URI)
     cy.intercept('/api/polygon*', { ...MOCK_TASK_STATE, hasEnoughTokens: true })
-    cy.get('[data-testid="dot_dot-0-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-1-visible-active"]').should('have.css', 'opacity', '1')
+    cy.get('[data-testid="dot_dot-0-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-1-visible-active"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
     cy.get('[data-testid="dot_dot-2"]').should('have.css', 'opacity', '0')
     cy.get('[data-testid="dot_dot-3"]').should('have.css', 'opacity', '0')
     cy.get('[data-testid="dot_dot-4"]').should('have.css', 'opacity', '0')
@@ -62,7 +77,8 @@ describe('Desktop connected view', () => {
 
   // Task 3
   it('lights up received native tokens', () => {
-    cy.visit('/?account=foobar')
+    cy.visit(QUERY_URI)
+
     cy.intercept('/api/polygon*', {
       ...MOCK_TASK_STATE,
       tokenBalance: '300',
@@ -70,9 +86,21 @@ describe('Desktop connected view', () => {
       hasUsedFaucet: true,
       maticBalance: '1',
     })
-    cy.get('[data-testid="dot_dot-0-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-1-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-2-visible-active"]').should('have.css', 'opacity', '1')
+    cy.get('[data-testid="dot_dot-0-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-1-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-2-visible-active"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
     cy.get('[data-testid="dot_dot-3"]').should('have.css', 'opacity', '0')
     cy.get('[data-testid="dot_dot-4"]').should('have.css', 'opacity', '0')
     cy.get('[data-testid="dot_dot-5"]').should('have.css', 'opacity', '0')
@@ -86,17 +114,34 @@ describe('Desktop connected view', () => {
 
   // Task 4
   it('lights up has sent tokens', () => {
-    cy.visit('/?account=foobar')
+    cy.visit(QUERY_URI)
+
     cy.intercept('/api/polygon*', {
       ...MOCK_TASK_STATE,
       hasEnoughTokens: true,
       hasUsedFaucet: true,
       hasSentTokens: true,
     })
-    cy.get('[data-testid="dot_dot-0-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-1-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-2-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-3-visible-active"]').should('have.css', 'opacity', '1')
+    cy.get('[data-testid="dot_dot-0-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-1-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-2-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-3-visible-active"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
     cy.get('[data-testid="dot_dot-4"]').should('have.css', 'opacity', '0')
     cy.get('[data-testid="dot_dot-5"]').should('have.css', 'opacity', '0')
     cy.get('[data-testid="dot_dot-6"]').should('have.css', 'opacity', '0')
@@ -109,7 +154,7 @@ describe('Desktop connected view', () => {
 
   // Task 5
   it('lights up has minted diamon nft', () => {
-    cy.visit('/?account=foobar')
+    cy.visit(QUERY_URI)
     cy.intercept('/api/polygon*', {
       ...MOCK_TASK_STATE,
       hasEnoughTokens: true,
@@ -117,11 +162,31 @@ describe('Desktop connected view', () => {
       hasSentTokens: true,
       hasMintedNFT: true,
     })
-    cy.get('[data-testid="dot_dot-0-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-1-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-2-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-3-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-4-visible-active"]').should('have.css', 'opacity', '1')
+    cy.get('[data-testid="dot_dot-0-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-1-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-2-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-3-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-4-visible-active"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
     cy.get('[data-testid="dot_dot-5"]').should('have.css', 'opacity', '0')
     cy.get('[data-testid="dot_dot-6"]').should('have.css', 'opacity', '0')
     cy.get('[data-testid="dot_dot-7"]').should('have.css', 'opacity', '0')
@@ -133,7 +198,7 @@ describe('Desktop connected view', () => {
 
   // Task 6
   it('lights up has burned tokens', () => {
-    cy.visit('/?account=foobar')
+    cy.visit(QUERY_URI)
     cy.intercept('/api/polygon*', {
       ...MOCK_TASK_STATE,
       hasEnoughTokens: true,
@@ -142,12 +207,36 @@ describe('Desktop connected view', () => {
       hasMintedNFT: true,
       hasBurnedTokens: true,
     })
-    cy.get('[data-testid="dot_dot-0-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-1-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-2-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-3-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-4-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-5-visible-active"]').should('have.css', 'opacity', '1')
+    cy.get('[data-testid="dot_dot-0-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-1-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-2-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-3-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-4-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-5-visible-active"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
     cy.get('[data-testid="dot_dot-6"]').should('have.css', 'opacity', '0')
     cy.get('[data-testid="dot_dot-7"]').should('have.css', 'opacity', '0')
     cy.get('[data-testid="dot_dot-8"]').should('have.css', 'opacity', '0')
@@ -158,7 +247,7 @@ describe('Desktop connected view', () => {
 
   // Task 7
   it('lights up swap', () => {
-    cy.visit('/?account=foobar')
+    cy.visit(QUERY_URI)
     cy.intercept('/api/polygon*', {
       ...MOCK_TASK_STATE,
       hasEnoughTokens: true,
@@ -168,13 +257,41 @@ describe('Desktop connected view', () => {
       hasBurnedTokens: true,
       hasSwappedTokens: true,
     })
-    cy.get('[data-testid="dot_dot-0-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-1-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-2-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-3-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-4-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-5-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-6-visible-active"]').should('have.css', 'opacity', '1')
+    cy.get('[data-testid="dot_dot-0-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-1-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-2-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-3-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-4-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-5-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-6-visible-active"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
     cy.get('[data-testid="dot_dot-7"]').should('have.css', 'opacity', '0')
     cy.get('[data-testid="dot_dot-8"]').should('have.css', 'opacity', '0')
     cy.get('[data-testid="game-tasks_6-complete"]').should('be.visible')
@@ -184,7 +301,7 @@ describe('Desktop connected view', () => {
 
   // Task 8
   it('lights up voted in poll', () => {
-    cy.visit('/?account=foobar')
+    cy.visit(QUERY_URI)
     cy.intercept('/api/polygon*', {
       ...MOCK_TASK_STATE,
       hasEnoughTokens: true,
@@ -195,14 +312,46 @@ describe('Desktop connected view', () => {
       hasSwappedTokens: true,
       hasVotedInPoll: true,
     })
-    cy.get('[data-testid="dot_dot-0-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-1-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-2-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-3-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-4-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-5-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-6-visible"]').should('have.css', 'opacity', '1')
-    cy.get('[data-testid="dot_dot-7-visible-active"]').should('have.css', 'opacity', '1')
+    cy.get('[data-testid="dot_dot-0-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-1-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-2-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-3-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-4-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-5-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-6-visible"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
+    cy.get('[data-testid="dot_dot-7-visible-active"]').should(
+      'have.css',
+      'opacity',
+      '1'
+    )
     cy.get('[data-testid="dot_dot-8"]').should('have.css', 'opacity', '0')
     cy.get('[data-testid="game-tasks_7-complete"]').should('be.visible')
     cy.get('[data-testid="chest-tooltip_7"]').contains('Vote in a FWEB3')
@@ -211,7 +360,7 @@ describe('Desktop connected view', () => {
 
   // Task 9
   it('opens chest when all tasks complete', () => {
-    cy.visit('/?account=foobar')
+    cy.visit(QUERY_URI)
     cy.intercept('/api/polygon*', {
       ...MOCK_TASK_STATE,
       hasEnoughTokens: true,

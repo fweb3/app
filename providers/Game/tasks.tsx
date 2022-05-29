@@ -1,5 +1,5 @@
 import { IDotsMap, DOTS_MAP, DotKey, IDot } from '../../components/Chest/dots'
-import { IGameTaskState } from '../../interfaces/game'
+import { IGameTaskState } from '../../types/game'
 import { DEV_GAME_STATE, USE_LIVE_DATA } from './dev'
 import { logger } from '../../lib'
 import { ethers } from 'ethers'

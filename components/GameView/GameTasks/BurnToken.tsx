@@ -1,5 +1,4 @@
 import { CommonText, Subheading } from '../../shared/Elements'
-import { loadAddress } from '../../../interfaces'
 import { RiFileCopy2Line } from 'react-icons/ri'
 import { useGame } from '../../../providers'
 import { DotKey } from '../../Chest/dots'
@@ -30,9 +29,9 @@ const CopyIcon = styled(RiFileCopy2Line)`
 `
 
 export const BurnToken = (): JSX.Element => {
-  const { isDotComplete } = useGame()
-  const hasBurnedTokens: boolean = isDotComplete(DotKey.hasBurnedTokens)
-  const burnAddress: string = loadAddress('burn')[0]
+  const { isDotComplete, burnAddress } = useGame()
+  const hasBurnedTokens = isDotComplete(DotKey.hasBurnedTokens)
+
   const handleCopy = (): void => {
     navigator?.clipboard.writeText(burnAddress)
     toast.success('copied!', {

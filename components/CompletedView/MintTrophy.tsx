@@ -1,11 +1,11 @@
 import { CommonLink, CommonText } from '../shared/Elements'
-import { loadAddress } from '../../interfaces'
-import { useUrl } from '../../hooks'
+import { useUrl, useGame } from '../../hooks'
 
 export const MintTrophy = (): JSX.Element => {
   const { getPolygonscanUrl } = useUrl()
-  const trophyAddress = loadAddress('fweb3_trophy')[0]
-  const contractUrl = `${getPolygonscanUrl(trophyAddress)}#writeContract`
+  const { tokenAddress } = useGame()
+
+  const contractUrl = `${getPolygonscanUrl(tokenAddress)}#writeContract`
 
   return (
     <>

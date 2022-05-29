@@ -15,6 +15,10 @@ const StyledHeading = styled(HeadingText)`
     font-size: ${TEXT.h2};
     padding-bottom: 0.4rem;
   }
+
+  @media only screen and (min-width: ${MEDIA_QUERY.smallDesk}) {
+    font-size: ${TEXT.h4};
+  }
 `
 
 export const Introduction = (): JSX.Element => {

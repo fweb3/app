@@ -22,7 +22,7 @@ describe('Desktop disconnected view', () => {
   })
 
   it('loads the connect button', () => {
-    cy.get('[data-testid="connect-btn"]').contains('Connect')
+    cy.get('[data-testid="pulse-btn"]').contains('Connect')
   })
 
   it('loads the footer text', () => {

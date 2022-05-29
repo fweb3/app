@@ -1,5 +1,5 @@
 import { DOTS_MAP } from '../components/Chest/dots'
-import { IGameTaskState } from '../interfaces/game'
+import { IGameTaskState } from '../types/game'
 import { DEFAULT_GAME_STATE } from '../lib'
 
 export const MOCK_GAME_CONTEXT = {
@@ -15,6 +15,12 @@ export const MOCK_GAME_CONTEXT = {
   trophyColor: '',
   isVerified: false,
   isJudge: false,
+  gameAddress: 'foobarbaz',
+  tokenAddress: 'bazbarfoo',
+  trophyAddress: 'bangpowsplat',
+  burnAddress: 'burnme',
+  diamondNftAddress: 'brightlikeadiamon',
+  pollAddress: 'poooooooll',
   resetGameState: jest.fn(),
   isDotComplete: jest.fn().mockReturnValue(false),
 }

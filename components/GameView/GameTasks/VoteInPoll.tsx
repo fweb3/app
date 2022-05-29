@@ -1,4 +1,3 @@
-import { loadAddress } from '../../../interfaces'
 import { RiFileCopy2Line } from 'react-icons/ri'
 import { useGame } from '../../../providers'
 import { DotKey } from '../../Chest/dots'
@@ -33,8 +32,7 @@ const CopyIcon = styled(RiFileCopy2Line)`
   }
 `
 export const VoteInPoll = (): JSX.Element => {
-  const pollAddress = loadAddress('fweb3_poll')[0]
-  const { isDotComplete } = useGame()
+  const { isDotComplete, pollAddress } = useGame()
   const hasVotedInPoll = isDotComplete(DotKey.hasVotedInPoll)
 
   const renderCompleted = () => {

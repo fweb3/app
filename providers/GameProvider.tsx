@@ -1,15 +1,14 @@
 import { useState, useEffect, createContext, useContext, Context } from 'react'
 import { DotKey, DOTS_MAP, IDotsMap } from '../components/Chest/dots'
-import { IFweb3Contracts, loadFweb3Contracts } from '../interfaces'
 // eslint-disable-next-line
-import type { GameError, IGameTaskState } from '../interfaces/game'
+import type { GameError, IGameTaskState } from '../types/game'
 import { IComponentProps } from '../components/component'
 import { useEthers, useLoading } from '../providers'
 import { Contract } from '@ethersproject/contracts'
+import { loadAddress, loadFweb3Contracts } from '../interfaces'
 import { useAccount } from './AccountProvider'
 import { getCurrentGame } from './Game/tasks'
 import { DEFAULT_GAME_STATE } from '../lib'
-import { useRouter } from 'next/router'
 import { logger } from '../lib'
 
 interface IGameProviderState {
@@ -17,14 +16,20 @@ interface IGameProviderState {
   gameTaskState: IGameTaskState
   isFetchingGameData: boolean
   completedTasks: IDotsMap
-  tokenContract: Contract | null
-  gameContract: Contract | null
   hasWonGame: boolean
   activeDot: string
   trophyId: string
   trophyColor: string
   isVerified: boolean
   isJudge: boolean
+  tokenContract: Contract | null
+  gameContract: Contract | null
+  pollAddress: string
+  gameAddress: string
+  tokenAddress: string
+  trophyAddress: string
+  burnAddress: string
+  diamondNftAddress: string
   resetGameState: () => void
   isDotComplete: (dot: DotKey) => boolean
 }
@@ -33,8 +38,6 @@ const defaultGameState: IGameProviderState = {
   gameTaskState: DEFAULT_GAME_STATE,
   setActiveDot: () => null,
   isFetchingGameData: false,
-  tokenContract: null,
-  gameContract: null,
   completedTasks: {},
   hasWonGame: false,
   activeDot: '0',
@@ -42,6 +45,14 @@ const defaultGameState: IGameProviderState = {
   trophyColor: '',
   isVerified: false,
   isJudge: false,
+  tokenContract: null,
+  gameContract: null,
+  tokenAddress: '',
+  gameAddress: '',
+  trophyAddress: '',
+  burnAddress: '',
+  diamondNftAddress: '',
+  pollAddress: '',
   resetGameState: () => null,
   isDotComplete: () => false,
 }
@@ -60,15 +71,21 @@ const calcTrophyColor = (trophyId: string): string => {
 }
 
 const GameProvider = ({ children }: IComponentProps): JSX.Element => {
-  const { account, isConnected, web3Provider, isAllowedNetwork, isCypress } =
-    useEthers()
   const [isFetchingGameData, setIsFetchingGameData] = useState<boolean>(false)
-  const [tokenContract, setTokenContract] = useState<Contract | null>(null)
   const [completedTasks, setCompletedTasks] = useState<IDotsMap>(DOTS_MAP)
-  const [gameContract, setGameContract] = useState<Contract | null>(null)
   const [hasWonGame, setHasWonGame] = useState<boolean>(false)
   const [isVerified, setIsVerified] = useState<boolean>(false)
+
+  const [pollAddress, setPollAddress] = useState<string>('')
+  const [gameContract, setGameContract] = useState<Contract | null>(null)
+  const [tokenContract, setTokenContract] = useState<Contract | null>(null)
+  const [trophyAddress, setTrophyAddress] = useState<string>('')
+  const [tokenAddress, setTokenAddress] = useState<string>('')
+  const [diamondNftAddress, setDiamondNftAddress] = useState<string>('')
   const [trophyColor, setTrophyColor] = useState<string>('')
+  const [gameAddress, setGameAddress] = useState<string>('')
+  const [burnAddress, setBurnAddress] = useState<string>('')
+
   const [activeDot, setActiveDot] = useState<string>('0')
   const [isJudge, setIsJudge] = useState<boolean>(false)
   const [trophyId, setTrophyId] = useState<string>('')
@@ -76,14 +93,34 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
     useState<IGameTaskState>(DEFAULT_GAME_STATE)
   const { setIsLoading } = useLoading()
   const { queryAccount } = useAccount()
+  const {
+    account,
+    isConnected,
+    web3Provider,
+    isAllowedNetwork,
+    isCypress,
+    chainId,
+  } = useEthers()
 
   const loadGameGameState = async (player: string): Promise<void> => {
     try {
       setIsLoading(true)
-      const { tokenContract, gameContract }: IFweb3Contracts =
-        loadFweb3Contracts(web3Provider)
-      setTokenContract(tokenContract || null)
-      setGameContract(gameContract || null)
+      const { tokenContract, gameContract } = await loadFweb3Contracts(
+        web3Provider
+      )
+      const trophyAddress = loadAddress(chainId, 'fweb3_trophy')[0]
+      const burnAddress = loadAddress(chainId, 'burn')[0]
+      const diamondNftAddress = loadAddress(chainId, 'fweb3_diamond_nft')[0]
+      const pollAddress = loadAddress(chainId, 'fweb3_poll')[0]
+
+      setPollAddress(pollAddress)
+      setDiamondNftAddress(diamondNftAddress)
+      setBurnAddress(burnAddress)
+      setTrophyAddress(trophyAddress || '')
+      setTokenContract(tokenContract)
+      setGameContract(gameContract)
+      setGameAddress(gameContract?.address || '')
+      setTokenAddress(tokenContract?.address || '')
 
       const { taskState, currentCompletedDots, activeDot } =
         await getCurrentGame(player, !!isCypress)
@@ -200,12 +237,18 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
         trophyId,
         hasWonGame,
         isFetchingGameData,
-        gameContract,
-        tokenContract,
         completedTasks,
         trophyColor,
         isVerified,
         isJudge,
+        gameContract,
+        tokenContract,
+        gameAddress,
+        tokenAddress,
+        trophyAddress,
+        burnAddress,
+        diamondNftAddress,
+        pollAddress,
         resetGameState,
         isDotComplete,
       }}
