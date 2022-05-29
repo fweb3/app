@@ -23,7 +23,7 @@ export const loadTokenContract = async (
   chainId: number,
   provider: Provider
 ): Promise<Contract> => {
-  const tokenAddress = loadAddress(chainId, 'fweb3_game')[0]
+  const tokenAddress = loadAddress(chainId, 'fweb3_token')[0]
   const tokenContract: Contract = new Contract(
     tokenAddress,
     fweb3TokenInterface.abi,

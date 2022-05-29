@@ -15,7 +15,7 @@ export default async function handler(
 ) {
   try {
     const { account, chainId } = req.query
-    const chainIdInt = parseInt(chainId.toString())
+    const chainIdInt = parseInt(chainId?.toString())
     const isAllowedNet = _isAllowedNet(chainIdInt)
 
     if (!isAllowedNet) {
@@ -25,7 +25,8 @@ export default async function handler(
     const payload = await fetchCurrentGameState(chainIdInt, account.toString())
     return res.json({ status: 'success', ...payload })
   } catch (e: GameError) {
-    console.error(e)
-    return res.status(500).json({ status: 'error', error: e.message })
+    return res
+      .status(500)
+      .json({ status: 'error', message: e.message, error: e })
   }
 }

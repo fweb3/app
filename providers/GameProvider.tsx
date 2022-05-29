@@ -1,14 +1,15 @@
 import { useState, useEffect, createContext, useContext, Context } from 'react'
 import { DotKey, DOTS_MAP, IDotsMap } from '../components/Chest/dots'
+import { loadAddress, loadFweb3Contracts } from '../interfaces'
 // eslint-disable-next-line
 import type { GameError, IGameTaskState } from '../types/game'
 import { IComponentProps } from '../components/component'
 import { useEthers, useLoading } from '../providers'
 import { Contract } from '@ethersproject/contracts'
-import { loadAddress, loadFweb3Contracts } from '../interfaces'
 import { useAccount } from './AccountProvider'
 import { getCurrentGame } from './Game/tasks'
 import { DEFAULT_GAME_STATE } from '../lib'
+import { useError } from './ErrorProvider'
 import { logger } from '../lib'
 
 interface IGameProviderState {
@@ -85,7 +86,7 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
   const [trophyColor, setTrophyColor] = useState<string>('')
   const [gameAddress, setGameAddress] = useState<string>('')
   const [burnAddress, setBurnAddress] = useState<string>('')
-
+  const { setErrorMessage } = useError()
   const [activeDot, setActiveDot] = useState<string>('0')
   const [isJudge, setIsJudge] = useState<boolean>(false)
   const [trophyId, setTrophyId] = useState<string>('')
@@ -93,14 +94,8 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
     useState<IGameTaskState>(DEFAULT_GAME_STATE)
   const { setIsLoading } = useLoading()
   const { queryAccount } = useAccount()
-  const {
-    account,
-    isConnected,
-    web3Provider,
-    isAllowedNetwork,
-    isCypress,
-    chainId,
-  } = useEthers()
+  const { account, isConnected, web3Provider, isAllowedNetwork, chainId } =
+    useEthers()
 
   const loadGameGameState = async (player: string): Promise<void> => {
     try {
@@ -123,7 +118,7 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
       setTokenAddress(tokenContract?.address || '')
 
       const { taskState, currentCompletedDots, activeDot } =
-        await getCurrentGame(player, !!isCypress)
+        await getCurrentGame(chainId, player)
 
       setCompletedTasks(currentCompletedDots)
       setGameTaskState(taskState)
@@ -140,6 +135,7 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
       logger.log('[+] Game state loaded')
     } catch (err: GameError) {
       console.error(err)
+      setErrorMessage(err.message)
       resetGameState()
       setIsLoading(false)
     }

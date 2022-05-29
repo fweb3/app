@@ -1,10 +1,6 @@
 import { EthereumRpcError } from 'eth-rpc-errors'
 
-export type GameError = Err | EthereumRpcError
-
-export interface Err {
-  message?: string
-}
+export type GameError = EthereumRpcError | Error
 
 interface IBalances {
   maticBalance: string

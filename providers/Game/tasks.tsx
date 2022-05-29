@@ -1,6 +1,5 @@
 import { IDotsMap, DOTS_MAP, DotKey, IDot } from '../../components/Chest/dots'
 import { IGameTaskState } from '../../types/game'
-import { DEV_GAME_STATE, USE_LIVE_DATA } from './dev'
 import { logger } from '../../lib'
 import { ethers } from 'ethers'
 
@@ -14,29 +13,26 @@ interface IDotsCompleted {
 }
 
 export const getCurrentGame = async (
-  player: string,
-  cypress = false
+  chainId: number,
+  player: string
 ): Promise<ICurrentTaskState> => {
-  const taskState = await fetchTaskState(player, cypress)
+  const taskState = await fetchTaskState(chainId, player)
   const { currentCompletedDots, activeDot } = mapDotsCompleted(taskState)
   return { taskState, currentCompletedDots, activeDot }
 }
 
 export const fetchTaskState = async (
-  player: string,
-  isCypress: boolean
+  chainId: number,
+  player: string
 ): Promise<IGameTaskState> => {
-  if (USE_LIVE_DATA || isCypress) {
-    const url = `/api/polygon?account=${player}`
-    const apiResponse = await fetch(url)
-    const taskState = await apiResponse.json()
-    logger.log(`[+] fetched live game data`)
-    console.log({ taskState })
-    return taskState
+  const url = `/api/polygon?account=${player}&chainId=${chainId}`
+  const apiResponse = await fetch(url)
+  const taskState = await apiResponse.json()
+  if (taskState.status === 'error') {
+    throw new Error(taskState.error)
   }
-  logger.log('[+] using dev game data')
-
-  return DEV_GAME_STATE
+  logger.log(JSON.stringify(taskState, null, 2))
+  return taskState
 }
 
 const mapDotsCompleted = (newGameTaskState: IGameTaskState): IDotsCompleted => {
