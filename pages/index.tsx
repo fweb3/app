@@ -1,4 +1,4 @@
-import { ContentSection } from '../components/GameViews/ContentSection'
+import { ContentSection } from '../components/GameView/ContentSection'
 import { ChestSection } from '../components/Chest/ChestSection'
 import { MEDIA_QUERY, SPACING } from '../components/styles'
 import { Layout } from '../components/shared/Layout'

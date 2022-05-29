@@ -9,6 +9,7 @@ import { createShareInfo, ISocialShare } from './Game/social'
 import { IComponentProps } from '../components/component'
 import { useEthers, useLoading } from '../providers'
 import { Contract } from '@ethersproject/contracts'
+import { useAccount } from './AccountProvider'
 import { getCurrentGame } from './Game/tasks'
 import { DEFAULT_GAME_STATE } from '../lib'
 import { useRouter } from 'next/router'
@@ -70,10 +71,11 @@ const calcTrophyColor = (trophyId: string): string => {
 }
 
 const GameProvider = ({ children }: IComponentProps): JSX.Element => {
+  const { account, isConnected, web3Provider, isAllowedNetwork, isCypress } =
+    useEthers()
   const [isFetchingGameData, setIsFetchingGameData] = useState<boolean>(false)
   const [tokenContract, setTokenContract] = useState<Contract | null>(null)
   const [completedTasks, setCompletedTasks] = useState<IDotsMap>(DOTS_MAP)
-  const { account, isConnected, provider, isAllowedNetwork } = useEthers()
   const [shareInfo, setShareInfo] = useState<ISocialShare>(initShareInfo)
   const [gameContract, setGameContract] = useState<Contract | null>(null)
   const [hasWonGame, setHasWonGame] = useState<boolean>(false)
@@ -86,50 +88,43 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
     useState<IGameTaskState>(DEFAULT_GAME_STATE)
   const { setIsLoading } = useLoading()
   const { query } = useRouter()
+  const { queryAccount } = useAccount()
 
   const loadGameGameState = async (player: string): Promise<void> => {
-    const shouldLoadGame =
-      window?.Cypress || (isAllowedNetwork && (isConnected || query?.account))
-    if (shouldLoadGame) {
-      logger.log('[+] start loading game state')
-      try {
-        setIsLoading(true)
+    try {
+      setIsLoading(true)
+      const { tokenContract, gameContract }: IFweb3Contracts =
+        loadFweb3Contracts(web3Provider)
+      setTokenContract(tokenContract || null)
+      setGameContract(gameContract || null)
 
-        const { tokenContract, gameContract }: IFweb3Contracts =
-          loadFweb3Contracts(provider)
-        setTokenContract(tokenContract || null)
-        setGameContract(gameContract || null)
+      const { taskState, currentCompletedDots, activeDot } =
+        await getCurrentGame(player, isCypress)
 
-        const { taskState, currentCompletedDots, activeDot } =
-          await getCurrentGame(player, window?.Cypress)
+      setCompletedTasks(currentCompletedDots)
+      setGameTaskState(taskState)
+      setActiveDot(activeDot)
 
-        setCompletedTasks(currentCompletedDots)
-        setGameTaskState(taskState)
-        setActiveDot(activeDot)
+      setHasWonGame(!!taskState?.hasWonGame)
+      setTrophyId(taskState?.trophyId?.toString() || '')
 
-        setHasWonGame(!!taskState?.hasWonGame)
-        setTrophyId(taskState?.trophyId?.toString() || '')
+      const trophyColor = calcTrophyColor(taskState?.trophyId?.toString() || '')
+      setTrophyColor(trophyColor)
 
-        const trophyColor = calcTrophyColor(
-          taskState?.trophyId?.toString() || ''
-        )
-        setTrophyColor(trophyColor)
+      const shareInfo = createShareInfo(
+        trophyId,
+        trophyColor,
+        currentCompletedDots
+      )
+      setShareInfo(shareInfo)
 
-        const shareInfo = createShareInfo(
-          trophyId,
-          trophyColor,
-          currentCompletedDots
-        )
-        setShareInfo(shareInfo)
-
-        setIsFetchingGameData(false)
-        setIsLoading(false)
-        logger.log('[+] game loaded')
-      } catch (err: GameError) {
-        console.error(err)
-        resetGameState()
-        setIsLoading(false)
-      }
+      setIsFetchingGameData(false)
+      setIsLoading(false)
+      logger.log('[+] Game state loaded')
+    } catch (err: GameError) {
+      console.error(err)
+      resetGameState()
+      setIsLoading(false)
     }
   }
 
@@ -185,12 +180,12 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
         }
       })()
     }
-  }, [isConnected]) // eslint-disable-line
+  }, [isConnected, isAllowedNetwork]) // eslint-disable-line
 
   useEffect(() => {
     ;(async () => {
-      if ((isConnected || query?.account) && isAllowedNetwork) {
-        await loadGameGameState(query?.account?.toString() ?? account)
+      if ((isConnected || queryAccount) && isAllowedNetwork) {
+        await loadGameGameState(queryAccount?.toString() ?? account)
       }
     })()
   }, [isConnected, query]) // eslint-disable-line
@@ -215,7 +210,7 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
       })()
     }
     // eslint-disable-next-line
-  }, [provider, gameContract, hasWonGame, trophyId, account])
+  }, [web3Provider, gameContract, hasWonGame, trophyId, account])
 
   return (
     <GameContext.Provider

@@ -1,5 +1,3 @@
-declare let window: any // eslint-disable-line
-
 import { createContext, useContext, useEffect, useState } from 'react'
 import type { IComponentProps } from '../components/component'
 import { createAlchemyProvider } from '../interfaces'
@@ -14,7 +12,6 @@ interface IAccountContext {
   displayName: string
   queryDisplayName: string
   queryAccount: string
-  isQueryLoad: boolean
   account: string
 }
 
@@ -22,7 +19,6 @@ const defaultConnectionContext: IAccountContext = {
   ensName: '',
   displayName: '',
   queryDisplayName: '',
-  isQueryLoad: false,
   queryAccount: '',
   account: '',
 }
@@ -33,21 +29,20 @@ const USE_LIVE_ENS = false
 
 const AccountProvider = ({ children }: IComponentProps) => {
   const [queryDisplayName, setQueryDisplayName] = useState<string>('')
-  const [isQueryLoad, setIsQueryLoad] = useState<boolean>(false)
   const [queryAccount, setQueryAccount] = useState<string>('')
   const [displayName, setDisplayName] = useState<string>('')
   const [ensName, setEnsName] = useState<string>('')
-  const { account } = useEthers()
+  const { account, isCypress } = useEthers()
   const { query } = useRouter()
 
   const fetchEnsName = async (): Promise<string> => {
-    if (USE_LIVE_ENS) {
+    if (USE_LIVE_ENS && !isCypress) {
       const provider = await createAlchemyProvider('homestead')
-      const ensName: string = (await provider.lookupAddress(account)) || ''
+      const ensName = (await provider.lookupAddress(account)) || ''
       ensName && logger.log(`[+] found ens: ${ensName}`)
       return ensName
     }
-    logger.log('[+] skipping ens')
+    logger.log('[-] skipping ens')
     return ''
   }
 
@@ -56,7 +51,6 @@ const AccountProvider = ({ children }: IComponentProps) => {
       try {
         const queryAccount = query?.account?.toString()
         if (queryAccount) {
-          setIsQueryLoad(!!queryAccount)
           setQueryAccount(queryAccount)
           setQueryDisplayName(`${queryAccount?.substring(0, 6)}...`)
         } else {
@@ -77,7 +71,6 @@ const AccountProvider = ({ children }: IComponentProps) => {
         ensName,
         displayName,
         queryDisplayName,
-        isQueryLoad,
         queryAccount,
         account,
       }}

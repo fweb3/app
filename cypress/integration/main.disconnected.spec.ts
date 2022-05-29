@@ -7,7 +7,9 @@ describe('Desktop disconnected view', () => {
   })
   it('loads the header', () => {
     cy.get('[data-testid="header-logo"]').contains('fweb3')
-    cy.get('[data-testid="header-get-started"]').contains('Connect a wallet to get started')
+    cy.get('[data-testid="header-get-started"]').contains(
+      'Connect a wallet to get started'
+    )
   })
 
   it('loads the main chest without dots', () => {
@@ -20,7 +22,7 @@ describe('Desktop disconnected view', () => {
   })
 
   it('loads the connect button', () => {
-    cy.get('[data-testid="pulse-btn"]').contains('Connect')
+    cy.get('[data-testid="connect-btn"]').contains('Connect')
   })
 
   it('loads the footer text', () => {

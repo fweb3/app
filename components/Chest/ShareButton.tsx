@@ -16,7 +16,7 @@ const ShareButtonContainer = styled.div`
 
 export const ShareButton = (): JSX.Element => {
   const { hasWonGame, shareInfo } = useGame()
-  const { isQueryLoad } = useAccount()
+  const { queryAccount } = useAccount()
   const { query } = useRouter()
 
   const handleShare = (): void => {
@@ -31,7 +31,7 @@ export const ShareButton = (): JSX.Element => {
       return
     }
   }
-  return !isQueryLoad ? (
+  return !queryAccount ? (
     <ShareButtonContainer data-testid="share-btn" onClick={handleShare}>
       {hasWonGame ? 'Share your win' : 'Share your progress'}
     </ShareButtonContainer>

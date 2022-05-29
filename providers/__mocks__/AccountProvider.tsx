@@ -3,7 +3,6 @@ export const MOCK_ACCOUNT_STATE = {
   displayName: '',
   queryDisplayName: '',
   queryAccount: '',
-  isQueryLoad: false,
   account: '',
 }
 

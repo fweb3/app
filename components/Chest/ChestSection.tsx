@@ -56,11 +56,11 @@ const Chest = styled.div`
 
 export const ChestSection = (): JSX.Element => {
   const { completedTasks, hasWonGame, trophyId } = useGame()
+  const { queryAccount } = useAccount()
   const { isConnected } = useEthers()
-  const { isQueryLoad } = useAccount()
   const { device } = useDevice()
 
-  const shouldCountAsConnected = isConnected || isQueryLoad
+  const shouldCountAsConnected = isConnected || queryAccount
   const numTasksComplete = numTasksCompleted(completedTasks)
   const renderMobileChest = (): JSX.Element => {
     return <Chest data-testid="chest-mobile" />

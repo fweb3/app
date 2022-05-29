@@ -6,7 +6,6 @@
   },
   "scripts": {
     "dev": "next dev",
-    "dev:local": "NEXT_PUBLIC_LOCAL=true yarn dev",
     "dev:debug": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",

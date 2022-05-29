@@ -6,6 +6,7 @@ import { ConnectedWallet } from './GameTasks/ConnectedWallet'
 import { useAccount, useEthers, useGame } from '../../hooks'
 import { MintDiamonNFT } from './GameTasks/MintDiamondNFT'
 import { HasSentTokens } from './GameTasks/HasSentTokens'
+import { OnboardingSection } from './OnboardingSection'
 import styled, { keyframes } from 'styled-components'
 import { UseFaucets } from './GameTasks/UseFaucets'
 import { VoteInPoll } from './GameTasks/VoteInPoll'
@@ -24,6 +25,7 @@ const ContentContainer = styled.div`
   flex-direction: column;
   animation: 0.5s ${fade};
   margin: ${SPACING.medium} ${SPACING.medium} 4rem ${SPACING.medium};
+
   @media only screen and (min-width: ${MEDIA_QUERY.tablet}) {
     margin: 0 ${SPACING.extra} 0 ${SPACING.extra};
   }
@@ -43,28 +45,11 @@ const ContentContainer = styled.div`
 
 export const ContentSection = (): JSX.Element => {
   const { activeDot, hasWonGame, trophyId } = useGame()
-  const { isConnected } = useEthers()
-  const { isQueryLoad } = useAccount()
+  const { isConnected, needsWallet } = useEthers()
+  const { queryAccount } = useAccount()
   const { device } = useDevice()
 
-  const shouldCountAsConnected = isConnected || isQueryLoad
-
-  const renderNotConnected = (): JSX.Element => {
-    return (
-      <>
-        <Introduction />
-        <ConnectButton />
-      </>
-    )
-  }
-
-  const renderNotDesktop = (): JSX.Element => {
-    return <Introduction />
-  }
-
-  const renderHasTrophy = () => {
-    return <VerifiedWinner />
-  }
+  const shouldCountAsConnected = isConnected || queryAccount
 
   const renderConnected = (): JSX.Element => {
     return (
@@ -82,27 +67,33 @@ export const ContentSection = (): JSX.Element => {
     )
   }
 
-  const renderNeedsVerification = (): JSX.Element => {
-    return <SeekVerification />
-  }
-
   const renderGame = (): JSX.Element => {
     if (device !== 'desktop') {
-      return renderNotDesktop()
+      return <Introduction />
+    }
+
+    if (needsWallet) {
+      return <OnboardingSection />
     }
 
     if (shouldCountAsConnected && parseInt(trophyId) >= 1) {
-      return renderHasTrophy()
+      return <VerifiedWinner />
     }
 
     if (shouldCountAsConnected && hasWonGame) {
-      return renderNeedsVerification()
+      return <SeekVerification />
     }
 
     if (shouldCountAsConnected) {
       return renderConnected()
     }
-    return renderNotConnected()
+
+    return (
+      <>
+        <Introduction />
+        <ConnectButton />
+      </>
+    )
   }
 
   return <ContentContainer>{renderGame()}</ContentContainer>

@@ -49,12 +49,12 @@ export const MintDiamonNFT = (): JSX.Element => {
           <CommonLink href={getOpenseaAccountUrl(account)}>
             {getOpenseaAccountUrl(account)}
           </CommonLink>
-          <ErrorText>
-            If you&apos;re having trouble or the gas is too high, it probably
-            means that diamond is already taken. Try inputing different values!
-            69 and 420 have already been taken 😄 FYI.
-          </ErrorText>
         </CommonText>
+        <ErrorText>
+          If you&apos;re having trouble or the gas is too high, it probably
+          means that diamond is already taken. Try inputing different values! 69
+          and 420 have already been taken 😄 FYI.
+        </ErrorText>
       </div>
     )
   }

@@ -3,7 +3,7 @@ declare let window: any // eslint-disable-line
 import { createContext, useContext, useEffect, useState } from 'react'
 import { Network, Web3Provider } from '@ethersproject/providers'
 import type { IComponentProps } from '../components/component'
-import detectEthereumProvider from '@metamask/detect-provider'
+import MetaMaskOnboarding from '@metamask/onboarding'
 // eslint-disable-next-line
 import type { GameError } from '../interfaces/game.d'
 import { AllowedChains } from '../types/providers.d'
@@ -21,7 +21,8 @@ interface IEthersContext {
   isConnected: boolean
   isConnecting: boolean
   connectAccount: () => void
-  provider: Web3Provider | null
+  web3Provider: Web3Provider | null
+  needsWallet: boolean
 }
 
 const defaultContext = {
@@ -32,20 +33,22 @@ const defaultContext = {
   network: null,
   account: '',
   chainId: 0,
-  provider: null,
+  web3Provider: null,
   isConnected: false,
   isConnecting: false,
   connectAccount: async () => null,
+  needsWallet: false,
 }
 
 const EthersContext = createContext<IEthersContext>(defaultContext)
 
 const EthersProvider = ({ children }: IComponentProps) => {
-  const [provider, setProvider] = useState<Web3Provider | null>(null)
+  const [web3Provider, setWeb3Provider] = useState<Web3Provider | null>(null)
   const [isAllowedNetwork, setIsAllowedNetwork] = useState<boolean>(true)
   const [isInitialized, setIsInitialized] = useState<boolean>(false)
   const [isConnecting, setIsConnecting] = useState<boolean>(false)
   const [isConnected, setIsConnected] = useState<boolean>(false)
+  const [needsWallet, setNeedsWallet] = useState<boolean>(false)
   const [network, setNetwork] = useState<Network | null>(null)
   const [isCypress, setIsCypress] = useState<boolean>(false)
   const [isLocal, setIsLocal] = useState<boolean>(false)
@@ -55,13 +58,10 @@ const EthersProvider = ({ children }: IComponentProps) => {
 
   const connectAccount = async () => {
     try {
-      if (provider && !isCypress) {
+      if (web3Provider && !isCypress) {
         setIsConnecting(true)
-        const account = await provider.send('eth_requestAccounts', [])
-        const network = await provider.getNetwork()
+        const account = await web3Provider.send('eth_requestAccounts', [])
         setAccount(account[0])
-        setNetwork(network)
-        setChainId(network.chainId)
         setIsConnected(true)
         setIsConnecting(false)
       }
@@ -70,39 +70,44 @@ const EthersProvider = ({ children }: IComponentProps) => {
     }
   }
 
-  const initialize = async (provider: Web3Provider | null | unknown) => {
+  const initialize = async (web3Provider: Web3Provider) => {
     if (window?.Cypress) {
       logger.log('[+] Cypress detected')
       setIsCypress(true)
-      return
-    } else if (provider !== window?.ethereum) {
+    }
+
+    if (!web3Provider?.provider?.isMetaMask) {
       logger.log('[-] Provider is not metamask')
       return
-    } else {
-      const hexChainId = await window.ethereum.request({
-        method: 'eth_chainId',
-      })
-      const chainId = parseInt(hexChainId, 16)
-      const isLocalhost = chainId === AllowedChains.LOCAL
-      const isAllowed = Object.values(AllowedChains).includes(chainId)
+    } else if (web3Provider.provider) {
+      const network = await web3Provider.getNetwork()
+      setNetwork(network)
+      const isLocalhost = network.chainId === AllowedChains.LOCAL
+      const isAllowed = Object.values(AllowedChains).includes(network.chainId)
       if (!isAllowed) {
         setErrorMessage(`${NETWORKS[chainId]} is not an allowed network`)
       }
-      setProvider(provider as Web3Provider)
-      setChainId(chainId)
+      setWeb3Provider(web3Provider)
+      setChainId(network.chainId)
       setIsLocal(isLocalhost)
       setIsAllowedNetwork(isAllowed)
       setIsInitialized(true)
+      logger.log(
+        `[+] Initialized web3 on [${network.name}:${
+          network.chainId ?? 'unknown'
+        }]`
+      )
       return
     }
   }
 
   const handleAccountChange = (accounts: string[]) => {
+    logger.log('[+] Account change event')
     setAccount(accounts[0])
   }
 
   const handleChainChange = async (newChainId: number) => {
-    console.log('changeChain', chainId)
+    logger.log('[+] Chain change event')
     if (newChainId !== chainId) {
       window.location.reload()
     }
@@ -110,17 +115,19 @@ const EthersProvider = ({ children }: IComponentProps) => {
 
   useEffect(() => {
     ;(async () => {
-      const provider = (await detectEthereumProvider()) as Web3Provider
-      if (provider) {
-        initialize(provider)
+      if (window?.ethereum) {
+        const web3Provider = new Web3Provider(window.ethereum) as Web3Provider
+        initialize(web3Provider)
+        return
       } else {
-        console.error('[-] No provider avail')
+        setNeedsWallet(true)
+        return
       }
     })()
-  }, []) // eslint-disable-line
+  }, [account]) // eslint-disable-line
 
   useEffect(() => {
-    if (window?.ethereum) {
+    if (window?.ethereum && !window?.Cypress) {
       window.ethereum.on('accountsChanged', handleAccountChange)
       window.ethereum.on('chainChanged', handleChainChange)
       return () => {
@@ -140,10 +147,11 @@ const EthersProvider = ({ children }: IComponentProps) => {
         network,
         account,
         chainId,
-        provider,
         isConnected,
         isConnecting,
+        web3Provider,
         connectAccount,
+        needsWallet,
       }}
     >
       {children}

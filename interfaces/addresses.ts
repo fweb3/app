@@ -1,3 +1,5 @@
+import { logger } from '../lib'
+
 interface IAddresses {
   [key: string]: any // eslint-disable-line @typescript-eslint/no-explicit-any
 }
@@ -51,5 +53,6 @@ export const loadAddress = (
   network = 'polygon',
   version = 'v1'
 ): string[] => {
+  logger.log(`[+] loading [${network}.${version}.${name}]`)
   return ADDRESSES[network]?.[version]?.[name] || []
 }

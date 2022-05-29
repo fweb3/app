@@ -14,7 +14,7 @@ describe('<ShareButton />', () => {
   it('renders the share button', () => {
     mockUseAccount.mockReturnValue({
       ...MOCK_ACCOUNT_STATE,
-      isQueryLoad: false,
+      queryAccount: '',
     })
     renderComponent()
     expect(screen.getByTestId('share-btn')).toBeTruthy()
@@ -24,7 +24,7 @@ describe('<ShareButton />', () => {
     mockUseEthers.mockReturnValueOnce(MOCK_ETHERS_STATE)
     mockUseAccount.mockReturnValueOnce({
       ...MOCK_ACCOUNT_STATE,
-      isQueryLoad: true,
+      queryAccount: 'account',
     })
     renderComponent()
     expect(() => screen.getByTestId('share-btn')).toThrow()
