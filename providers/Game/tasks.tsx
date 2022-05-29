@@ -15,7 +15,7 @@ interface IDotsCompleted {
 
 export const getCurrentGame = async (
   player: string,
-  cypress?: any // eslint-disable-line
+  cypress = false
 ): Promise<ICurrentTaskState> => {
   const taskState = await fetchTaskState(player, cypress)
   const { currentCompletedDots, activeDot } = mapDotsCompleted(taskState)
@@ -24,13 +24,14 @@ export const getCurrentGame = async (
 
 export const fetchTaskState = async (
   player: string,
-  cypress: any // eslint-disable-line
+  isCypress: boolean
 ): Promise<IGameTaskState> => {
-  if (USE_LIVE_DATA || cypress) {
-    logger.log('[+] fetching live game data')
+  if (USE_LIVE_DATA || isCypress) {
     const url = `/api/polygon?account=${player}`
     const apiResponse = await fetch(url)
-    const taskState: IGameTaskState = await apiResponse.json()
+    const taskState = await apiResponse.json()
+    logger.log(`[+] fetched live game data`)
+    console.log({ taskState })
     return taskState
   }
   logger.log('[+] using dev game data')

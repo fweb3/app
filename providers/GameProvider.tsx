@@ -1,11 +1,8 @@
-declare let window: any // eslint-disable-line
-
 import { useState, useEffect, createContext, useContext, Context } from 'react'
 import { DotKey, DOTS_MAP, IDotsMap } from '../components/Chest/dots'
 import { IFweb3Contracts, loadFweb3Contracts } from '../interfaces'
 // eslint-disable-next-line
 import type { GameError, IGameTaskState } from '../interfaces/game'
-import { createShareInfo, ISocialShare } from './Game/social'
 import { IComponentProps } from '../components/component'
 import { useEthers, useLoading } from '../providers'
 import { Contract } from '@ethersproject/contracts'
@@ -27,16 +24,9 @@ interface IGameProviderState {
   trophyId: string
   trophyColor: string
   isVerified: boolean
-  shareInfo: ISocialShare
   isJudge: boolean
   resetGameState: () => void
   isDotComplete: (dot: DotKey) => boolean
-}
-
-const initShareInfo = {
-  imageUrl: 'https://fweb3.xyz/fweb3.png',
-  tweetText: '',
-  tweetUrl: '',
 }
 
 const defaultGameState: IGameProviderState = {
@@ -51,7 +41,6 @@ const defaultGameState: IGameProviderState = {
   trophyId: '',
   trophyColor: '',
   isVerified: false,
-  shareInfo: initShareInfo,
   isJudge: false,
   resetGameState: () => null,
   isDotComplete: () => false,
@@ -76,7 +65,6 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
   const [isFetchingGameData, setIsFetchingGameData] = useState<boolean>(false)
   const [tokenContract, setTokenContract] = useState<Contract | null>(null)
   const [completedTasks, setCompletedTasks] = useState<IDotsMap>(DOTS_MAP)
-  const [shareInfo, setShareInfo] = useState<ISocialShare>(initShareInfo)
   const [gameContract, setGameContract] = useState<Contract | null>(null)
   const [hasWonGame, setHasWonGame] = useState<boolean>(false)
   const [isVerified, setIsVerified] = useState<boolean>(false)
@@ -87,7 +75,6 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
   const [gameTaskState, setGameTaskState] =
     useState<IGameTaskState>(DEFAULT_GAME_STATE)
   const { setIsLoading } = useLoading()
-  const { query } = useRouter()
   const { queryAccount } = useAccount()
 
   const loadGameGameState = async (player: string): Promise<void> => {
@@ -99,7 +86,7 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
       setGameContract(gameContract || null)
 
       const { taskState, currentCompletedDots, activeDot } =
-        await getCurrentGame(player, isCypress)
+        await getCurrentGame(player, !!isCypress)
 
       setCompletedTasks(currentCompletedDots)
       setGameTaskState(taskState)
@@ -110,13 +97,6 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
 
       const trophyColor = calcTrophyColor(taskState?.trophyId?.toString() || '')
       setTrophyColor(trophyColor)
-
-      const shareInfo = createShareInfo(
-        trophyId,
-        trophyColor,
-        currentCompletedDots
-      )
-      setShareInfo(shareInfo)
 
       setIsFetchingGameData(false)
       setIsLoading(false)
@@ -130,7 +110,6 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
 
   const resetGameState = () => {
     setCompletedTasks(DOTS_MAP)
-    setShareInfo(initShareInfo)
     setHasWonGame(false)
     setIsVerified(false)
     setTrophyColor('')
@@ -184,11 +163,11 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
 
   useEffect(() => {
     ;(async () => {
-      if ((isConnected || queryAccount) && isAllowedNetwork) {
+      if ((isConnected || !!queryAccount) && isAllowedNetwork) {
         await loadGameGameState(queryAccount?.toString() ?? account)
       }
     })()
-  }, [isConnected, query]) // eslint-disable-line
+  }, [isConnected, queryAccount]) // eslint-disable-line
 
   useEffect(() => {
     const shouldVerifyWin =
@@ -226,7 +205,6 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
         completedTasks,
         trophyColor,
         isVerified,
-        shareInfo,
         isJudge,
         resetGameState,
         isDotComplete,

@@ -1,7 +1,10 @@
+import { createContext, useContext, useEffect, useState } from 'react'
+import { createShareInfo, ISocialShare } from './Game/social'
 import { IComponentProps } from '../components/component'
 import { AllowedChains } from '../types/providers.d'
-import { createContext, useContext } from 'react'
+import { useAccount } from './AccountProvider'
 import { useEthers } from './EthersProvider'
+import { useGame } from './GameProvider'
 
 interface IUrlContext {
   getPolygonscanUrl: (address: string) => string
@@ -12,6 +15,13 @@ interface IUrlContext {
   githubUrl: string
   uniswapUrl: string
   walkthroughUrl: string
+  shareInfo: ISocialShare
+}
+
+const initShareInfo = {
+  imageUrl: 'https://fweb3.xyz/fweb3.png',
+  tweetText: '',
+  tweetUrl: '',
 }
 
 const defaultUrlContext: IUrlContext = {
@@ -23,6 +33,7 @@ const defaultUrlContext: IUrlContext = {
   githubUrl: '',
   uniswapUrl: '',
   walkthroughUrl: '',
+  shareInfo: initShareInfo,
 }
 
 const UrlContext = createContext(defaultUrlContext)
@@ -37,6 +48,9 @@ const POLYGON_OPENSEA_URL = `${POLYGON_BASE_OPENSEA_URL}/assets/matic`
 const MUMBAI_OPEANSEA_URL = `${MUMBAI_BASE_OPENSEA_URL}/assets`
 
 const UrlProvider = ({ children }: IComponentProps) => {
+  const [shareInfo, setShareInfo] = useState<ISocialShare>(initShareInfo)
+  const { trophyColor, trophyId, completedTasks } = useGame()
+  const { account } = useAccount()
   const { chainId } = useEthers()
 
   const URLS = {
@@ -69,17 +83,25 @@ const UrlProvider = ({ children }: IComponentProps) => {
     return `${POLYGON_BASE_OPENSEA_URL}/account`
   }
 
+  useEffect(() => {
+    if (account) {
+      const shareInfo = createShareInfo(trophyId, trophyColor, completedTasks)
+      setShareInfo(shareInfo)
+    }
+  }, [account, completedTasks, trophyColor, trophyId])
+
   return (
     <UrlContext.Provider
       value={{
-        getPolygonscanUrl,
-        getOpenseaUrl,
-        getOpenseaAccountUrl,
+        walkthroughUrl: URLS.walkthroughUrl,
         discordUrl: URLS.discord,
+        uniswapUrl: URLS.uniswap,
         faucetUrl: URLS.faucet,
         githubUrl: URLS.github,
-        uniswapUrl: URLS.uniswap,
-        walkthroughUrl: URLS.walkthroughUrl,
+        getOpenseaAccountUrl,
+        getPolygonscanUrl,
+        getOpenseaUrl,
+        shareInfo,
       }}
     >
       {children}

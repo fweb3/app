@@ -1,8 +1,8 @@
-import { useGame } from '../../providers'
+import { useUrl } from '../../providers'
 import Head from 'next/head'
 
 export const HtmlHead = () => {
-  const { shareInfo } = useGame()
+  const { shareInfo } = useUrl()
 
   return (
     <Head>

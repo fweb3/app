@@ -62,6 +62,7 @@ export const ChestSection = (): JSX.Element => {
 
   const shouldCountAsConnected = isConnected || queryAccount
   const numTasksComplete = numTasksCompleted(completedTasks)
+
   const renderMobileChest = (): JSX.Element => {
     return <Chest data-testid="chest-mobile" />
   }

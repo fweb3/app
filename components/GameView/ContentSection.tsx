@@ -1,3 +1,5 @@
+declare let window: any // eslint-disable-line
+
 import { SeekVerification } from '../CompletedView/SeekVerification'
 import { VerifiedWinner } from '../CompletedView/VerifiedWinner'
 import { DeployedContract } from './GameTasks/DeployedContract'
@@ -72,7 +74,7 @@ export const ContentSection = (): JSX.Element => {
       return <Introduction />
     }
 
-    if (needsWallet) {
+    if (needsWallet && !window.Cypress) {
       return <OnboardingSection />
     }
 

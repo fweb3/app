@@ -3,12 +3,12 @@ declare let window: any // eslint-disable-line
 import { createContext, useContext, useEffect, useState } from 'react'
 import { Network, Web3Provider } from '@ethersproject/providers'
 import type { IComponentProps } from '../components/component'
-import MetaMaskOnboarding from '@metamask/onboarding'
 // eslint-disable-next-line
 import type { GameError } from '../interfaces/game.d'
 import { AllowedChains } from '../types/providers.d'
-import { logger, NETWORKS } from '../lib'
+import { getMessageFromCode } from 'eth-rpc-errors'
 import { useError } from './ErrorProvider'
+import { logger, NETWORKS } from '../lib'
 
 interface IEthersContext {
   isLocal?: boolean
@@ -66,14 +66,23 @@ const EthersProvider = ({ children }: IComponentProps) => {
         setIsConnecting(false)
       }
     } catch (err: GameError) {
-      console.error(err.message)
+      const errMessage = getMessageFromCode(err.code, err.message)
+      console.error(errMessage)
     }
   }
 
-  const initialize = async (web3Provider: Web3Provider) => {
+  const handleCypress = () => {
+    setIsCypress(true)
+    setNetwork({ chainId: 137, name: 'polygon' })
+    setIsLocal(true)
+    setIsAllowedNetwork(true)
+    setIsInitialized(true)
+    logger.log('[+] Initialized cypress provider')
+  }
+
+  const initialize = async (web3Provider: Web3Provider | null) => {
     if (window?.Cypress) {
-      logger.log('[+] Cypress detected')
-      setIsCypress(true)
+      return handleCypress()
     }
 
     if (!web3Provider?.provider?.isMetaMask) {
@@ -119,6 +128,8 @@ const EthersProvider = ({ children }: IComponentProps) => {
         const web3Provider = new Web3Provider(window.ethereum) as Web3Provider
         initialize(web3Provider)
         return
+      } else if (window?.Cypress) {
+        initialize(null)
       } else {
         setNeedsWallet(true)
         return

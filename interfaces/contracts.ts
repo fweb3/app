@@ -3,6 +3,7 @@ import fweb3GameInterface from '../interfaces/abi/Fweb3Game.json'
 import { Provider } from '@ethersproject/providers'
 import { Contract } from '@ethersproject/contracts'
 import { loadAddress } from './addresses'
+import { logger } from '../lib'
 
 export const loadGameContract = (provider: Provider): Contract => {
   if (provider) {
@@ -35,6 +36,7 @@ export interface IFweb3Contracts {
 export const loadFweb3Contracts = (
   provider: Provider | null
 ): IFweb3Contracts => {
+  logger.log('[+] loaded game contracts')
   return {
     gameContract: provider ? loadGameContract(provider) : null,
     tokenContract: provider ? loadTokenContract(provider) : null,
