@@ -17,7 +17,7 @@ const ChestContainer = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
-  animation: 1s ${fade};
+  animation: ${fade} 1.5s ease-in-out;
 `
 
 const OpenChest = styled.div`

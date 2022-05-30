@@ -27,5 +27,5 @@
     "types/networks.d.ts",
     "types/providers.d.ts"
   ],
-  "exclude": []
+  "exclude": ["node_modules"]
 }

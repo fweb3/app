@@ -1,3 +1,5 @@
+declare let window: any // eslint-disable-line
+
 import fweb3TokenInterface from '../interfaces/abi/Fweb3Token.json'
 import fweb3GameInterface from '../interfaces/abi/Fweb3Game.json'
 import type { IFweb3Contracts } from './../types/interfaces.d'
@@ -35,6 +37,12 @@ export const loadTokenContract = async (
 export const loadFweb3Contracts = async (
   provider: Provider | null
 ): Promise<IFweb3Contracts> => {
+  if (window.Cypress) {
+    return {
+      gameContract: null,
+      tokenContract: null,
+    }
+  }
   if (!provider) {
     throw new Error('No provider to load contracts')
   }

@@ -1,3 +1,5 @@
+declare let window: any // eslint-disable-line
+
 import { NETWORKS, AllowedChains } from './../types/networks.d'
 import { logger } from '../lib'
 
@@ -54,10 +56,10 @@ export const loadAddress = (
   name: string,
   version = 'v1'
 ): string[] => {
-  const netName = NETWORKS[chainId].toLowerCase()
+  const netName = NETWORKS[chainId]?.toLowerCase() || ''
   const addresses = ADDRESSES[netName]?.[version]?.[name] || []
 
-  if (addresses.length === 0 || !AllowedChains[chainId]) {
+  if ((!window.Cypress && addresses.length === 0) || !AllowedChains[chainId]) {
     throw new Error(`No address found for [${netName}.${version}.${name}]`)
   }
   logger.log(`[+] loaded [${netName}.${version}.${name}]`)

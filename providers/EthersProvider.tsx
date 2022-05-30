@@ -1,8 +1,8 @@
 declare let window: any // eslint-disable-line
 
 import { createContext, useContext, useEffect, useState } from 'react'
-import { Web3Provider } from '@ethersproject/providers'
 import type { IComponentProps } from '../components/component'
+import { Web3Provider } from '@ethersproject/providers'
 import { AllowedChains } from '../types/networks.d'
 import { getMessageFromCode } from 'eth-rpc-errors'
 import { Network } from '@ethersproject/networks'
@@ -10,6 +10,7 @@ import { Network } from '@ethersproject/networks'
 import type { GameError } from '../types/game.d'
 import { useError } from './ErrorProvider'
 import { logger, NETWORKS } from '../lib'
+import { toast } from 'react-toastify'
 
 interface IEthersContext {
   isLocal?: boolean
@@ -24,6 +25,7 @@ interface IEthersContext {
   connectAccount: () => void
   web3Provider: Web3Provider | null
   needsWallet: boolean
+  setAccount: (account: string) => void
 }
 
 const defaultContext = {
@@ -39,6 +41,7 @@ const defaultContext = {
   isConnecting: false,
   connectAccount: async () => null,
   needsWallet: false,
+  setAccount: () => null,
 }
 
 const EthersContext = createContext<IEthersContext>(defaultContext)
@@ -72,20 +75,7 @@ const EthersProvider = ({ children }: IComponentProps) => {
     }
   }
 
-  const handleCypress = () => {
-    setIsCypress(true)
-    setNetwork({ chainId: 137, name: 'polygon' })
-    setIsLocal(true)
-    setIsAllowedNetwork(true)
-    setIsInitialized(true)
-    logger.log('[+] Initialized cypress provider')
-  }
-
-  const initialize = async (web3Provider: Web3Provider | null) => {
-    if (window?.Cypress) {
-      return handleCypress()
-    }
-
+  const initialize = async (web3Provider: Web3Provider) => {
     if (!web3Provider?.provider?.isMetaMask) {
       logger.log('[-] Provider is not metamask')
       return
@@ -96,7 +86,9 @@ const EthersProvider = ({ children }: IComponentProps) => {
       const isAllowed = Object.values(AllowedChains).includes(network.chainId)
       if (!isAllowed) {
         setErrorMessage(
-          `${NETWORKS[network.chainId]} is not an allowed network`
+          `${
+            NETWORKS[network.chainId]
+          } is not a supported network at this time.`
         )
       }
       setWeb3Provider(web3Provider)
@@ -113,13 +105,9 @@ const EthersProvider = ({ children }: IComponentProps) => {
     }
   }
 
-  const handleAccountChange = (accounts: string[]) => {
-    logger.log('[+] Account change event')
-    setAccount(accounts[0])
-  }
-
   const handleChainChange = async (newChainId: number) => {
     logger.log('[+] Chain change event')
+    toast.success('Changing chains')
     if (newChainId !== chainId) {
       window.location.reload()
     }
@@ -132,7 +120,7 @@ const EthersProvider = ({ children }: IComponentProps) => {
         initialize(web3Provider)
         return
       } else if (window?.Cypress) {
-        initialize(null)
+        setIsCypress(true)
       } else {
         setNeedsWallet(true)
         return
@@ -142,10 +130,8 @@ const EthersProvider = ({ children }: IComponentProps) => {
 
   useEffect(() => {
     if (window?.ethereum && !window?.Cypress) {
-      window.ethereum.on('accountsChanged', handleAccountChange)
       window.ethereum.on('chainChanged', handleChainChange)
       return () => {
-        window.ethereum.removeListener('accountsChanged', handleAccountChange)
         window.ethereum.removeListener('chainChanged', handleChainChange)
       }
     }
@@ -166,6 +152,7 @@ const EthersProvider = ({ children }: IComponentProps) => {
         web3Provider,
         connectAccount,
         needsWallet,
+        setAccount,
       }}
     >
       {children}

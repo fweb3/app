@@ -5,6 +5,7 @@ import { createAlchemyProvider } from '../interfaces'
 import type { GameError } from '../types/game'
 import { useEthers } from './EthersProvider'
 import { useRouter } from 'next/router'
+import { toast } from 'react-toastify'
 import { logger } from '../lib'
 
 interface IAccountContext {
@@ -12,6 +13,7 @@ interface IAccountContext {
   displayName: string
   queryDisplayName: string
   queryAccount: string
+  isQueryLoad: boolean
   account: string
 }
 
@@ -20,15 +22,17 @@ const defaultConnectionContext: IAccountContext = {
   displayName: '',
   queryDisplayName: '',
   queryAccount: '',
+  isQueryLoad: false,
   account: '',
 }
 
 const AccountContext = createContext<IAccountContext>(defaultConnectionContext)
 
-const USE_LIVE_ENS = false
+const USE_LIVE_ENS = process.env.NEXT_PUBLIC_USE_ENS
 
 const AccountProvider = ({ children }: IComponentProps) => {
   const [queryDisplayName, setQueryDisplayName] = useState<string>('')
+  const [isQueryLoad, setIsQueryLoad] = useState<boolean>(false)
   const [queryAccount, setQueryAccount] = useState<string>('')
   const [displayName, setDisplayName] = useState<string>('')
   const [ensName, setEnsName] = useState<string>('')
@@ -51,6 +55,7 @@ const AccountProvider = ({ children }: IComponentProps) => {
       try {
         const queryAccount = query?.account?.toString()
         if (queryAccount) {
+          setIsQueryLoad(true)
           setQueryAccount(queryAccount)
           setQueryDisplayName(`${queryAccount?.substring(0, 6)}...`)
         } else {
@@ -61,9 +66,10 @@ const AccountProvider = ({ children }: IComponentProps) => {
         }
       } catch (err: GameError) {
         console.error(err.message)
+        toast.error('Error loading account')
       }
     })()
-  }, [query, account]) // eslint-disable-line
+  }, [query.account, account]) // eslint-disable-line
 
   return (
     <AccountContext.Provider
@@ -72,6 +78,7 @@ const AccountProvider = ({ children }: IComponentProps) => {
         displayName,
         queryDisplayName,
         queryAccount,
+        isQueryLoad,
         account,
       }}
     >

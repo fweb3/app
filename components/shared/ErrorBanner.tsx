@@ -1,8 +1,11 @@
 import { COLORS, MEDIA_QUERY, SPACING } from '../styles'
+import styled, { keyframes } from 'styled-components'
 import { useError, useDevice } from '../../hooks'
+import { fadeIn } from 'react-animations'
 import { MdClose } from 'react-icons/md'
-import styled from 'styled-components'
 import { useEffect } from 'react'
+
+const fade = keyframes(fadeIn)
 
 const Container = styled.div`
   display: grid;
@@ -16,9 +19,11 @@ const Container = styled.div`
   right: 0;
   padding: ${SPACING.medium};
   box-shadow: inset 2px 2px 8px 1px rgba(0, 0, 0, 0.5);
+  animation: ${fade} 1.5s ease-in-out;
 
   @media only screen and (min-width: ${MEDIA_QUERY.smallDesk}) {
     top: 125px;
+    padding: 0.7rem;
   }
 `
 
@@ -44,12 +49,14 @@ export const ErrorBanner = () => {
   const { errorMessage, setErrorMessage } = useError()
   const { device } = useDevice()
 
+  const isMobile = device && device !== 'desktop'
+
   const handleCloseBanner = () => {
     setErrorMessage('')
   }
 
   useEffect(() => {
-    if (device && device !== 'desktop') {
+    if (isMobile) {
       setErrorMessage('Not supported on mobile')
     }
   }, [device]) // eslint-disable-line
@@ -59,7 +66,7 @@ export const ErrorBanner = () => {
       <ErrorText>{errorMessage}</ErrorText>
       <CloseBtnContainer onClick={handleCloseBanner}>
         {device === 'desktop' ? (
-          <StyledCloseIcon size={40} color="white" />
+          <StyledCloseIcon size={isMobile ? 30 : 40} color="white" />
         ) : (
           ''
         )}

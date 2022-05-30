@@ -9,6 +9,7 @@ export const MOCK_ETHERS_STATE = {
   isInitialized: true,
   chainId: 137,
   needsWallet: false,
+  setAccount: jest.fn,
   connectAccount: jest.fn(),
 }
 

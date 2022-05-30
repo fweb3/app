@@ -1,3 +1,5 @@
+declare let window: any // eslint-disable-line
+
 import { useState, useEffect, createContext, useContext, Context } from 'react'
 import { DotKey, DOTS_MAP, IDotsMap } from '../components/Chest/dots'
 import { loadAddress, loadFweb3Contracts } from '../interfaces'
@@ -77,46 +79,37 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
   const [hasWonGame, setHasWonGame] = useState<boolean>(false)
   const [isVerified, setIsVerified] = useState<boolean>(false)
 
-  const [pollAddress, setPollAddress] = useState<string>('')
-  const [gameContract, setGameContract] = useState<Contract | null>(null)
   const [tokenContract, setTokenContract] = useState<Contract | null>(null)
+  const [gameContract, setGameContract] = useState<Contract | null>(null)
+  const [diamondNftAddress, setDiamondNftAddress] = useState<string>('')
   const [trophyAddress, setTrophyAddress] = useState<string>('')
   const [tokenAddress, setTokenAddress] = useState<string>('')
-  const [diamondNftAddress, setDiamondNftAddress] = useState<string>('')
+  const [pollAddress, setPollAddress] = useState<string>('')
   const [trophyColor, setTrophyColor] = useState<string>('')
   const [gameAddress, setGameAddress] = useState<string>('')
   const [burnAddress, setBurnAddress] = useState<string>('')
-  const { setErrorMessage } = useError()
+
   const [activeDot, setActiveDot] = useState<string>('0')
   const [isJudge, setIsJudge] = useState<boolean>(false)
   const [trophyId, setTrophyId] = useState<string>('')
   const [gameTaskState, setGameTaskState] =
     useState<IGameTaskState>(DEFAULT_GAME_STATE)
+  const { setErrorMessage } = useError()
   const { setIsLoading } = useLoading()
   const { queryAccount } = useAccount()
-  const { account, isConnected, web3Provider, isAllowedNetwork, chainId } =
-    useEthers()
+  const {
+    account,
+    setAccount,
+    isConnected,
+    web3Provider,
+    // rpcProvider,
+    isAllowedNetwork,
+    chainId,
+  } = useEthers()
 
   const loadGameGameState = async (player: string): Promise<void> => {
     try {
       setIsLoading(true)
-      const { tokenContract, gameContract } = await loadFweb3Contracts(
-        web3Provider
-      )
-      const trophyAddress = loadAddress(chainId, 'fweb3_trophy')[0]
-      const burnAddress = loadAddress(chainId, 'burn')[0]
-      const diamondNftAddress = loadAddress(chainId, 'fweb3_diamond_nft')[0]
-      const pollAddress = loadAddress(chainId, 'fweb3_poll')[0]
-
-      setPollAddress(pollAddress)
-      setDiamondNftAddress(diamondNftAddress)
-      setBurnAddress(burnAddress)
-      setTrophyAddress(trophyAddress || '')
-      setTokenContract(tokenContract)
-      setGameContract(gameContract)
-      setGameAddress(gameContract?.address || '')
-      setTokenAddress(tokenContract?.address || '')
-
       const { taskState, currentCompletedDots, activeDot } =
         await getCurrentGame(chainId, player)
 
@@ -139,6 +132,25 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
       resetGameState()
       setIsLoading(false)
     }
+  }
+
+  const loadGameContracts = async () => {
+    const { tokenContract, gameContract } = await loadFweb3Contracts(
+      web3Provider
+    )
+    const trophyAddress = loadAddress(chainId, 'fweb3_trophy')[0]
+    const burnAddress = loadAddress(chainId, 'burn')[0]
+    const diamondNftAddress = loadAddress(chainId, 'fweb3_diamond_nft')[0]
+    const pollAddress = loadAddress(chainId, 'fweb3_poll')[0]
+
+    setPollAddress(pollAddress)
+    setDiamondNftAddress(diamondNftAddress)
+    setBurnAddress(burnAddress)
+    setTrophyAddress(trophyAddress || '')
+    setTokenContract(tokenContract)
+    setGameContract(gameContract)
+    setGameAddress(gameContract?.address || '')
+    setTokenAddress(tokenContract?.address || '')
   }
 
   const resetGameState = () => {
@@ -180,6 +192,14 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
     return false
   }
 
+  const handleAccountChange = (accounts: string[]) => {
+    logger.log('[+] Account change event')
+    if (accounts[0] !== account) {
+      setAccount(accounts[0])
+      loadGameGameState(accounts[0])
+    }
+  }
+
   useEffect(() => {
     if (isConnected && isAllowedNetwork) {
       ;(async () => {
@@ -197,6 +217,7 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
   useEffect(() => {
     ;(async () => {
       if ((isConnected || !!queryAccount) && isAllowedNetwork) {
+        await loadGameContracts()
         await loadGameGameState(queryAccount?.toString() ?? account)
       }
     })()
@@ -223,6 +244,15 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
     }
     // eslint-disable-next-line
   }, [web3Provider, gameContract, hasWonGame, trophyId, account])
+
+  useEffect(() => {
+    if (window?.ethereum && !window?.Cypress) {
+      window.ethereum.on('accountsChanged', handleAccountChange)
+      return () => {
+        window.ethereum.removeListener('accountsChanged', handleAccountChange)
+      }
+    }
+  }, []) // eslint-disable-line
 
   return (
     <GameContext.Provider

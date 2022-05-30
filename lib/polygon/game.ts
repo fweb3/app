@@ -1,5 +1,5 @@
-import { NETWORKS } from './../../types/networks.d'
 import { checkHasWonGame, currentWalletGameState } from './validators'
+import { NETWORKS } from './../../types/networks.d'
 
 import { IGameTaskState } from '../../types/game'
 
