@@ -25,7 +25,8 @@
     "providers",
     "jest",
     "types/networks.d.ts",
-    "types/providers.d.ts"
+    "types/providers.d.ts",
+    "scripts"
   ],
   "exclude": ["node_modules"]
 }
