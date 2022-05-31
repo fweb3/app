@@ -2,6 +2,7 @@
 .vscode
 .DS_Store
 tsconfig.tsbuildinfo
+cypress/support/metamask/extension
 
 # dependencies
 /node_modules

@@ -5,19 +5,23 @@ import fs from 'fs-extra'
 const METAMASK_EXTENSION_BASE =
   'https://api.github.com/repos/metamask/metamask-extension/releases'
 
-const DOWNLOAD_PATH = './cypress/support/metamask'
+const DOWNLOAD_PATH = './cypress/support/metamask/extension'
 
 export const checkAndDownloadMetamask = async (): Promise<string> => {
-  const metamaskPath = `${DOWNLOAD_PATH}/extension/metamask-extension.zip`
-  if (!fs.existsSync(metamaskPath)) {
+  if (!fs.existsSync(DOWNLOAD_PATH)) {
+    console.log('[-] cant find metamask in path')
     await fetchMetamask()
-    return metamaskPath
+    return DOWNLOAD_PATH
   }
-  return metamaskPath
+  return DOWNLOAD_PATH
 }
 
 const fetchMetamask = async () => {
   try {
+    console.log('[+] fetching metamask')
+    if (!fs.existsSync(DOWNLOAD_PATH)) {
+      fs.mkdirSync(DOWNLOAD_PATH)
+    }
     const res = await fetch(`${METAMASK_EXTENSION_BASE}/latest`)
     const json = await res.json()
     const downloadUrl = json.assets[0].browser_download_url
@@ -32,9 +36,9 @@ const fetchMetamask = async () => {
 
     const zipFile = `${DOWNLOAD_PATH}/${filename}`
 
-    writer.close(() => {
+    return writer.close(async () => {
       const zip = new AdmZip(zipFile)
-      zip.extractAllTo(`${DOWNLOAD_PATH}/extension`, true)
+      return zip.extractAllTo(`${DOWNLOAD_PATH}`, true)
     })
   } catch (error) {
     console.error(error)

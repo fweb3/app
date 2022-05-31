@@ -26,7 +26,9 @@
     "jest",
     "types/networks.d.ts",
     "types/providers.d.ts",
-    "scripts"
+    "scripts",
+    "cypress/plugins",
+    "cypress/support"
   ],
   "exclude": ["node_modules"]
 }
