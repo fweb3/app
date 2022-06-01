@@ -1,6 +1,6 @@
-import { Context, createContext, useContext, useState } from 'react'
 import { LoadingDots } from '../components/shared/LoadingDots'
 import { IComponentProps } from '../components/component'
+import { Context, createContext, useState } from 'react'
 
 interface ILoadingContext {
   isLoading: boolean
@@ -32,6 +32,4 @@ const LoadingProvider = ({ children }: IComponentProps) => {
   )
 }
 
-const useLoading = () => useContext(LoadingContext)
-
-export { LoadingProvider, useLoading }
+export { LoadingProvider, LoadingContext }

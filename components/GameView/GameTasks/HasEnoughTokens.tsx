@@ -1,7 +1,6 @@
 import { FaucetDisclaimer } from '../FaucetDisclaimer'
-import { useGame } from '../../../providers'
+import { useUrl, useGame } from '../../../hooks'
 import { DotKey } from '../../Chest/dots'
-import { useUrl } from '../../../hooks'
 import { COLORS } from '../../styles'
 import {
   ColoredText,

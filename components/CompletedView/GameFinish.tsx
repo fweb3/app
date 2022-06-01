@@ -1,8 +1,8 @@
 import { QueryAccountSection } from './QueryAccountSection'
 import { SeekVerification } from './SeekVerification'
 import { VerifiedWinner } from './VerifiedWinner'
-import { useGame } from '../../providers'
 import { useRouter } from 'next/router'
+import { useGame } from '../../hooks'
 
 export const GameFinish = (): JSX.Element => {
   const { trophyId } = useGame()

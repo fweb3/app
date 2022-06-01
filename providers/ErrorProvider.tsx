@@ -1,7 +1,7 @@
-import { createContext, useContext, useState } from 'react'
 import { IComponentProps } from '../components/component'
 import { toast, ToastOptions } from 'react-toastify'
-import { useLoading } from './LoadingProvider'
+import { createContext, useState } from 'react'
+import { useLoading } from '../hooks'
 
 interface IErrorContext {
   errorMessage: string
@@ -44,10 +44,6 @@ const ErrorProvider = ({ children }: IComponentProps) => {
     })
   }
 
-  // useEffect(() => {
-  //   console.log({ network })
-  // }, [network])
-
   return (
     <ErrorContext.Provider
       value={{
@@ -62,6 +58,4 @@ const ErrorProvider = ({ children }: IComponentProps) => {
   )
 }
 
-const useError = () => useContext(ErrorContext)
-
-export { ErrorProvider, useError }
+export { ErrorProvider, ErrorContext }

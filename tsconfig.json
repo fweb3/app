@@ -26,9 +26,9 @@
     "jest",
     "types/networks.d.ts",
     "types/providers.d.ts",
-    "scripts",
-    "cypress/plugins",
-    "cypress/support"
+    "scripts"
+    // "cypress/plugins",
+    // "cypress/support"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "cypress/support/metamask/extension"]
 }

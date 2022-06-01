@@ -1,7 +1,7 @@
 import { MOCK_GAME_CONTEXT } from '../../jest/jest.fixtures'
 import { render, screen } from '@testing-library/react'
-import { useGame } from '../../providers/GameProvider'
 import { GameFinish } from './GameFinish'
+import { useGame } from '../../hooks'
 
 // eslint-disable-next-line
 const renderComponent = (props: any) => render(<GameFinish {...props} />)

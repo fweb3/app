@@ -1,11 +1,11 @@
-import { createContext, useContext, useEffect, useState } from 'react'
 import type { IComponentProps } from '../components/component'
+import { createContext, useEffect, useState } from 'react'
 import { createAlchemyProvider } from '../interfaces'
 // eslint-disable-next-line
 import type { GameError } from '../types/game'
-import { useEthers } from './EthersProvider'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
+import { useEthers } from '../hooks'
 import { logger } from '../lib'
 
 interface IAccountContext {
@@ -87,6 +87,4 @@ const AccountProvider = ({ children }: IComponentProps) => {
   )
 }
 
-const useAccount = () => useContext(AccountContext)
-
-export { useAccount, AccountProvider }
+export { AccountContext, AccountProvider }

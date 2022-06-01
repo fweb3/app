@@ -2,10 +2,10 @@ export {}
 
 import { cleanup } from '@testing-library/react'
 
-jest.mock('../providers/AccountProvider')
-jest.mock('../providers/EthersProvider')
-jest.mock('../providers/GameProvider')
+jest.mock('../hooks/useAccount')
+jest.mock('../hooks/useEthers')
 jest.mock('../hooks/useDevice')
+jest.mock('../hooks/useGame')
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({ query: { account: '' } })),
 }))

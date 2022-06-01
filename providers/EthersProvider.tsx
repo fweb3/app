@@ -1,16 +1,16 @@
 declare let window: any // eslint-disable-line
 
-import { createContext, useContext, useEffect, useState } from 'react'
 import type { IComponentProps } from '../components/component'
+import { createContext, useEffect, useState } from 'react'
 import { Web3Provider } from '@ethersproject/providers'
 import { AllowedChains } from '../types/networks.d'
 import { getMessageFromCode } from 'eth-rpc-errors'
 import { Network } from '@ethersproject/networks'
 // eslint-disable-next-line
 import type { GameError } from '../types/game.d'
-import { useError } from './ErrorProvider'
 import { logger, NETWORKS } from '../lib'
 import { toast } from 'react-toastify'
+import { useError } from '../hooks'
 
 interface IEthersContext {
   isLocal?: boolean
@@ -160,6 +160,4 @@ const EthersProvider = ({ children }: IComponentProps) => {
   )
 }
 
-const useEthers = () => useContext(EthersContext)
-
-export { EthersProvider, useEthers }
+export { EthersProvider, EthersContext }

@@ -1,7 +1,7 @@
 import { BORDERS, COLORS } from '../styles'
 import { BsCheckLg } from 'react-icons/bs'
-import { useGame } from '../../providers'
 import styled from 'styled-components'
+import { useGame } from '../../hooks'
 import { IDotProps } from './Dot'
 
 const TooltipContainer = styled((props) => <div {...props} />)`

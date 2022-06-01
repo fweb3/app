@@ -1,18 +1,15 @@
 declare let window: any // eslint-disable-line
 
-import { useState, useEffect, createContext, useContext, Context } from 'react'
+import { useAccount, useError, useEthers, useLoading } from '../hooks'
 import { DotKey, DOTS_MAP, IDotsMap } from '../components/Chest/dots'
+import { useState, useEffect, createContext, Context } from 'react'
 import { loadAddress, loadFweb3Contracts } from '../interfaces'
 // eslint-disable-next-line
 import type { GameError, IGameTaskState } from '../types/game'
 import { IComponentProps } from '../components/component'
-import { useEthers, useLoading } from '../providers'
 import { Contract } from '@ethersproject/contracts'
-import { useAccount } from './AccountProvider'
+import { DEFAULT_GAME_STATE, logger } from '../lib'
 import { getCurrentGame } from './Game/tasks'
-import { DEFAULT_GAME_STATE } from '../lib'
-import { useError } from './ErrorProvider'
-import { logger } from '../lib'
 
 interface IGameProviderState {
   setActiveDot: (dot: string) => void
@@ -284,6 +281,4 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
   )
 }
 
-const useGame = () => useContext(GameContext)
-
-export { GameProvider, useGame }
+export { GameProvider, GameContext }

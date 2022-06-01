@@ -1,7 +1,7 @@
 import { CommonText, Subheading } from '../../shared/Elements'
 import { RiFileCopy2Line } from 'react-icons/ri'
-import { useGame } from '../../../providers'
 import { DotKey } from '../../Chest/dots'
+import { useGame } from '../../../hooks'
 import styled from 'styled-components'
 import { toast } from 'react-toastify'
 

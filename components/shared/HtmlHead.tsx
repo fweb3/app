@@ -1,4 +1,4 @@
-import { useUrl } from '../../providers'
+import { useUrl } from '../../hooks'
 import Head from 'next/head'
 
 export const HtmlHead = () => {

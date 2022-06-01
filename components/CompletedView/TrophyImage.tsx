@@ -1,5 +1,5 @@
-import { useGame } from '../../providers'
 import styled from 'styled-components'
+import { useGame } from '../../hooks'
 import Image from 'next/image'
 
 const ImageContainer = styled.div``

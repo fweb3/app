@@ -1,9 +1,8 @@
-import { MOCK_ACCOUNT_STATE } from '../../providers/__mocks__/AccountProvider'
-import { MOCK_ETHERS_STATE } from '../../providers/__mocks__/EthersProvider'
+import { MOCK_ACCOUNT_STATE } from '../../hooks/__mocks__/useAccount'
+import { MOCK_ETHERS_STATE } from '../../hooks/__mocks__/useEthers'
 import { screen, render } from '@testing-library/react'
+import { useAccount, useEthers } from '../../hooks'
 import { ShareButton } from './ShareButton'
-import { useEthers } from '../../providers'
-import { useAccount } from '../../hooks'
 
 const mockUseAccount = useAccount as jest.MockedFunction<typeof useAccount>
 const mockUseEthers = useEthers as jest.MockedFunction<typeof useEthers>

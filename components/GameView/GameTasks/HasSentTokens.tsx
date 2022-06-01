@@ -1,6 +1,6 @@
 import { CommonText, Subheading } from '../../shared/Elements'
-import { useGame } from '../../../providers'
 import { DotKey } from '../../Chest/dots'
+import { useGame } from '../../../hooks'
 
 export const HasSentTokens = (): JSX.Element => {
   const { isDotComplete } = useGame()

@@ -1,6 +1,6 @@
 import { COLORS, MEDIA_QUERY } from '../styles'
-import { useGame } from '../../providers'
 import styled from 'styled-components'
+import { useGame } from '../../hooks'
 import { Tooltip } from './Tooltip'
 
 const MD_DOT_SIZE = '50px'
@@ -12,7 +12,9 @@ interface IDotStyleProps {
 }
 
 const createAura = ({ $isCompleted, $isVisible }: IDotStyleProps): string => {
-  return $isVisible && !$isCompleted ? `0px 0px 207px 50px ${COLORS.violet}` : ''
+  return $isVisible && !$isCompleted
+    ? `0px 0px 207px 50px ${COLORS.violet}`
+    : ''
 }
 
 const createBorder = ({ $isVisible, $isCompleted }: IDotStyleProps): string => {
@@ -92,7 +94,9 @@ export const Dot = (dotData: IDotProps): JSX.Element => {
   const { setActiveDot, activeDot } = useGame()
   const { idx, position, isCompleted } = dotData
   const isActive = idx === activeDot
-  const testid = `dot_dot-${idx}${isCompleted ? '-visible' : ''}${isActive ? '-active' : ''}`
+  const testid = `dot_dot-${idx}${isCompleted ? '-visible' : ''}${
+    isActive ? '-active' : ''
+  }`
   return (
     <div data-testid={`dot-wrapper-${idx}`} onClick={() => setActiveDot(idx)}>
       <HoverStyle

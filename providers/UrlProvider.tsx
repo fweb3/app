@@ -1,10 +1,8 @@
-import { createContext, useContext, useEffect, useState } from 'react'
 import type { IComponentProps } from '../components/component'
 import { createShareInfo, ISocialShare } from './Game/social'
+import { createContext, useEffect, useState } from 'react'
+import { useEthers, useAccount, useGame } from '../hooks'
 import { AllowedChains } from '../types/networks.d'
-import { useAccount } from './AccountProvider'
-import { useEthers } from './EthersProvider'
-import { useGame } from './GameProvider'
 
 interface IUrlContext {
   getPolygonscanUrl: (address: string) => string
@@ -109,6 +107,4 @@ const UrlProvider = ({ children }: IComponentProps) => {
   )
 }
 
-const useUrl = () => useContext(UrlContext)
-
-export { UrlProvider, useUrl }
+export { UrlProvider, UrlContext }

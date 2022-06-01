@@ -1,4 +1,4 @@
-import { useAccount, useGame, useUrl } from '../../providers'
+import { useAccount, useGame, useUrl } from '../../hooks'
 import { COLORS, SPACING } from '../styles'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'

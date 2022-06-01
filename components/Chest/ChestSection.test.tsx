@@ -1,8 +1,7 @@
 import { MOCK_GAME_CONTEXT } from '../../jest/jest.fixtures'
 import { setCompleteTasks } from '../../jest/jest.helpers'
 import { render, screen } from '@testing-library/react'
-import { useGame } from '../../providers/GameProvider'
-import { useDevice } from '../../hooks/useDevice'
+import { useGame, useDevice } from '../../hooks'
 import { ChestSection } from './ChestSection'
 
 const renderComponent = () => render(<ChestSection />)

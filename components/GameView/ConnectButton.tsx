@@ -1,9 +1,7 @@
-declare let window: any // eslint-disable-line
-
-import { useEthers } from '../../providers/EthersProvider'
 import styled, { keyframes } from 'styled-components'
 import { PulseButton } from '../shared/PulseButton'
 import { CgSpinner } from 'react-icons/cg'
+import { useEthers } from '../../hooks'
 import { SPACING } from '../styles'
 
 const Spin = keyframes`
