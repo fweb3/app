@@ -1,12 +1,12 @@
-import type { IComponentProps } from '../components/component'
+import type { IComponentProps } from '../../components/component'
 import { createContext, useEffect, useState } from 'react'
-import { createAlchemyProvider } from '../interfaces'
+import { createAlchemyProvider } from '../../interfaces'
 // eslint-disable-next-line
-import type { GameError } from '../types/game'
+import type { GameError } from '../../types/game'
+import { useEthers } from '../Ethers/useEthers'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
-import { useEthers } from '../hooks'
-import { logger } from '../lib'
+import { logger } from '../../lib'
 
 interface IAccountContext {
   ensName: string

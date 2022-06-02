@@ -1,15 +1,18 @@
 declare let window: any // eslint-disable-line
 
-import { useAccount, useError, useEthers, useLoading } from '../hooks'
-import { DotKey, DOTS_MAP, IDotsMap } from '../components/Chest/dots'
+import { DotKey, DOTS_MAP, IDotsMap } from '../../components/Chest/dots'
 import { useState, useEffect, createContext, Context } from 'react'
-import { loadAddress, loadFweb3Contracts } from '../interfaces'
+import { loadAddress, loadFweb3Contracts } from '../../interfaces'
 // eslint-disable-next-line
-import type { GameError, IGameTaskState } from '../types/game'
-import { IComponentProps } from '../components/component'
+import type { GameError, IGameTaskState } from '../../types/game'
+import { IComponentProps } from '../../components/component'
+import { DEFAULT_GAME_STATE, logger } from '../../lib'
 import { Contract } from '@ethersproject/contracts'
-import { DEFAULT_GAME_STATE, logger } from '../lib'
-import { getCurrentGame } from './Game/tasks'
+import { getCurrentGame } from './tasks'
+import { useLoading } from '../Loading'
+import { useAccount } from '../Account'
+import { useEthers } from '../Ethers'
+import { useError } from '../Error'
 
 interface IGameProviderState {
   setActiveDot: (dot: string) => void
@@ -99,7 +102,6 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
     setAccount,
     isConnected,
     web3Provider,
-    // rpcProvider,
     isAllowedNetwork,
     chainId,
   } = useEthers()

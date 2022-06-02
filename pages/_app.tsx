@@ -1,4 +1,4 @@
-import { RootProvider } from '../providers/RootProvider'
+import { RootProvider } from '../hooks/RootProvider'
 import type { AppProps } from 'next/app'
 
 import 'react-toastify/dist/ReactToastify.css'

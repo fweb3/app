@@ -1,6 +1,6 @@
 import { COLORS, SPACING, MEDIA_QUERY, BORDERS } from '../styles'
-import { useDevice } from '../../hooks/useDevice'
 import { DesktopHeader } from './Desktop'
+import { useDevice } from '../../hooks'
 import { MobileHeader } from './Mobile'
 import styled from 'styled-components'
 

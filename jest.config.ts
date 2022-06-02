@@ -13,12 +13,16 @@ const customJestConfig = {
     '<rootDir>/hooks/',
     '<rootDir>/components/',
     '<rootDir>/lib/',
-    '<rootDir>/providers/',
     '<rootDir>/interfaces/',
   ],
   collectCoverageFrom: ['<rootDir>/**'],
-  coveragePathIgnorePatterns: ['<rootDir>/node_modules', '<rootDir>/interfaces/abi'],
+  coveragePathIgnorePatterns: [
+    '<rootDir>/node_modules',
+    '<rootDir>/interfaces/abi',
+  ],
   setupFilesAfterEnv: ['<rootDir>/jest/jest.setup.ts'],
 }
 
-module.exports = createJestConfig(customJestConfig)
+const config = createJestConfig(customJestConfig)
+
+export default config

@@ -1,10 +1,10 @@
-import { IComponentProps } from '../components/component'
-import { AccountProvider } from './AccountProvider'
-import { LoadingProvider } from './LoadingProvider'
-import { ErrorProvider } from './ErrorProvider'
-import { GameProvider } from './GameProvider'
-import { UrlProvider } from './UrlProvider'
-import { EthersProvider } from './EthersProvider'
+import type { IComponentProps } from '../components/component.d'
+import { AccountProvider } from './Account'
+import { LoadingProvider } from './Loading'
+import { EthersProvider } from './Ethers'
+import { ErrorProvider } from './Error'
+import { GameProvider } from './Game'
+import { UrlProvider } from './Url'
 
 export const RootProvider = ({ children }: IComponentProps) => {
   return (

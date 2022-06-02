@@ -1,5 +1,5 @@
 import { COLORS, TEXT, MEDIA_QUERY } from '../styles'
-import { useDevice } from '../../hooks/useDevice'
+import { useDevice } from '../../hooks'
 import styled from 'styled-components'
 import {
   HeadingText,

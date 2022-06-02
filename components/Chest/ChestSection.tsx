@@ -1,8 +1,7 @@
-import { numTasksCompleted } from '../../providers/Game/tasks'
-import { useGame, useEthers, useAccount } from '../../hooks'
+import { useGame, useEthers, useAccount, useDevice } from '../../hooks'
+import { numTasksCompleted } from '../../hooks/Game/tasks'
 import { TrophyImage } from '../CompletedView/TrophyImage'
 import styled, { keyframes } from 'styled-components'
-import { useDevice } from '../../hooks/useDevice'
 import { ShareButton } from './ShareButton'
 import { fadeIn } from 'react-animations'
 import { MEDIA_QUERY } from '../styles'
@@ -63,10 +62,6 @@ export const ChestSection = (): JSX.Element => {
   const shouldCountAsConnected = isConnected || queryAccount
   const numTasksComplete = numTasksCompleted(completedTasks)
 
-  const renderMobileChest = (): JSX.Element => {
-    return <Chest data-testid="chest-mobile" />
-  }
-
   const renderGameChest = (): JSX.Element => {
     const shouldShowShare =
       isConnected &&
@@ -85,13 +80,9 @@ export const ChestSection = (): JSX.Element => {
     )
   }
 
-  const renderOpenChest = (): JSX.Element => {
-    return <OpenChest data-testid="open-chest" />
-  }
-
   const renderContent = (): JSX.Element => {
     if (device !== 'desktop') {
-      return renderMobileChest()
+      return <Chest data-testid="chest-mobile" />
     }
     if (shouldCountAsConnected && parseInt(trophyId) >= 1) {
       return <TrophyImage />
@@ -100,7 +91,7 @@ export const ChestSection = (): JSX.Element => {
       (shouldCountAsConnected && hasWonGame) ||
       (shouldCountAsConnected && numTasksComplete === 9)
     ) {
-      return renderOpenChest()
+      return <OpenChest data-testid="open-chest" />
     }
     return renderGameChest()
   }

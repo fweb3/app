@@ -6,7 +6,10 @@ import { useGame } from '../../hooks'
 // eslint-disable-next-line
 const renderComponent = (props: any) => render(<GameFinish {...props} />)
 
+jest.mock('../../hooks/Game/useGame')
+
 const mockUseGame = useGame as jest.MockedFunction<typeof useGame>
+
 // eslint-disable-next-line
 const mockUseRouter = jest.spyOn(require('next/router'), 'useRouter')
 

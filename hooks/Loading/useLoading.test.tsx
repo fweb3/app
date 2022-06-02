@@ -1,6 +1,6 @@
-import { LoadingProvider } from '../providers/LoadingProvider'
 import { renderHook, act } from '@testing-library/react-hooks'
-import { IComponentProps } from '../components/component'
+import { IComponentProps } from '../../components/component'
+import { LoadingProvider } from './LoadingProvider'
 import { useLoading } from './useLoading'
 
 const wrapper = ({ children }: IComponentProps) => (

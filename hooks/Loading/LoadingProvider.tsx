@@ -1,5 +1,5 @@
-import { LoadingDots } from '../components/shared/LoadingDots'
-import { IComponentProps } from '../components/component'
+import { LoadingDots } from '../../components/shared/LoadingDots'
+import { IComponentProps } from '../../components/component'
 import { Context, createContext, useState } from 'react'
 
 interface ILoadingContext {

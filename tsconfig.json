@@ -22,13 +22,10 @@
     "hooks",
     "lib",
     "pages",
-    "providers",
     "jest",
     "types/networks.d.ts",
     "types/providers.d.ts",
     "scripts"
-    // "cypress/plugins",
-    // "cypress/support"
   ],
   "exclude": ["node_modules", "cypress/support/metamask/extension"]
 }

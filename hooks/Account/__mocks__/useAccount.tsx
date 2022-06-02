@@ -1,4 +1,4 @@
-export const MOCK_ACCOUNT_STATE = {
+export const MOCK_ACCOUNT_CONTEXT = {
   ensName: '',
   displayName: '',
   queryDisplayName: '',
@@ -8,5 +8,5 @@ export const MOCK_ACCOUNT_STATE = {
 }
 
 export const useAccount = jest.fn(() => {
-  return MOCK_ACCOUNT_STATE
+  return MOCK_ACCOUNT_CONTEXT
 })

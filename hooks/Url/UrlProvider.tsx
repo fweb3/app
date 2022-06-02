@@ -1,8 +1,10 @@
-import type { IComponentProps } from '../components/component'
-import { createShareInfo, ISocialShare } from './Game/social'
+import type { IComponentProps } from '../../components/component'
+import { createShareInfo, ISocialShare } from '../Game/social'
 import { createContext, useEffect, useState } from 'react'
-import { useEthers, useAccount, useGame } from '../hooks'
-import { AllowedChains } from '../types/networks.d'
+import { AllowedChains } from '../../types/networks.d'
+import { useAccount } from '../Account/useAccount'
+import { useEthers } from '../Ethers/useEthers'
+import { useGame } from '../Game/useGame'
 
 interface IUrlContext {
   getPolygonscanUrl: (address: string) => string
@@ -36,21 +38,20 @@ const defaultUrlContext: IUrlContext = {
 
 const UrlContext = createContext(defaultUrlContext)
 
-const POLYGONSCAN_URL = 'https://polygonscan.com/address'
-const MUMBAI_POLYGONSCAN_URL = 'https://mumbai.polygonscan.com/address'
+const POLYGONSCAN_URL = 'https://polygonscan.com'
+const MUMBAI_POLYGONSCAN_URL = 'https://mumbai.polygonscan.com'
 
 const POLYGON_BASE_OPENSEA_URL = 'https://opensea.io'
-const MUMBAI_BASE_OPENSEA_URL = 'https://mumbai.polygonscan.com'
+const MUMBAI_BASE_OPENSEA_URL = 'https://testnets.opensea.io'
 
 const POLYGON_OPENSEA_URL = `${POLYGON_BASE_OPENSEA_URL}/assets/matic`
-const MUMBAI_OPEANSEA_URL = `${MUMBAI_BASE_OPENSEA_URL}/assets`
+const MUMBAI_OPEANSEA_URL = `${MUMBAI_BASE_OPENSEA_URL}/assets/mumbai`
 
 const UrlProvider = ({ children }: IComponentProps) => {
   const [shareInfo, setShareInfo] = useState<ISocialShare>(initShareInfo)
   const { trophyColor, trophyId, completedTasks } = useGame()
   const { account } = useAccount()
   const { chainId } = useEthers()
-
   const URLS = {
     discord: 'https://discord.gg/pNSFNfyVxA',
     faucet: 'https://fweb3-faucet.vercel.app',
@@ -69,7 +70,7 @@ const UrlProvider = ({ children }: IComponentProps) => {
 
   const getOpenseaUrl = (address: string): string => {
     if (chainId !== AllowedChains.POLYGON) {
-      return `${MUMBAI_OPEANSEA_URL}/?search[chains][0]=MUMBAI&search[query]=${address}[resultModel]=ASSETS`
+      return `${MUMBAI_OPEANSEA_URL}/${address}`
     }
     return `${POLYGON_OPENSEA_URL}/${address}`
   }

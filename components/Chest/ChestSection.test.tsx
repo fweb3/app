@@ -6,6 +6,10 @@ import { ChestSection } from './ChestSection'
 
 const renderComponent = () => render(<ChestSection />)
 
+jest.mock('../../hooks/Device/useDevice')
+jest.mock('../../hooks/Game/useGame')
+jest.mock('../../hooks/Ethers/useEthers')
+
 const mockUseDevice = useDevice as jest.MockedFunction<typeof useDevice>
 const mockUseGame = useGame as jest.MockedFunction<typeof useGame>
 

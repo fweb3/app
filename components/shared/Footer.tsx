@@ -1,11 +1,10 @@
 import { BORDERS, COLORS, MEDIA_QUERY, SPACING, TEXT } from '../styles'
-import { useDevice } from '../../hooks/useDevice'
+import { useUrl, useDevice } from '../../hooks'
 import { FaGithubSquare } from 'react-icons/fa'
 import { MdHelpCenter } from 'react-icons/md'
 import { BsDiscord } from 'react-icons/bs'
 import styled from 'styled-components'
 import { IconType } from 'react-icons'
-import { useUrl } from '../../hooks'
 import Link from 'next/link'
 
 interface IFooterItems {

@@ -1,16 +1,16 @@
 declare let window: any // eslint-disable-line
 
-import type { IComponentProps } from '../components/component'
+import type { IComponentProps } from '../../components/component'
 import { createContext, useEffect, useState } from 'react'
 import { Web3Provider } from '@ethersproject/providers'
-import { AllowedChains } from '../types/networks.d'
+import { AllowedChains } from '../../types/networks.d'
 import { getMessageFromCode } from 'eth-rpc-errors'
-import { Network } from '@ethersproject/networks'
 // eslint-disable-next-line
-import type { GameError } from '../types/game.d'
-import { logger, NETWORKS } from '../lib'
+import type { GameError } from '../../types/game.d'
+import { Network } from '@ethersproject/networks'
+import { logger, NETWORKS } from '../../lib'
 import { toast } from 'react-toastify'
-import { useError } from '../hooks'
+import { useError } from '../Error'
 
 interface IEthersContext {
   isLocal?: boolean

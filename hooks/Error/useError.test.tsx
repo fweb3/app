@@ -1,12 +1,12 @@
-import { ErrorProvider } from '../providers/ErrorProvider'
 import { renderHook, act } from '@testing-library/react-hooks'
-import { IComponentProps } from '../components/component'
-import { useLoading } from './useLoading'
+import { IComponentProps } from '../../components/component'
+import { ErrorProvider } from './ErrorProvider'
+import { useLoading } from '../Loading'
 import { useError } from './useError'
 
 const mockSetIsLoading = jest.fn()
 
-jest.mock('../providers/LoadingProvider')
+jest.mock('../Loading/useLoading')
 jest.mock('react-toastify')
 
 const mockUseLoading = useLoading as jest.MockedFunction<typeof useLoading>
@@ -30,6 +30,7 @@ describe('error provider', () => {
     })
     expect(result.current.errorMessage).toBe('foo')
   })
+
   it('calls toast and stops loading', () => {
     const { result } = renderHook(() => useError(), { wrapper })
 

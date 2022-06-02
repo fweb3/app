@@ -1,4 +1,4 @@
-export const MOCK_ETHERS_STATE = {
+export const MOCK_ETHERS_CONTEXT = {
   isConnected: true,
   account: '',
   web3Provider: null,
@@ -14,5 +14,5 @@ export const MOCK_ETHERS_STATE = {
 }
 
 export const useEthers = jest.fn(() => {
-  return MOCK_ETHERS_STATE
+  return MOCK_ETHERS_CONTEXT
 })

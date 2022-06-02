@@ -1,7 +1,7 @@
-import { IComponentProps } from '../components/component'
+import { IComponentProps } from '../../components/component'
 import { toast, ToastOptions } from 'react-toastify'
 import { createContext, useState } from 'react'
-import { useLoading } from '../hooks'
+import { useLoading } from '../Loading'
 
 interface IErrorContext {
   errorMessage: string
