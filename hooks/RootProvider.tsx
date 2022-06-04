@@ -1,4 +1,4 @@
-import type { IComponentProps } from '../components/component.d'
+import type { IComponentProps } from '../types'
 import { AccountProvider } from './Account'
 import { LoadingProvider } from './Loading'
 import { EthersProvider } from './Ethers'

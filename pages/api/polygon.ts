@@ -1,8 +1,8 @@
-import { NETWORKS, AllowedChains } from './../../types/networks.d'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { NETWORKS, AllowedChains } from './../../types'
+import { fetchCurrentGameState } from '../../lib/polygon'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { GameError } from '../../types/game.d'
-import { fetchCurrentGameState } from '../../lib'
+import type { GameError } from '../../types'
 
 const _isAllowedNet = (chainId: number) => {
   const netName = NETWORKS[chainId]?.toUpperCase() || ''

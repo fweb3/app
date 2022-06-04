@@ -1,5 +1,5 @@
-import { IComponentProps } from '../../components/component'
 import { toast, ToastOptions } from 'react-toastify'
+import type { IComponentProps } from '../../types'
 import { createContext, useState } from 'react'
 import { useLoading } from '../Loading'
 

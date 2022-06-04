@@ -1,6 +1,6 @@
 import { LoadingDots } from '../../components/shared/LoadingDots'
-import { IComponentProps } from '../../components/component'
 import { Context, createContext, useState } from 'react'
+import type { IComponentProps } from '../../types'
 
 interface ILoadingContext {
   isLoading: boolean

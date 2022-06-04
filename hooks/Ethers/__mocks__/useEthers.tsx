@@ -1,17 +1,4 @@
-export const MOCK_ETHERS_CONTEXT = {
-  isConnected: true,
-  account: '',
-  web3Provider: null,
-  network: null,
-  isConnecting: false,
-  isLocal: false,
-  isAllowedNetwork: true,
-  isInitialized: true,
-  chainId: 137,
-  needsWallet: false,
-  setAccount: jest.fn,
-  connectAccount: jest.fn(),
-}
+import { MOCK_ETHERS_CONTEXT } from '../../../jest/jest.fixtures'
 
 export const useEthers = jest.fn(() => {
   return MOCK_ETHERS_CONTEXT

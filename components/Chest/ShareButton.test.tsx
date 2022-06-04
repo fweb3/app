@@ -1,8 +1,10 @@
-import { MOCK_ACCOUNT_CONTEXT } from '../../hooks/Account/__mocks__/useAccount'
-import { MOCK_ETHERS_CONTEXT } from '../../hooks/Ethers/__mocks__/useEthers'
 import { screen, render } from '@testing-library/react'
 import { useAccount, useEthers } from '../../hooks'
 import { ShareButton } from './ShareButton'
+import {
+  MOCK_ACCOUNT_CONTEXT,
+  MOCK_ETHERS_CONTEXT,
+} from '../../jest/jest.fixtures'
 
 jest.mock('../../hooks/Account/useAccount')
 jest.mock('../../hooks/Ethers/useEthers')

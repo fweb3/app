@@ -1,16 +1,11 @@
-import { MOCK_ETHERS_CONTEXT } from '../Ethers/__mocks__/useEthers'
+import { MOCK_ETHERS_CONTEXT } from '../../jest/jest.fixtures'
 import { renderHook, act } from '@testing-library/react-hooks'
-import { IComponentProps } from '../../components/component'
-import { AllowedChains } from '../../types/networks.d'
+import { AllowedChains, IComponentProps } from '../../types'
 import { useEthers } from '../Ethers/useEthers'
 import { UrlProvider } from './UrlProvider'
 import { useUrl } from './useUrl'
 
-jest.mock('../Account/useAccount')
-jest.mock('../Ethers/useEthers')
-jest.mock('../Game/useGame')
-
-const mockUseEthers = useEthers as jest.MockedFunction<typeof useEthers>
+jest.unmock('./useUrl')
 
 const wrapper = ({ children }: IComponentProps) => (
   <UrlProvider>{children}</UrlProvider>
@@ -26,7 +21,7 @@ describe('useUrl', () => {
     })
   })
   it('creates opensea for mumbai', () => {
-    mockUseEthers.mockReturnValueOnce({
+    jest.mocked(useEthers).mockReturnValueOnce({
       ...MOCK_ETHERS_CONTEXT,
       chainId: AllowedChains.MUMBAI,
     })
@@ -38,7 +33,7 @@ describe('useUrl', () => {
     })
   })
   it('creates polygonscan url for mainnet', () => {
-    mockUseEthers.mockReturnValueOnce({
+    jest.mocked(useEthers).mockReturnValueOnce({
       ...MOCK_ETHERS_CONTEXT,
       chainId: AllowedChains.POLYGON,
     })
@@ -50,7 +45,7 @@ describe('useUrl', () => {
     })
   })
   it('creates polygonscan url for testnet', () => {
-    mockUseEthers.mockReturnValueOnce({
+    jest.mocked(useEthers).mockReturnValueOnce({
       ...MOCK_ETHERS_CONTEXT,
       chainId: AllowedChains.MUMBAI,
     })

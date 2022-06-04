@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react-hooks'
-import { IComponentProps } from '../../components/component'
+import type { IComponentProps } from '../../types'
 import { ErrorProvider } from './ErrorProvider'
 import { useLoading } from '../Loading'
 import { useError } from './useError'

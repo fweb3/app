@@ -1,7 +1,5 @@
 import { checkHasWonGame, currentWalletGameState } from './validators'
-import { NETWORKS } from './../../types/networks.d'
-
-import { IGameTaskState } from '../../types/game'
+import { NETWORKS, IGameTaskState } from './../../types'
 
 export const DEV_GAME_STATE: IGameTaskState = {
   tokenBalance: '300000000000000000000',

@@ -1,9 +1,11 @@
 declare let window: any // eslint-disable-line
 
-import type { IComponentProps } from '../../components/component.d'
 import { renderHook } from '@testing-library/react-hooks'
+import type { IComponentProps } from '../../types'
 import { EthersProvider } from './EthersProvider'
 import { useEthers } from './useEthers'
+
+jest.unmock('./useEthers')
 
 const mockWindowEthereum = {
   isMetaMask: true,

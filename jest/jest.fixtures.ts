@@ -2,6 +2,29 @@ import { DOTS_MAP } from '../components/Chest/dots'
 import { IGameTaskState } from '../types/game'
 import { DEFAULT_GAME_STATE } from '../lib'
 
+export const MOCK_ROUTER_STATE = {
+  basePath: '',
+  pathname: '/',
+  route: '/',
+  asPath: '/',
+  query: {},
+  push: jest.fn(),
+  replace: jest.fn(),
+  reload: jest.fn(),
+  back: jest.fn(),
+  prefetch: jest.fn(),
+  beforePopState: jest.fn(),
+  events: {
+    on: jest.fn(),
+    off: jest.fn(),
+    emit: jest.fn(),
+  },
+  isFallback: false,
+  isLocaleDomain: false,
+  isReady: true,
+  isPreview: false,
+}
+
 export const MOCK_GAME_CONTEXT = {
   gameTaskState: DEFAULT_GAME_STATE,
   setActiveDot: jest.fn().mockReturnValue('0'),
@@ -39,4 +62,28 @@ export const WIN_GAME_STATE: IGameTaskState = {
   isConnected: true,
   trophyId: '',
   maticBalance: '100000000000000000',
+}
+
+export const MOCK_ETHERS_CONTEXT = {
+  isConnected: true,
+  account: '',
+  web3Provider: null,
+  network: null,
+  isConnecting: false,
+  isLocal: false,
+  isAllowedNetwork: true,
+  isInitialized: true,
+  chainId: 137,
+  needsWallet: false,
+  setAccount: jest.fn,
+  connectAccount: jest.fn(),
+}
+
+export const MOCK_ACCOUNT_CONTEXT = {
+  ensName: '',
+  displayName: '',
+  queryDisplayName: '',
+  queryAccount: '',
+  isQueryLoad: false,
+  account: '',
 }

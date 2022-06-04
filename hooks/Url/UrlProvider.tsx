@@ -1,10 +1,9 @@
-import type { IComponentProps } from '../../components/component'
 import { createShareInfo, ISocialShare } from '../Game/social'
+import { AllowedChains, IComponentProps } from '../../types'
 import { createContext, useEffect, useState } from 'react'
-import { AllowedChains } from '../../types/networks.d'
-import { useAccount } from '../Account/useAccount'
-import { useEthers } from '../Ethers/useEthers'
-import { useGame } from '../Game/useGame'
+import { useAccount } from '../Account'
+import { useEthers } from '../Ethers'
+import { useGame } from '../Game'
 
 interface IUrlContext {
   getPolygonscanUrl: (address: string) => string

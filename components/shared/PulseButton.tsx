@@ -1,6 +1,6 @@
 import { COLORS, MEDIA_QUERY, SPACING, TEXT } from '../styles'
 import styled, { keyframes } from 'styled-components'
-import { IComponentProps } from '../component'
+import type { IComponentProps } from '../../types'
 
 const pulse = keyframes`
   0% {

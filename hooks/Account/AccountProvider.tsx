@@ -1,11 +1,10 @@
-import type { IComponentProps } from '../../components/component'
 import { createContext, useEffect, useState } from 'react'
 import { createAlchemyProvider } from '../../interfaces'
 // eslint-disable-next-line
-import type { GameError } from '../../types/game'
-import { useEthers } from '../Ethers/useEthers'
+import type { GameError, IComponentProps } from '../../types'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
+import { useEthers } from '../Ethers'
 import { logger } from '../../lib'
 
 interface IAccountContext {
@@ -28,8 +27,6 @@ const defaultConnectionContext: IAccountContext = {
 
 const AccountContext = createContext<IAccountContext>(defaultConnectionContext)
 
-const USE_LIVE_ENS = process.env.NEXT_PUBLIC_USE_ENS
-
 const AccountProvider = ({ children }: IComponentProps) => {
   const [queryDisplayName, setQueryDisplayName] = useState<string>('')
   const [isQueryLoad, setIsQueryLoad] = useState<boolean>(false)
@@ -40,7 +37,7 @@ const AccountProvider = ({ children }: IComponentProps) => {
   const { query } = useRouter()
 
   const fetchEnsName = async (): Promise<string> => {
-    if (USE_LIVE_ENS && !isCypress) {
+    if (process.env.NEXT_PUBLIC_USE_ENS && !isCypress) {
       const provider = await createAlchemyProvider('homestead')
       const ensName = (await provider.lookupAddress(account)) || ''
       ensName && logger.log(`[+] found ens: ${ensName}`)

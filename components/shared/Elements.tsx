@@ -1,5 +1,5 @@
 import { COLORS, MEDIA_QUERY, SPACING, TEXT } from '../styles'
-import { IComponentProps } from '../component'
+import type { IComponentProps } from '../../types'
 import styled from 'styled-components'
 import Link from 'next/link'
 

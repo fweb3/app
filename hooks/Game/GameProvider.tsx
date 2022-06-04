@@ -3,9 +3,6 @@ declare let window: any // eslint-disable-line
 import { DotKey, DOTS_MAP, IDotsMap } from '../../components/Chest/dots'
 import { useState, useEffect, createContext, Context } from 'react'
 import { loadAddress, loadFweb3Contracts } from '../../interfaces'
-// eslint-disable-next-line
-import type { GameError, IGameTaskState } from '../../types/game'
-import { IComponentProps } from '../../components/component'
 import { DEFAULT_GAME_STATE, logger } from '../../lib'
 import { Contract } from '@ethersproject/contracts'
 import { getCurrentGame } from './tasks'
@@ -13,6 +10,12 @@ import { useLoading } from '../Loading'
 import { useAccount } from '../Account'
 import { useEthers } from '../Ethers'
 import { useError } from '../Error'
+import type {
+  // eslint-disable-next-line
+  GameError,
+  IGameTaskState,
+  IComponentProps,
+} from '../../types'
 
 interface IGameProviderState {
   setActiveDot: (dot: string) => void

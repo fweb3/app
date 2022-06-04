@@ -1,6 +1,6 @@
+import type { IComponentProps } from '../../types'
 import { ToastContainer } from 'react-toastify'
 import { ErrorBanner } from './ErrorBanner'
-import { IComponentProps } from '../component'
 import { Header } from '../Header/Header'
 import styled from 'styled-components'
 import { HtmlHead } from './HtmlHead'
