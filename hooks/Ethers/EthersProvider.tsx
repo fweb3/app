@@ -76,32 +76,36 @@ const EthersProvider = ({ children }: IComponentProps) => {
   }
 
   const initialize = async (web3Provider: Web3Provider) => {
-    if (!web3Provider?.provider?.isMetaMask) {
-      logger.log('[-] Provider is not metamask')
-      return
-    } else if (web3Provider.provider) {
-      const network = await web3Provider.getNetwork()
-      setNetwork(network)
-      const isLocalhost = network.chainId === AllowedChains.LOCAL
-      const isAllowed = Object.values(AllowedChains).includes(network.chainId)
-      if (!isAllowed) {
-        setErrorMessage(
-          `${
-            NETWORKS[network.chainId]
-          } is not a supported network at this time.`
+    try {
+      if (!web3Provider?.provider?.isMetaMask) {
+        logger.log('[-] Provider is not metamask')
+        return
+      } else if (web3Provider.provider) {
+        const network = await web3Provider.getNetwork()
+        setNetwork(network)
+        const isLocalhost = network.chainId === AllowedChains.LOCAL
+        const isAllowed = Object.values(AllowedChains).includes(network.chainId)
+        if (!isAllowed) {
+          setErrorMessage(
+            `${
+              NETWORKS[network.chainId]
+            } is not a supported network at this time.`
+          )
+        }
+        setWeb3Provider(web3Provider)
+        setChainId(network.chainId)
+        setIsLocal(isLocalhost)
+        setIsAllowedNetwork(isAllowed)
+        setIsInitialized(true)
+        logger.log(
+          `[+] Initialized web3 on [${NETWORKS[network.chainId]}:${
+            network.chainId ?? 'unknown'
+          }]`
         )
+        return
       }
-      setWeb3Provider(web3Provider)
-      setChainId(network.chainId)
-      setIsLocal(isLocalhost)
-      setIsAllowedNetwork(isAllowed)
-      setIsInitialized(true)
-      logger.log(
-        `[+] Initialized web3 on [${NETWORKS[network.chainId]}:${
-          network.chainId ?? 'unknown'
-        }]`
-      )
-      return
+    } catch (err) {
+      console.error(err)
     }
   }
 
@@ -116,7 +120,7 @@ const EthersProvider = ({ children }: IComponentProps) => {
   useEffect(() => {
     ;(async () => {
       if (window?.ethereum) {
-        const web3Provider = new Web3Provider(window.ethereum) as Web3Provider
+        const web3Provider = new Web3Provider(window.ethereum)
         initialize(web3Provider)
         return
       } else if (window?.Cypress) {
