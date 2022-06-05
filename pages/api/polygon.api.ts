@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { NETWORKS, AllowedChains } from './../../types'
+import { NETWORKS, AllowedChains } from '../../types'
 import { fetchCurrentGameState } from '../../lib/polygon'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { GameError } from '../../types'
