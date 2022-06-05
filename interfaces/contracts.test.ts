@@ -6,8 +6,6 @@ import { loadFweb3Contracts } from './contracts'
 
 jest.unmock('./contracts')
 
-const mockProvider = new MockProvider()
-
 describe('contracts interfaces', () => {
   it('throws without provider', async () => {
     try {
@@ -19,14 +17,14 @@ describe('contracts interfaces', () => {
 
   it('loads the game contracts', async () => {
     jest.mocked(Contract).mockReturnValueOnce(new MockContract())
-    const contracts = await loadFweb3Contracts(mockProvider)
+    const contracts = await loadFweb3Contracts(new MockProvider())
     expect(contracts.gameContract.connect).toBeTruthy()
     expect(contracts.tokenContract.connect).toBeTruthy()
   })
 
   it('returns empty address if in cypress', async () => {
     window.Cypress = true
-    const contracts = await loadFweb3Contracts(mockProvider)
+    const contracts = await loadFweb3Contracts(new MockProvider())
     expect(contracts.gameContract).toBeNull()
     expect(contracts.tokenContract).toBeNull()
   })

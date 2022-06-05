@@ -1,6 +1,7 @@
 import { DOTS_MAP, DotKey } from '../../components/Chest/dots'
-import { renderHook } from '@testing-library/react-hooks'
+// eslint-disable-next-line
 import type { GameError, IComponentProps } from '../../types'
+import { renderHook } from '@testing-library/react-hooks'
 import { DEFAULT_GAME_STATE } from '../../lib'
 import { GameProvider } from './GameProvider'
 import { getCurrentGame } from './tasks'

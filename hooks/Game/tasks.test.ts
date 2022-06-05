@@ -1,6 +1,8 @@
-import { GameError } from './../../types/game.d'
-import { DEFAULT_GAME_STATE } from './../../lib/constants'
 declare let window: any // eslint-disable-line
+
+import { DEFAULT_GAME_STATE } from './../../lib/constants'
+// eslint-disable-next-line
+import type { GameError } from './../../types'
 
 import { getCurrentGame } from './tasks'
 window.fetch = jest.fn(async () => ({

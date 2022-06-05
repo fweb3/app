@@ -1,4 +1,4 @@
-import { useUrl, useEthers, useGame } from '../../../hooks'
+import { useUrl, useGame } from '../../../hooks'
 import { DotKey } from '../../Chest/dots'
 import {
   CommonLink,
@@ -9,7 +9,6 @@ import {
 
 export const MintDiamonNFT = (): JSX.Element => {
   const { getOpenseaAccountUrl, getPolygonscanUrl } = useUrl()
-  const { account } = useEthers()
   const { isDotComplete, diamondNftAddress } = useGame()
 
   const hasMintedNFT = isDotComplete(DotKey.hasMintedNFT)

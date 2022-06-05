@@ -39,7 +39,7 @@ const Button = styled.button`
     padding: ${SPACING.large};
   }
 `
-interface IButtonProps extends IComponentProps {
+export interface IButtonProps extends IComponentProps {
   onClick: () => void
 }
 

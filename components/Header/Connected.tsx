@@ -54,7 +54,7 @@ export const ConnectedHeader = () => {
   return (
     <>
       <HeaderLogo />
-      <Container>
+      <Container data-testid="connected-header">
         <InnerContainer>
           <CommonLink href={getPolygonscanUrl(account)}>
             <DisplayName data-testid="header_displayname">

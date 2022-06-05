@@ -61,13 +61,13 @@ const Dot = styled((props) => <div {...props} $s={props.$s} />)`
   animation: ${FadeInOut} ${(props) => `${props.$s}s`} infinite;
 `
 
-interface ILoadingProps {
+export interface ILoadingProps {
   isLoading: boolean
 }
 
 export const LoadingDots = ({ isLoading }: ILoadingProps) => {
   return isLoading ? (
-    <OutterContainer>
+    <OutterContainer data-testid="loading-dots">
       <InnerContainer $isLoading={isLoading}>
         <DotContainer>
           {[...Array.from(Array(9).keys())].map((i) => (

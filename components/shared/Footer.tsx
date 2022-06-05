@@ -76,7 +76,7 @@ export const Footer = (): JSX.Element => {
     },
   ]
   return (
-    <Container data-testid="footer_footer">
+    <Container data-testid="footer">
       {FOOTER_ITEMS.map((elem, i) => (
         <LinkItem key={i} {...elem} />
       ))}

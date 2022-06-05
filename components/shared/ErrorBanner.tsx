@@ -62,9 +62,9 @@ export const ErrorBanner = () => {
   }, [device]) // eslint-disable-line
 
   return errorMessage ? (
-    <Container>
+    <Container data-testid="error-banner">
       <ErrorText>{errorMessage}</ErrorText>
-      <CloseBtnContainer onClick={handleCloseBanner}>
+      <CloseBtnContainer data-testid="close-btn" onClick={handleCloseBanner}>
         {device === 'desktop' ? (
           <StyledCloseIcon size={isMobile ? 30 : 40} color="white" />
         ) : (

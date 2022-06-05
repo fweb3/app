@@ -26,6 +26,6 @@ describe('Desktop disconnected view', () => {
   })
 
   it('loads the footer text', () => {
-    cy.get('[data-testid="footer_footer"]').should('be.visible')
+    cy.get('[data-testid="footer"]').should('be.visible')
   })
 })

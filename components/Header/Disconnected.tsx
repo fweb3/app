@@ -35,14 +35,18 @@ export const DisconnectedHeader = () => {
     return (
       <>
         <StyledUnplug />
-        <Text data-testid="header-get-started">Connect a wallet to get started</Text>
+        <Text data-testid="header-get-started">
+          Connect a wallet to get started
+        </Text>
       </>
     )
   }
   return (
     <>
       <HeaderLogo />
-      <Container>{query?.account ? renderQueryConnect() : renderGetStarted()}</Container>
+      <Container data-testid="disconnected-header">
+        {query?.account ? renderQueryConnect() : renderGetStarted()}
+      </Container>
     </>
   )
 }

@@ -2,6 +2,7 @@ declare let window: any // eslint-disable-line
 
 import { MOCK_ROUTER_STATE } from './jest.fixtures'
 import { cleanup } from '@testing-library/react'
+import '@testing-library/jest-dom'
 
 jest.mock('../interfaces/ethersInterfaces')
 jest.mock('../hooks/Ethers/useEthers')
@@ -23,8 +24,9 @@ jest.mock('@ethersproject/providers', () => ({
   AlchemyProvider: jest.fn(),
   JsonRpcProvider: jest.fn(),
   Web3Provider: jest.fn(() => ({
+    send: jest.fn(async () => ['web3_account']),
     provider: mockWindowEthereum,
-    getNetwork() {
+    async getNetwork() {
       return {
         chainId: 137,
         name: 'mainnet',

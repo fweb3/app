@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { act, renderHook } from '@testing-library/react-hooks'
 import type { IComponentProps } from '../../types'
 import { EthersProvider } from './EthersProvider'
 import { useEthers } from './useEthers'
@@ -17,5 +17,18 @@ describe('useEthers', () => {
     await waitForNextUpdate()
     expect(result.current.isInitialized).toBeTruthy()
     expect(result.current.isAllowedNetwork).toBeTruthy()
+  })
+
+  it('connects an account', async () => {
+    const { result, waitForNextUpdate } = renderHook(() => useEthers(), {
+      wrapper,
+    })
+    await waitForNextUpdate()
+    act(() => {
+      result.current.connectAccount()
+    })
+    await waitForNextUpdate()
+    expect(result.current.isConnected).toBeTruthy()
+    expect(result.current.account).toBeTruthy()
   })
 })

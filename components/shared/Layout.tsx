@@ -19,15 +19,19 @@ const MainGrid = styled.div`
 
 export const Layout = ({ children }: IComponentProps) => {
   return (
-    <>
+    <div data-testid="layout-container">
       <ErrorBanner />
-      <ToastContainer theme="dark" position="bottom-right" />
+      <ToastContainer
+        data-testid="toast-container"
+        theme="dark"
+        position="bottom-right"
+      />
       <HtmlHead />
       <MainGrid>
         <Header />
         {children}
         <Footer />
       </MainGrid>
-    </>
+    </div>
   )
 }

@@ -34,7 +34,10 @@ const Container = styled.nav`
 export const Header = (): JSX.Element => {
   const { device } = useDevice()
   const isMobile = device !== 'desktop'
+
   return (
-    <Container>{isMobile ? <MobileHeader /> : <DesktopHeader />}</Container>
+    <Container data-testid="header">
+      {isMobile ? <MobileHeader /> : <DesktopHeader />}
+    </Container>
   )
 }

@@ -27,7 +27,7 @@ interface IEthersContext {
   setAccount: (account: string) => void
 }
 
-const defaultContext = {
+const EthersContext = createContext<IEthersContext>({
   isLocal: false,
   isAllowedNetwork: false,
   isInitialized: false,
@@ -41,9 +41,7 @@ const defaultContext = {
   connectAccount: async () => null,
   needsWallet: false,
   setAccount: () => null,
-}
-
-const EthersContext = createContext<IEthersContext>(defaultContext)
+})
 
 const EthersProvider = ({ children }: IComponentProps) => {
   const [web3Provider, setWeb3Provider] = useState<Web3Provider | null>(null)

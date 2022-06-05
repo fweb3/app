@@ -5,7 +5,7 @@ export const HtmlHead = () => {
   const { shareInfo } = useUrl()
 
   return (
-    <Head>
+    <Head data-testid="html-head">
       <title>fWeb3</title>
       <meta name="description" content="Learn and build web3" />
       <link rel="icon" href="/icon.png" />
