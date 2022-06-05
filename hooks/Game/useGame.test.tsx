@@ -1,28 +1,13 @@
 import { DOTS_MAP, DotKey } from '../../components/Chest/dots'
 import { renderHook } from '@testing-library/react-hooks'
-import type { IComponentProps } from '../../types'
+import type { GameError, IComponentProps } from '../../types'
 import { DEFAULT_GAME_STATE } from '../../lib'
 import { GameProvider } from './GameProvider'
 import { getCurrentGame } from './tasks'
 import { useGame } from './useGame'
 
-const mockTokenContract = { address: 'mock_token_contract_address' }
-const mockGameContract = {
-  isJudge: jest.fn(),
-  address: 'mock_game_contract_address',
-  hasBeenVerifiedToWin: jest.fn(),
-}
-
 jest.unmock('./useGame')
-jest.mock('@ethersproject/contracts')
 jest.mock('./tasks')
-jest.mock('../../interfaces', () => ({
-  loadAddress: jest.fn(() => ['mock_address']),
-  loadFweb3Contracts: jest.fn(async () => ({
-    tokenContract: mockTokenContract,
-    gameContract: mockGameContract,
-  })),
-}))
 
 const wrapper = ({ children }: IComponentProps) => (
   <GameProvider>{children}</GameProvider>
@@ -31,9 +16,9 @@ const wrapper = ({ children }: IComponentProps) => (
 describe('useGame', () => {
   beforeAll(() => {
     jest.mocked(getCurrentGame).mockResolvedValue({
-      taskState: {},
-      currentCompletedDots: {},
-      activeDot: '',
+      taskState: DEFAULT_GAME_STATE,
+      currentCompletedDots: DOTS_MAP,
+      activeDot: '0',
     })
   })
   afterEach(() => {
@@ -44,26 +29,19 @@ describe('useGame', () => {
       wrapper,
     })
     await waitForNextUpdate()
-    expect(result.current.pollAddress).toBe('mock_address')
-    expect(result.current.diamondNftAddress).toBe('mock_address')
-    expect(result.current.burnAddress).toBe('mock_address')
-    expect(result.current.trophyAddress).toBe('mock_address')
-    expect(result.current.gameAddress).toBe('mock_game_contract_address')
-    expect(result.current.tokenAddress).toBe('mock_token_contract_address')
-    expect(result.current.gameContract?.address).toBe(
-      'mock_game_contract_address'
+    expect(result.current.pollAddress).toBe('137_mock_fweb3_poll_address')
+    expect(result.current.diamondNftAddress).toBe(
+      '137_mock_fweb3_diamond_nft_address'
     )
-    expect(result.current.tokenContract?.address).toBe(
-      'mock_token_contract_address'
-    )
+    expect(result.current.burnAddress).toBe('137_mock_burn_address')
+    expect(result.current.trophyAddress).toBe('137_mock_fweb3_trophy_address')
+    expect(result.current.gameAddress).toBe('mock_contract_address')
+    expect(result.current.tokenAddress).toBe('mock_contract_address')
+    expect(result.current.gameContract).toBeTruthy()
+    expect(result.current.tokenContract).toBeTruthy()
   })
 
   it('loads the current game', async () => {
-    jest.mocked(getCurrentGame).mockResolvedValueOnce({
-      taskState: DEFAULT_GAME_STATE,
-      currentCompletedDots: DOTS_MAP,
-      activeDot: '0',
-    })
     const { result, waitForNextUpdate } = renderHook(() => useGame(), {
       wrapper,
     })
@@ -79,5 +57,47 @@ describe('useGame', () => {
     expect(result.current.hasWonGame).toBeFalsy()
     expect(result.current.trophyColor).toBeFalsy()
     expect(result.current.isFetchingGameData).toBeFalsy()
+  })
+
+  it('sets trophy color', async () => {
+    jest.mocked(getCurrentGame).mockResolvedValueOnce({
+      taskState: { ...DEFAULT_GAME_STATE, trophyId: '1' },
+      currentCompletedDots: DOTS_MAP,
+      activeDot: '0',
+    })
+    const { result, waitForNextUpdate } = renderHook(() => useGame(), {
+      wrapper,
+    })
+    await waitForNextUpdate()
+    expect(result.current.trophyColor).toBe('gold')
+  })
+
+  it('sets an error message when loading fails', async () => {
+    jest.spyOn(console, 'error').mockReturnValueOnce()
+    try {
+      jest.mocked(getCurrentGame).mockRejectedValue('rejected')
+      const { waitForNextUpdate } = renderHook(() => useGame(), {
+        wrapper,
+      })
+      await waitForNextUpdate()
+    } catch (err: GameError) {
+      expect(err.message).toBe('rejected')
+    }
+  })
+
+  it('checks that a dot is complete', async () => {
+    jest.mocked(getCurrentGame).mockResolvedValueOnce({
+      taskState: { ...DEFAULT_GAME_STATE, hasBurnedTokens: true },
+      currentCompletedDots: DOTS_MAP,
+      activeDot: '0',
+    })
+    const { result, waitForNextUpdate, waitFor } = renderHook(() => useGame(), {
+      wrapper,
+    })
+    await waitForNextUpdate()
+    waitFor(() => {
+      const isComplete = result.current.isDotComplete(DotKey.hasBurnedTokens)
+      expect(isComplete).toBe(true)
+    })
   })
 })

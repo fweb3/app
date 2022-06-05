@@ -14,6 +14,7 @@ import {
   fetchNftsTxs,
 } from './api'
 
+jest.unmock('../../interfaces/addresses')
 jest.mock('./api')
 
 const MOCK_WALLET = '0xb15A3D29eFe51baaC8d3cd2f4F747B843FeAdA7d'

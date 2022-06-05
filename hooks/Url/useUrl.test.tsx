@@ -1,8 +1,8 @@
 import { MOCK_ETHERS_CONTEXT } from '../../jest/jest.fixtures'
 import { renderHook, act } from '@testing-library/react-hooks'
 import { AllowedChains, IComponentProps } from '../../types'
-import { useEthers } from '../Ethers'
 import { UrlProvider } from './UrlProvider'
+import { useEthers } from '../Ethers'
 import { useUrl } from './useUrl'
 
 jest.unmock('./useUrl')
@@ -32,6 +32,31 @@ describe('useUrl', () => {
       expect(actual).toEqual(expected)
     })
   })
+
+  it('gets opensea account url for mainnet', () => {
+    jest.mocked(useEthers).mockReturnValueOnce({
+      ...MOCK_ETHERS_CONTEXT,
+      chainId: AllowedChains.POLYGON,
+    })
+    const { result } = renderHook(() => useUrl(), { wrapper })
+    act(() => {
+      const actual = result.current.getOpenseaAccountUrl()
+      const expected = 'https://opensea.io/account'
+      expect(actual).toEqual(expected)
+    })
+  })
+  it('gets opensea account url for testnet', () => {
+    jest.mocked(useEthers).mockReturnValueOnce({
+      ...MOCK_ETHERS_CONTEXT,
+      chainId: AllowedChains.MUMBAI,
+    })
+    const { result } = renderHook(() => useUrl(), { wrapper })
+    act(() => {
+      const actual = result.current.getOpenseaAccountUrl()
+      const expected = 'https://testnets.opensea.io/account'
+      expect(actual).toEqual(expected)
+    })
+  })
   it('creates polygonscan url for mainnet', () => {
     jest.mocked(useEthers).mockReturnValueOnce({
       ...MOCK_ETHERS_CONTEXT,
@@ -56,12 +81,10 @@ describe('useUrl', () => {
       expect(actual).toEqual(expected)
     })
   })
-  it('has default share info', () => {
+  it('has default share info', async () => {
     const { result } = renderHook(() => useUrl(), { wrapper })
-    act(() => {
-      const actual = result.current.shareInfo
-      const expected = 'https://fweb3.xyz/fweb3.png'
-      expect(actual.imageUrl).toEqual(expected)
-    })
+    const actual = result.current.shareInfo
+    const expected = 'https://fweb3.xyz/fweb3.png'
+    expect(actual.imageUrl).toEqual(expected)
   })
 })

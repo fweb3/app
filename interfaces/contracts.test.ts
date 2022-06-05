@@ -4,8 +4,7 @@ import { MockContract, MockProvider } from './__mocks__/ethersInterfaces'
 import { Contract } from '@ethersproject/contracts'
 import { loadFweb3Contracts } from './contracts'
 
-jest.mock('@ethersproject/providers')
-jest.mock('@ethersproject/contracts')
+jest.unmock('./contracts')
 
 const mockProvider = new MockProvider()
 

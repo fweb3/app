@@ -3,7 +3,8 @@ import { BaseContract } from '@ethersproject/contracts'
 
 export class MockContract extends BaseContract {
   constructor() {
-    super('foo', 'bar')
+    super('contract_address', '')
+    Object.defineProperty(this, 'address', { value: 'mock_contract_address' })
   }
 }
 

@@ -8,7 +8,7 @@ import { useGame } from '../Game'
 interface IUrlContext {
   getPolygonscanUrl: (address: string) => string
   getOpenseaUrl: (address: string) => string
-  getOpenseaAccountUrl: (address: string) => string
+  getOpenseaAccountUrl: () => string
   discordUrl: string
   faucetUrl: string
   githubUrl: string

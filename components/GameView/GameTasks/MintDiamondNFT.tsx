@@ -44,8 +44,8 @@ export const MintDiamonNFT = (): JSX.Element => {
         </CommonText>
         <CommonText>
           This will show up in your OpenSea account shortly.{' '}
-          <CommonLink href={getOpenseaAccountUrl(account)}>
-            {getOpenseaAccountUrl(account)}
+          <CommonLink href={getOpenseaAccountUrl()}>
+            {getOpenseaAccountUrl()}
           </CommonLink>
         </CommonText>
         <ErrorText>
