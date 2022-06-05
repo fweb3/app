@@ -1,12 +1,11 @@
 import { ethers } from 'ethers'
 
-// eslint-disable-next-line
 export const fetcher = async (uri: string, config = {}): Promise<unknown> => {
   const res = await fetch(uri, config)
   return res.json()
 }
 
-export const parseBalance = (
+export const prettyParseBalance = (
   value: string,
   decimals = 18,
   decimalsToDisplay = 0
@@ -18,7 +17,7 @@ export const parseBalance = (
   )
 }
 
-export const parseBalanceToNum = (
+export const balanceToInt = (
   value: string,
   decimals = 18,
   decimalsToDisplay = 0

@@ -1,5 +1,5 @@
 import { checkHasWonGame, currentWalletGameState } from './validators'
-import { DEFAULT_GAME_STATE } from '../constants'
+import { DEFAULT_GAME_STATE, DEV_GAME_STATE } from '../constants'
 import { fetchCurrentGameState } from './game'
 
 jest.mock('./validators')
@@ -17,5 +17,10 @@ describe('the game', () => {
       .mockResolvedValue({ ...DEFAULT_GAME_STATE, trophyId: '100' })
     const actual = await fetchCurrentGameState(137, 'foo')
     expect(actual).toEqual({ ...DEFAULT_GAME_STATE, trophyId: '100' })
+  })
+
+  it('sends dev data when network is local', async () => {
+    const actual = await fetchCurrentGameState(1337, 'foo')
+    expect(actual).toBe(DEV_GAME_STATE)
   })
 })

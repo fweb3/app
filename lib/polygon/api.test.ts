@@ -1,7 +1,9 @@
 import { fetcher, sleep } from '../util'
 import {
+  fetchMaticBalance,
   fetchWalletTokenBalance,
   fetchTrophyTransactions,
+  fetchWalletsInternalTxs,
   fetchWalletsTxs,
   fetchERC20Txs,
   fetchNftsTxs,
@@ -12,6 +14,8 @@ import {
   walletsTxsURI,
   erc20TxsURI,
   nftTxsURI,
+  walletMaticBalanceURI,
+  walletsInternalTxsURI,
 } from './endpoints'
 
 jest.mock('../util')
@@ -24,6 +28,11 @@ afterEach(() => {
 })
 
 describe('polygon api', () => {
+  it('fetches matic balance', () => {
+    jest.mocked(walletMaticBalanceURI).mockReturnValue('matic')
+    fetchMaticBalance(137, 'foobar')
+    expect(fetcher).toHaveBeenCalledWith('matic')
+  })
   it('fetches token balance', () => {
     jest.mocked(walletsTokenBalanceURI).mockReturnValue('balance')
     fetchWalletTokenBalance(137, 'foobar')
@@ -38,6 +47,11 @@ describe('polygon api', () => {
     jest.mocked(walletsTxsURI).mockReturnValue('wallet')
     fetchWalletsTxs(137, 'foobar')
     expect(fetcher).toHaveBeenCalledWith('wallet')
+  })
+  it('fetches internal wallet transactions', () => {
+    jest.mocked(walletsInternalTxsURI).mockReturnValue('internal')
+    fetchWalletsInternalTxs(137, 'foobar')
+    expect(fetcher).toHaveBeenCalledWith('internal')
   })
   it('fetches erc20 transactions', () => {
     jest.mocked(erc20TxsURI).mockReturnValue('erc20')

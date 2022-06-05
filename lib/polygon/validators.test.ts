@@ -19,24 +19,24 @@ jest.mock('./api')
 const MOCK_WALLET = '0xb15A3D29eFe51baaC8d3cd2f4F747B843FeAdA7d'
 
 describe('game validators', () => {
-  // !! For some reason this test lowers coverage!?? wtf.
+  it('returns null if not a winner', async () => {
+    // eslint-disable-next-line
+    // @ts-ignore
+    jest.mocked(fetchTrophyTransactions).mockResolvedValueOnce({ result: [] })
+    // eslint-disable-next-line
+    // @ts-ignore
+    jest.mocked(fetchWalletTokenBalance).mockResolvedValueOnce({ result: [] })
 
-  // it('returns null if not a winner', async () => {
-  //   // eslint-disable-next-line
-  //   // @ts-ignore
-  //   jest.mocked(fetchTrophyTransactions).mockResolvedValue({ result: [] })
-  //   // eslint-disable-next-line
-  //   // @ts-ignore
-  //   jest.mocked(fetchWalletTokenBalance).mockResolvedValue({ result: [] })
-
-  //   const res = await checkHasWonGame(137, MOCK_WALLET)
-  //   expect(res).toBeNull()
-  // })
+    const res = await checkHasWonGame(137, MOCK_WALLET)
+    expect(res).toBeNull()
+  })
   it('validates a winner has won', async () => {
     // eslint-disable-next-line
     // @ts-ignore
-    jest.mocked(fetchTrophyTransactions).mockResolvedValue(mockTrophyTx)
-    jest.mocked(fetchWalletTokenBalance).mockResolvedValue(mockWalletBalance)
+    jest.mocked(fetchTrophyTransactions).mockResolvedValueOnce(mockTrophyTx)
+    jest
+      .mocked(fetchWalletTokenBalance)
+      .mockResolvedValueOnce(mockWalletBalance)
     const res = await checkHasWonGame(137, MOCK_WALLET)
     expect(res).toEqual({
       hasBurnedTokens: true,
@@ -57,15 +57,17 @@ describe('game validators', () => {
   it('gets a wallets game state', async () => {
     // eslint-disable-next-line
     // @ts-ignore
-    jest.mocked(fetchWalletsTxs).mockResolvedValue(mockWalletTxs)
+    jest.mocked(fetchWalletsTxs).mockResolvedValueOnce(mockWalletTxs)
     // eslint-disable-next-line
     // @ts-ignore
-    jest.mocked(fetchWalletsInternalTxs).mockResolvedValue(mockWalletTxs)
+    jest.mocked(fetchWalletsInternalTxs).mockResolvedValueOnce(mockWalletTxs)
     // eslint-disable-next-line
     // @ts-ignore
-    jest.mocked(fetchNftsTxs).mockResolvedValue(mockNftsTxs)
-    jest.mocked(fetchERC20Txs).mockResolvedValue(mockErc20Txs)
-    jest.mocked(fetchWalletTokenBalance).mockResolvedValue(mockWalletBalance)
+    jest.mocked(fetchNftsTxs).mockResolvedValueOnce(mockNftsTxs)
+    jest.mocked(fetchERC20Txs).mockResolvedValueOnce(mockErc20Txs)
+    jest
+      .mocked(fetchWalletTokenBalance)
+      .mockResolvedValueOnce(mockWalletBalance)
     jest
       .mocked(fetchMaticBalance)
       .mockResolvedValue({ result: { balance: '123' } })
