@@ -1,20 +1,17 @@
 import { renderHook, act } from '@testing-library/react-hooks'
 import type { IComponentProps } from '../../types'
 import { ErrorProvider } from './ErrorProvider'
-import { useLoading } from '../Loading'
 import { useError } from './useError'
 
 const mockSetIsLoading = jest.fn()
 
-jest.mock('../Loading/useLoading')
 jest.mock('react-toastify')
-
-const mockUseLoading = useLoading as jest.MockedFunction<typeof useLoading>
-
-mockUseLoading.mockReturnValue({
-  isLoading: true,
-  setIsLoading: mockSetIsLoading,
-})
+jest.mock('../Loading', () => ({
+  useLoading: () => ({
+    setIsLoading: mockSetIsLoading,
+    isLoading: false,
+  }),
+}))
 
 const wrapper = ({ children }: IComponentProps) => (
   <ErrorProvider>{children}</ErrorProvider>

@@ -1,7 +1,7 @@
+import { IPolygonAPIResponse } from './../../types/polygon.d'
+import type { IPolygonData, IGameTaskState } from '../../types'
 import { DEFAULT_WON_GAME_STATE } from '../constants'
-import { IGameTaskState } from '../../types/game'
 import { loadAddress } from '../../interfaces'
-import type { IPolygonData } from './index.d'
 import {
   fetchTrophyTransactions,
   fetchWalletTokenBalance,
@@ -12,17 +12,31 @@ import {
   fetchMaticBalance,
 } from './api'
 
+const _lower = (str: string) => str.toLowerCase()
+
+const _responseToResult = ({
+  result,
+}: IPolygonAPIResponse): IPolygonData[] | [] => {
+  if (Array.isArray(result)) {
+    return result
+  }
+
+  return []
+}
+
 export const checkHasWonGame = async (
   chainId: number,
   account: string
 ): Promise<IGameTaskState | null> => {
-  const { result: trophyTxs } = await fetchTrophyTransactions(chainId, account)
+  const res = await fetchTrophyTransactions(chainId, account)
+  const trophyTxs = _responseToResult(res)
   const tokenBalance = await _walletBalance(chainId, account)
-  const genesysAddress = loadAddress(chainId, 'genesys')
-  const trophy =
-    trophyTxs?.filter((tx) => tx.from === genesysAddress[0])[0] || null
+  const genesysAddress = loadAddress(chainId, 'genesys')[0]
+  const trophy = trophyTxs?.filter(
+    (tx) => _lower(tx.from) === _lower(genesysAddress)
+  )[0]
 
-  if (!trophy) {
+  if (!trophy || trophy.tokenID === '0') {
     return null
   }
 
@@ -59,40 +73,46 @@ export const _maticBalance = async (
   chainId: number,
   account: string
 ): Promise<string> => {
-  const { result } = await fetchMaticBalance(chainId, account)
-  return result ?? '0'
+  const { result } = (await fetchMaticBalance(
+    chainId,
+    account
+  )) as IPolygonAPIResponse
+  return result.toString() ?? '0'
 }
 
 export const _walletBalance = async (
   chainId: number,
   account: string
 ): Promise<string> => {
-  const { result: walletBalance } = await fetchWalletTokenBalance(
-    chainId,
-    account
-  )
-  return walletBalance ?? '0'
+  const { result } = await fetchWalletTokenBalance(chainId, account)
+  return result.toString() ?? '0'
 }
 
 export const _checkHasMintedNTF = async (
   chainId: number,
   account: string
 ): Promise<boolean> => {
-  const { result: nftsTx } = await fetchNftsTxs(chainId, account)
-  const genesysAddress = loadAddress(chainId, 'genesys')
-  return nftsTx?.filter((tx) => tx.from === genesysAddress[0]).length >= 1
+  const res = await fetchNftsTxs(chainId, account)
+  const nftsTx = _responseToResult(res)
+  const genesysAddress = loadAddress(chainId, 'genesys')[0]
+  const found = nftsTx?.filter(
+    (tx) => _lower(tx.from) === _lower(genesysAddress)
+  )
+  return found?.length >= 1 || false
 }
 
 const _checkWalletTxCompletedItems = async (
   chainId: number,
   walletAddress: string
 ): Promise<IGameTaskState> => {
-  const { result: walletsTxs } = await fetchWalletsTxs(chainId, walletAddress)
-  const { result: walletsInternalTxs } = await fetchWalletsInternalTxs(
+  const walletsTxsResult = await fetchWalletsTxs(chainId, walletAddress)
+  const walletsInternalTxsResult = await fetchWalletsInternalTxs(
     chainId,
     walletAddress
   )
 
+  const walletsTxs = _responseToResult(walletsTxsResult)
+  const walletsInternalTxs = _responseToResult(walletsInternalTxsResult)
   return {
     hasEnoughTokens: _checkHasUsedFweb3Faucet(chainId, walletsTxs),
     hasUsedFaucet: _checkHasUsedMaticFaucet(chainId, walletsInternalTxs),
@@ -111,8 +131,8 @@ const _checkHasUsedFweb3Faucet = (
   return (
     walletsTxs?.filter((tx) =>
       fweb3FaucetAddresses
-        .map((i) => i.toLowerCase())
-        .includes(tx.to.toLowerCase())
+        .map((address) => _lower(address))
+        .includes(_lower(tx.to))
     ).length >= 1
   )
 }
@@ -126,8 +146,8 @@ const _checkHasUsedMaticFaucet = (
   return (
     walletsTxs?.filter((tx) =>
       maticFaucetAddresses
-        .map((i) => i.toLowerCase())
-        .includes(tx.from.toLowerCase())
+        .map((address) => _lower(address))
+        .includes(_lower(tx.from))
     ).length >= 1
   )
 }
@@ -136,26 +156,24 @@ const _checkHasSwappedTokens = (
   chainId: number,
   walletsTxs: IPolygonData[]
 ): boolean => {
-  const swapAddress = loadAddress(chainId, 'swap_router')
+  const swapAddress = loadAddress(chainId, 'swap_router')[0]
   return (
-    walletsTxs?.filter(
-      (tx) => tx.to.toLowerCase() === swapAddress[0].toLowerCase()
-    ).length >= 1
+    walletsTxs?.filter((tx) => _lower(tx.to) === _lower(swapAddress)).length >=
+    1
   )
 }
 const _checkHasDeployedContract = (walletsTxs: IPolygonData[]): boolean => {
-  return walletsTxs?.filter((tx) => tx.to === '').length >= 1
+  return walletsTxs?.filter((tx) => _lower(tx.to) === '').length >= 1
 }
 
 const _checkHasVotedInPoll = (
   chainId: number,
   walletsTxs: IPolygonData[]
 ): boolean => {
-  const pollAddress = loadAddress(chainId, 'fweb3_poll')
+  const pollAddress = loadAddress(chainId, 'fweb3_poll')[0]
   return (
-    walletsTxs?.filter(
-      (tx) => tx.to.toLowerCase() === pollAddress[0].toLowerCase()
-    ).length >= 1
+    walletsTxs?.filter((tx) => _lower(tx.to) === _lower(pollAddress)).length >=
+    1
   )
 }
 
@@ -163,7 +181,8 @@ const _checkERC20CompletedItems = async (
   chainId: number,
   walletAddress: string
 ): Promise<IGameTaskState> => {
-  const { result: erc20Txs } = await fetchERC20Txs(chainId, walletAddress)
+  const res = await fetchERC20Txs(chainId, walletAddress)
+  const erc20Txs = _responseToResult(res)
   return {
     hasSentTokens: _validateHasSentTokens(erc20Txs, walletAddress),
     hasBurnedTokens: _validateHasBurnedTokens(chainId, erc20Txs, walletAddress),
@@ -177,7 +196,7 @@ const _validateHasSentTokens = (
   const found = txs?.filter((tx) => {
     return (
       tx.value &&
-      tx.from.toLowerCase() === walletAddress.toLowerCase() &&
+      _lower(tx.from) === _lower(walletAddress) &&
       parseInt(tx.value) >= 100 * 10 ** 18
     )
   })
@@ -189,12 +208,12 @@ const _validateHasBurnedTokens = (
   txs: IPolygonData[],
   walletAddress: string
 ): boolean => {
+  const burnAddress = loadAddress(chainId, 'burn')[0]
   const found = txs?.filter((tx) => {
-    const burnAddress = loadAddress(chainId, 'burn')
     return (
       tx.value &&
-      tx.from.toLowerCase() === walletAddress.toLowerCase() &&
-      tx.to.toLowerCase() === burnAddress[0].toLowerCase() &&
+      _lower(tx.from) === _lower(walletAddress) &&
+      _lower(tx.to) === _lower(burnAddress) &&
       parseInt(tx.value) > 0
     )
   })

@@ -1,5 +1,5 @@
 import { loadAddress } from './../../interfaces/addresses'
-import { NETWORKS } from './../../types/networks.d'
+import { NETWORKS } from './../../types'
 
 const POLYGON_BASE_API_URL = 'https://api.polygonscan.com/api'
 const MUMBAI_POLYGONSCAN_API_URL = 'https://api-testnet.polygonscan.com/api'
@@ -9,7 +9,7 @@ const { POLYGON_API_KEY } = process.env
 // External Endpoints
 
 const _getBaseUrlForChain = (chainId: number) => {
-  if (NETWORKS[chainId] !== 'polygon') {
+  if (NETWORKS[chainId].toLowerCase() !== 'polygon') {
     return MUMBAI_POLYGONSCAN_API_URL
   }
   return POLYGON_BASE_API_URL

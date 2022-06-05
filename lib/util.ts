@@ -1,7 +1,7 @@
 import { ethers } from 'ethers'
 
 // eslint-disable-next-line
-export const fetcher = async (uri: string, config = {}): Promise<any> => {
+export const fetcher = async (uri: string, config = {}): Promise<unknown> => {
   const res = await fetch(uri, config)
   return res.json()
 }
@@ -29,7 +29,7 @@ export const parseBalanceToNum = (
     )
   )
 
-export const sleep = (milliseconds: number): void => {
+export const sleep = (milliseconds = 0): void => {
   const date: number = Date.now()
   let currentDate = null
   do {

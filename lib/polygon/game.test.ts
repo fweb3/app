@@ -6,13 +6,15 @@ jest.mock('./validators')
 
 describe('the game', () => {
   it('fetches current game state', async () => {
-    checkHasWonGame.mockReturnValue(false)
-    currentWalletGameState.mockReturnValue(DEFAULT_GAME_STATE)
+    jest.mocked(checkHasWonGame).mockResolvedValue(null)
+    jest.mocked(currentWalletGameState).mockResolvedValue(DEFAULT_GAME_STATE)
     const actual = await fetchCurrentGameState(137, 'foo')
     expect(actual).toBe(DEFAULT_GAME_STATE)
   })
   it('sends back a winner game state', async () => {
-    checkHasWonGame.mockReturnValue({ ...DEFAULT_GAME_STATE, trophyId: '100' })
+    jest
+      .mocked(checkHasWonGame)
+      .mockResolvedValue({ ...DEFAULT_GAME_STATE, trophyId: '100' })
     const actual = await fetchCurrentGameState(137, 'foo')
     expect(actual).toEqual({ ...DEFAULT_GAME_STATE, trophyId: '100' })
   })

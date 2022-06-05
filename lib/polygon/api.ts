@@ -1,4 +1,4 @@
-import { IPolygonBalanceResponse, IPolygonDataResponse } from './index.d'
+import type { IPolygonAPIResponse } from '../../types'
 import { fetcher, sleep } from '../util'
 import {
   walletsTokenBalanceURI,
@@ -24,47 +24,59 @@ export const fetchMaticBalance = async (
 export const fetchWalletTokenBalance = async (
   chainId: number,
   walletAddress: string
-): Promise<IPolygonBalanceResponse> => {
+): Promise<IPolygonAPIResponse> => {
   sleep(200)
-  return fetcher(walletsTokenBalanceURI(chainId, walletAddress))
+  return fetcher(
+    walletsTokenBalanceURI(chainId, walletAddress)
+  ) as Promise<IPolygonAPIResponse>
 }
 
 export const fetchTrophyTransactions = async (
   chainId: number,
   walletAddress: string
-): Promise<IPolygonDataResponse> => {
+): Promise<IPolygonAPIResponse> => {
   sleep(200)
-  return fetcher(trophyCheckURI(chainId, walletAddress))
+  return fetcher(
+    trophyCheckURI(chainId, walletAddress)
+  ) as Promise<IPolygonAPIResponse>
 }
 
 export const fetchWalletsTxs = async (
   chainId: number,
   walletAddress: string
-): Promise<IPolygonDataResponse> => {
+): Promise<IPolygonAPIResponse> => {
   sleep(200)
-  return fetcher(walletsTxsURI(chainId, walletAddress))
+  return fetcher(
+    walletsTxsURI(chainId, walletAddress)
+  ) as Promise<IPolygonAPIResponse>
 }
 
 export const fetchWalletsInternalTxs = async (
   chainId: number,
   walletAddress: string
-): Promise<IPolygonDataResponse> => {
+): Promise<IPolygonAPIResponse> => {
   sleep(200)
-  return fetcher(walletsInternalTxsURI(chainId, walletAddress))
+  return fetcher(
+    walletsInternalTxsURI(chainId, walletAddress)
+  ) as Promise<IPolygonAPIResponse>
 }
 
 export const fetchERC20Txs = async (
   chainId: number,
   walletAddress: string
-): Promise<IPolygonDataResponse> => {
+): Promise<IPolygonAPIResponse> => {
   sleep(200)
-  return fetcher(erc20TxsURI(chainId, walletAddress))
+  return fetcher(
+    erc20TxsURI(chainId, walletAddress)
+  ) as Promise<IPolygonAPIResponse>
 }
 
 export const fetchNftsTxs = async (
   chainId: number,
   walletAddress: string
-): Promise<IPolygonDataResponse> => {
+): Promise<IPolygonAPIResponse> => {
   sleep(200)
-  return fetcher(nftTxsURI(chainId, walletAddress))
+  return fetcher(
+    nftTxsURI(chainId, walletAddress)
+  ) as Promise<IPolygonAPIResponse>
 }
