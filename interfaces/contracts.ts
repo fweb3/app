@@ -26,7 +26,7 @@ export const loadTokenContract = async (
   provider: Provider
 ): Promise<Contract> => {
   const tokenAddress = loadAddress(chainId, 'fweb3_token')[0]
-  const tokenContract: Contract = new Contract(
+  const tokenContract = new Contract(
     tokenAddress,
     fweb3TokenInterface.abi,
     provider

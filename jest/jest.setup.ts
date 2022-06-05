@@ -1,6 +1,7 @@
 import { MOCK_ROUTER_STATE } from './jest.fixtures'
 import { cleanup } from '@testing-library/react'
 
+jest.mock('../interfaces/ethersInterfaces')
 jest.mock('../hooks/Ethers/useEthers')
 jest.mock('../hooks/Game/useGame')
 jest.mock('../hooks/Url/useUrl')

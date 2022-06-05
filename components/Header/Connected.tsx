@@ -1,7 +1,7 @@
 import { useAccount, useEthers, useGame, useUrl } from '../../hooks'
 import { COLORS, SPACING, TEXT } from '../styles'
-import { formatBalance } from '../../interfaces'
 import { CommonLink } from '../shared/Elements'
+import { prettyParseBalance } from '../../lib'
 import { GiTwoCoins } from 'react-icons/gi'
 import styled from 'styled-components'
 import { HeaderLogo } from './Logo'
@@ -47,7 +47,9 @@ export const ConnectedHeader = () => {
   const { getPolygonscanUrl } = useUrl()
   const { gameTaskState } = useGame()
 
-  const balance = formatBalance(gameTaskState?.tokenBalance?.toString())
+  const balance = prettyParseBalance(
+    gameTaskState?.tokenBalance?.toString() || '0'
+  )
   const netName = network?.name || 'Unknown'
   return (
     <>
