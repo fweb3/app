@@ -112,6 +112,8 @@ const GameProvider = ({ children }: IComponentProps): JSX.Element => {
   const loadGameGameState = async (player: string): Promise<void> => {
     try {
       setIsLoading(true)
+      setIsFetchingGameData(true)
+
       const { taskState, currentCompletedDots, activeDot } =
         await getCurrentGame(chainId, player)
 

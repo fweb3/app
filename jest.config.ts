@@ -19,6 +19,7 @@ const customJestConfig = {
   coveragePathIgnorePatterns: [
     '<rootDir>/node_modules',
     '<rootDir>/interfaces/abi',
+    '<rootDir>/lib/polygon/__fixtures__',
   ],
   setupFilesAfterEnv: ['<rootDir>/jest/jest.setup.ts'],
 }

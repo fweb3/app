@@ -1,7 +1,7 @@
 import { MOCK_ETHERS_CONTEXT } from '../../jest/jest.fixtures'
 import { renderHook, act } from '@testing-library/react-hooks'
 import { AllowedChains, IComponentProps } from '../../types'
-import { useEthers } from '../Ethers/useEthers'
+import { useEthers } from '../Ethers'
 import { UrlProvider } from './UrlProvider'
 import { useUrl } from './useUrl'
 
