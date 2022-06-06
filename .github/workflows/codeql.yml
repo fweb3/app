@@ -2,8 +2,16 @@ name: "CodeQL Scan"
 
 on:
   push:
-    branches:
-      - '**'
+    branches: [main, protected]
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.txt'
+      - '**/__tests__/*'
+      - '**/__mocks__/*'
+      - '**/__fixtures__/*'
+      - '**/abi/*'
 
   schedule:
     - cron: '30 1 * * 0'
