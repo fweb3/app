@@ -25,8 +25,9 @@ export default async function handler(
     const payload = await fetchCurrentGameState(chainIdInt, account.toString())
     return res.json({ status: 'success', ...payload })
   } catch (e: GameError) {
+    console.error(e)
     return res
       .status(500)
-      .json({ status: 'error', message: e.message, error: e })
+      .json({ status: 'error', message: e.message || 'Unknown error' })
   }
 }
