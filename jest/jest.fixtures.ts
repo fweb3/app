@@ -1,6 +1,6 @@
 import { DOTS_MAP } from '../components/Chest/dots'
-import { IGameTaskState } from '../types/game'
 import { DEFAULT_GAME_STATE } from '../lib'
+import { IGameTaskState } from '../types'
 
 export const MOCK_ROUTER_STATE = {
   basePath: '',

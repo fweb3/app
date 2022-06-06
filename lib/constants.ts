@@ -1,4 +1,4 @@
-import type { IGameTaskState } from '../types/game'
+import type { IGameTaskState } from '../types'
 
 export const DEFAULT_GAME_STATE: IGameTaskState = {
   tokenBalance: '0',

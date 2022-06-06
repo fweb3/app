@@ -29,7 +29,7 @@ const createTweetText = (
   if (parseInt(trophyId) >= 1 && trophyColor) {
     return `🏆 I won a ${trophyColor} trophy in #fWeb3`
   }
-  // const numComplete = Object.entries(mappedDots).filter(([, v]) => v).length
+
   let text = ''
   Object.entries(mappedDots).forEach(([, v], i) => {
     text += v.isCompleted ? '🟣' : '⚫️'

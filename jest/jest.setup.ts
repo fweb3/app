@@ -6,11 +6,13 @@ import '@testing-library/jest-dom'
 
 jest.mock('../interfaces/ethersInterfaces')
 jest.mock('../hooks/Ethers/useEthers')
+jest.mock('../hooks/Device/useDevice')
 jest.mock('@ethersproject/contracts')
 jest.mock('../interfaces/addresses')
 jest.mock('../interfaces/contracts')
 jest.mock('../hooks/Game/useGame')
 jest.mock('../hooks/Url/useUrl')
+jest.mock('../hooks/Account')
 
 const mockWindowEthereum = {
   isMetaMask: true,

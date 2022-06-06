@@ -25,7 +25,8 @@
     "jest",
     "types/networks.d.ts",
     "types/providers.d.ts",
-    "scripts"
+    "scripts",
+    "interfaces/__tests__/contracts.test.ts"
   ],
   "exclude": ["node_modules", "cypress/support/metamask/extension"]
 }

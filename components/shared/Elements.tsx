@@ -28,11 +28,6 @@ export const Subheading = styled.h2`
   padding: 0;
   font-size: ${TEXT.h4};
   color: ${COLORS.maize};
-
-  // @media only screen and (min-width: ${MEDIA_QUERY.tablet}) {
-  //   font-size: ${TEXT.h4};
-  //   background: green;
-  // }
 `
 
 export const CommonText = styled((props) => <p {...props} />)`

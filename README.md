@@ -1,9 +1,9 @@
 # [fweb3.xyz](https://fweb3.xyz)
 
-![Statements](https://img.shields.io/badge/statements-26.6%25-red.svg?style=flat&logo=jest)
-![Branches](https://img.shields.io/badge/branches-11.7%25-red.svg?style=flat&logo=jest)
-![Functions](https://img.shields.io/badge/functions-16.46%25-red.svg?style=flat&logo=jest)
-![Lines](https://img.shields.io/badge/lines-22.77%25-red.svg?style=flat&logo=jest)
+![Statements](https://img.shields.io/badge/statements-75.29%25-red.svg?style=flat&logo=jest)
+![Branches](https://img.shields.io/badge/branches-60.11%25-red.svg?style=flat&logo=jest)
+![Functions](https://img.shields.io/badge/functions-72.45%25-red.svg?style=flat&logo=jest)
+![Lines](https://img.shields.io/badge/lines-74.21%25-red.svg?style=flat&logo=jest)
 
 Contributions are more than welcome! Please fork this repo, do work, then submit a PR!
 You will find the contribution guidlines [here](https://github.com/fweb3/CONTRIBUTING)

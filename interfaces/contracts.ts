@@ -2,9 +2,9 @@ declare let window: any // eslint-disable-line
 
 import fweb3TokenInterface from '../interfaces/abi/Fweb3Token.json'
 import fweb3GameInterface from '../interfaces/abi/Fweb3Game.json'
-import type { IFweb3Contracts } from './../types/interfaces.d'
 import type { Provider } from '@ethersproject/providers'
 import { Contract } from '@ethersproject/contracts'
+import type { IFweb3Contracts } from './../types'
 import { loadAddress } from './addresses'
 import { logger } from '../lib'
 
