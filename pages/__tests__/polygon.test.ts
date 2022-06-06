@@ -5,6 +5,8 @@ import httpMocks from 'node-mocks-http'
 
 jest.mock('../../lib/polygon/game')
 
+jest.spyOn(console, 'error').mockImplementation()
+
 const MOCK_WALLET_ADDRESS = '0x65eaFA1FBA16E3D85Ea9e663794e4F6e123C4B8A'
 
 describe('external polygon api', () => {
@@ -44,7 +46,6 @@ describe('external polygon api', () => {
     expect(JSON.parse(res._getData())).toEqual({
       status: 'error',
       message: 'Network not supported',
-      error: {},
     })
   })
 })
