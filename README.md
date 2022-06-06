@@ -5,6 +5,14 @@
 ![Functions](https://img.shields.io/badge/functions-72.45%25-red.svg?style=flat&logo=jest)
 ![Lines](https://img.shields.io/badge/lines-74.21%25-red.svg?style=flat&logo=jest)
 
+---
+
+![CodeQL](https://github.com/fweb3/app/actions/workflows/codeql.yml/badge.svg)
+![Cypress](https://github.com/fweb3/app/actions/workflows/cypress.yml/badge.svg)
+![Tests](https://github.com/fweb3/app/actions/workflows/tests.yml/badge.svg)
+
+---
+
 Contributions are more than welcome! Please fork this repo, do work, then submit a PR!
 You will find the contribution guidlines [here](https://github.com/fweb3/CONTRIBUTING)
 
