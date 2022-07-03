@@ -65,14 +65,14 @@ const orderedDots = Object.keys(dotContent).reduce((list, key) => {
   return list;
 }, []);
 
-const Dot: React.FC<DotProps> = ({
+const Dot = ({
   toolTip,
   position,
   completed,
   activeDot,
   setActiveDot,
   hideDot,
-}) => {
+}): JSX.Element => {
   return (
     <div
       onClick={() => setActiveDot(position)}
@@ -115,14 +115,11 @@ export default function Home() {
     useGameState();
 
   useEffect(() => {
-    const completionStates: number[] = calcCompletionStates(
-      isConnected,
-      gameTaskState
-    );
-    const completedTiles: number = completionStates.reduce((acc, cur) => {
+    const completionStates = calcCompletionStates(isConnected, gameTaskState);
+    const completedTiles = completionStates.reduce((acc, cur) => {
       return (acc += cur);
     }, 0);
-
+    setCompletionStates(completionStates);
     setCompletedTiles(completedTiles);
     if (gameTaskState?.hasWonGame || parseInt(trophyId) >= 1) {
       const trophyColor = getTrophyColor(gameTaskState.trophyId);
@@ -180,9 +177,7 @@ export default function Home() {
               return (
                 <Dot
                   key={id}
-                  id={id}
                   completed={hasWonGame || !!completionStates?.[position]}
-                  link={link}
                   position={position}
                   toolTip={toolTip}
                   activeDot={activeDot}

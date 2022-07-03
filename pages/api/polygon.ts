@@ -26,7 +26,7 @@ export default async function handler(
       debug,
       wallet_address: walletAddress,
     }: IAPIRequestQueryParams = req.query;
-    const { status, error }: IRequestValidationResponse = validateRequest(req);
+    const { status, error } = validateRequest(req);
 
     if (status !== 200) {
       return res.status(status).json(error);
@@ -37,12 +37,12 @@ export default async function handler(
       NEXT_PUBLIC_DEBUG_ENABLE_DOTS &&
       debug
     ) {
-      const debugTaskState: IGameTaskState = await fetchDebugGameState(
+      const debugTaskState = await fetchDebugGameState(
         NEXT_PUBLIC_DEBUG_ENABLE_DOTS
       );
       return res.json(debugTaskState);
     }
-    const gameTaskState: IGameTaskState = await fetchCurrentGameState(
+    const gameTaskState = await fetchCurrentGameState(
       debugWallet ?? walletAddress
     );
     return res.json(gameTaskState);

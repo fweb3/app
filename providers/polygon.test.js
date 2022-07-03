@@ -2,10 +2,10 @@ import { createMocks } from "node-mocks-http";
 import {
   fetchDebugGameState,
   fetchCurrentGameState,
-} from "../../lib/polygon/game";
+} from "../lib/polygon/game";
 
-import { MOCK_WALLET_ADDRESS } from "../../lib/polygon/__mocks__/mockWalletAddress";
-import polygonApiHandler from "./polygon";
+import { MOCK_WALLET_ADDRESS } from "../lib/polygon/__mocks__/mockWalletAddress";
+import polygonApiHandler from "../pages/api/polygon";
 
 const constantsMock = jest.requireMock("../../lib/constants");
 

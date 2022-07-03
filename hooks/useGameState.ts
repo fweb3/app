@@ -15,8 +15,8 @@ export const useGameState = () => {
   } = useRouter();
 
   const checkHasWonGame = (gameTaskState: IGameTaskState) => {
-    const hasWonGame: boolean = gameTaskState["hasWonGame"];
-    const trophyId: string = gameTaskState["trophyId"];
+    const hasWonGame = gameTaskState["hasWonGame"];
+    const trophyId = gameTaskState["trophyId"];
     setHasWonGame(hasWonGame);
     setTrophyId(trophyId);
   };
@@ -29,9 +29,11 @@ export const useGameState = () => {
           // if the wallet is coming from URL use that. else use connected
           const url = `/api/polygon?wallet_address=${wallet ?? account}`;
           const apiResponse = await fetch(url);
-          const taskState: IGameTaskState = await apiResponse.json();
-          setGameTaskState(taskState);
-          checkHasWonGame(taskState);
+          const taskState = await apiResponse.json();
+          const tasksConnected = { ...taskState, isConnected };
+
+          setGameTaskState(tasksConnected);
+          checkHasWonGame(tasksConnected);
           setFetchingData(false);
         } catch (err) {
           // todo toastify
