@@ -1,7 +1,8 @@
-import { createContext, useEffect, useState } from 'react'
-import { createAlchemyProvider } from '../../interfaces'
 // eslint-disable-next-line
 import type { GameError, IComponentProps } from '../../types'
+import { createContext, useEffect, useState } from 'react'
+import { createAlchemyProvider } from '../../interfaces'
+import { apolloClient } from '../../lib/graphql'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { useEthers } from '../Ethers'
@@ -50,6 +51,8 @@ const AccountProvider = ({ children }: IComponentProps) => {
   useEffect(() => {
     ;(async () => {
       try {
+        // fetch user data
+        
         const queryAccount = query?.account?.toString()
         if (queryAccount) {
           setIsQueryLoad(true)
